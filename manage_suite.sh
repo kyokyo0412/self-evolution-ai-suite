@@ -5,7 +5,7 @@
 #   manage_suite.sh domain install <git-url> [--domain <name>]
 #
 # Example:
-#   manage_suite.sh domain install https://github.com/org/ai-skills.git 
+#   manage_suite.sh domain install https://github.com/org/ai-skills.git --domain vmware
 
 set -euo pipefail
 
@@ -37,7 +37,7 @@ SUB-COMMANDS
                     Use --domain <name> to fetch a specific domain.
 
 OPTIONS
-  --domain <name>   Specific domain to install (e.g. microsoft)
+  --domain <name>   Specific domain to install (e.g. vmware)
   --help            Show this help
 EOF
 }

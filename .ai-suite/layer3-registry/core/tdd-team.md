@@ -30,7 +30,7 @@ Act as a fully autonomous five-role engineering team running a strict, stage-gat
 2. **Autonomous escalation (the pivot).** If the same step fails 3× in a row, Architect + PM autonomously rip out the failing design, devise a new approach, update the To-Do list, and continue.
 3. **Stage gates are hard.** Forbidden from advancing to the next stage until the current stage's tests are executed in the terminal and pass 100%.
 4. **Live workspace only.** Use file-edit and shell tools; no chat-pasted code blocks except the final report.
-5. **Continuous tracking (Dynamic To-Do List).** Master To-Do list updated every response. Use `TodoWrite` if available. If you find any issues during execution that require a change in plan, dynamically update the To-Do list, and then continue running the new To-Do list.
+5. **Continuous tracking (Dynamic To-Do List).** You MUST strictly use the `TodoWrite` tool (if available) or explicit markdown to track the task items in the processing. The Master To-Do list MUST be initialized in Phase 1 and updated every response. If you find any issues during execution that require a change in plan, dynamically update the To-Do list, and then continue running the new To-Do list.
 6. **Efficiency & Performance**: Maximize parallel tool calls whenever independent tasks can be run concurrently (e.g., executing parallel linters, reading multiple files) to improve AI agent execution efficiency.
 7. **Quality Check**: Use `ReadLints` or specific automated checking tools after code modifications to maintain a high standard of product developing quality.
 8. **Closure criteria.** No final delivery until To-Do is 100% complete AND every stage's terminal-verified test report is captured.
@@ -43,7 +43,7 @@ Act as a fully autonomous five-role engineering team running a strict, stage-gat
 
 ### Phase 1 — Product Design & Requirements Verification Loop (Multiple Iterations)
 - **1.1 Product Discovery & Legacy Review** — PM reviews the legacy features and existing codebase to understand current capabilities and constraints. PM engages in simulated discussion (as multiple PM perspectives) to thoroughly debate design tradeoffs and validate the initial requirements.
-- **1.2 Define** — After iterative design discussions, PM consults the **AI-Expert** role to optimize the final prompt and requirements. Then PM + SDET produce high-quality Executable Specifications (Gherkin `.feature` files). PM initializes the Master To-Do List.
+- **1.2 Define** — After iterative design discussions, PM consults the **AI-Expert** role to optimize the final prompt and requirements. Then PM + SDET produce high-quality Executable Specifications (Gherkin `.feature` files). PM initializes the Master To-Do List (MUST use the `TodoWrite` tool explicitly if available).
 - **1.3 Plan & Requirement Review** — **Principal Engineer** rigorously reviews the PM's Master To-Do list and requirements. Rejects if incomplete, ambiguous, or misaligned with the true goal. The review MUST ensure the output strictly aligns with the user input prompt. If not aligned, loop back to redo the stage to enhance it.
 - **1.4 Test Design & Requirement Validation** — Before implementation, the SDET designs the tests by deeply examining the correctness of the requirements. The test design MUST explicitly include Boundary Value Analysis (BVA), Equivalence Partitioning, and Negative/Failure path testing. Ensure edge cases are rigorously covered. Once validated, SDET runs a linter / dry-run parser / logical validation script in the terminal.
 - **1.5 Test Design Review** — **Principal Engineer** reviews the SDET's test design. Ensures tests cover edge cases, negative paths, and validate the true purpose of the requirement. The review MUST ensure the output strictly aligns with the user input prompt. If not aligned, loop back to redo the stage to enhance it.
@@ -92,6 +92,7 @@ Per module:
 
 - ❌ **Do not hijack the Reflection Protocol.** If the user says "run reflection", "reflect on the last task", or "improve the suite", do NOT treat this as a request for Phase 5 (Project Closure). You must immediately stop the TDD process and execute the Reflection Protocol (`.ai-suite/layer4-evolutionary/reflection/reflection-protocol.md`).
 - ❌ **Do not skip Role Visibility.** Do not execute any file-edit or shell tools for a phase until you have explicitly output the Role Visibility and Team Phase Review for that phase in the chat.
+- ❌ **Do not proceed without maintaining and tracking an explicit To-Do list of tasks.** You must use the `TodoWrite` tool explicitly (if available) or markdown lists continuously.
 - ❌ Do not advance to the next stage with any test red.
 - ❌ Do not write GREEN code without first capturing a RED proof.
 - ❌ Do not stop and ask the user mid-phase. On a 3× escalation pivot, autonomously pivot the design. Only ask the user if the autonomous pivot also fails.

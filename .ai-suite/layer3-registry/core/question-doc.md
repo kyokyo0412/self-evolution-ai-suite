@@ -39,8 +39,10 @@ Write the final output document to `aigen_doc/<question-topic>.md`. Ensure the d
 
 ## Constraints and Rules
 - ❌ **MUST NOT:** Do not guess answers without tracing the relevant code.
-- ❌ **MUST NOT:** Do not stop to ask the user for input information before the documentation is fully generated.
-- **MUST:** Always enforce deep code-tracing to back up answers with exact file paths and line numbers.
+- ❌ **MUST NOT:** Do not stop to ask the user for input information before the documentation is fully generated. Write the document exhaustively without stopping.
+- **MUST:** Always enforce deep code-tracing to back up answers with exact file paths and line numbers. The code or document read and analysis must be incredibly detailed.
+- **MUST:** Output doc to `aigen_doc/` directory. Ensure the output layout is well-structured and highly readable.
+- **MUST:** The output in the chat window is often better than the doc, so the agent MUST make the output document as good as in the chat window.
 
 ---
 

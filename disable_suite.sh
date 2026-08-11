@@ -143,9 +143,9 @@ do_uninstall_for_agent() {
       fi
       log "agent=$agent_name scope=project target=$target"
       if [[ "$AI_SUITE_DRY_RUN" == "1" ]]; then
-        printf '[dry-run] would call agent_uninstall_project %s\n' "$target"
+        printf '[dry-run] would call agent_uninstall_project %s %s\n' "$target" "$SUITE_DIR"
       else
-        agent_uninstall_project "$target"
+        agent_uninstall_project "$target" "$SUITE_DIR"
       fi
       ;;
     global)

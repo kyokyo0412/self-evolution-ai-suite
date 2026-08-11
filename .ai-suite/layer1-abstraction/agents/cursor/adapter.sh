@@ -207,6 +207,7 @@ agent_install_project() {
   _mirror_templates "$suite_dir" "$project_dir/.cursor/templates" "cursor"
   _mirror_scripts "$suite_dir" "$project_dir/.cursor/scripts" "cursor"
   _mirror_meta "$suite_dir" "$meta_dest"
+  _mirror_rules "$suite_dir" "$rules_dir" "cursor"
 
   # Auto-initialize memory system
   if [[ -f "$suite_dir/layer2-cognitive/memory/memory.sh" ]]; then
@@ -227,6 +228,7 @@ agent_install_global() {
   _mirror_templates "$suite_dir" "$HOME/.cursor/templates" "cursor"
   _mirror_scripts "$suite_dir" "$HOME/.cursor/scripts" "cursor"
   _mirror_meta "$suite_dir" "$meta_dest"
+  _mirror_rules "$suite_dir" "$HOME/.cursor/rules" "cursor"
 
   # Write global ~/.cursorrules block so the AI knows about the suite
   _append_cursorrules_global_block "$suite_dir"
@@ -249,6 +251,7 @@ agent_install_global() {
 
 agent_uninstall_project() {
   local project_dir="$1"
+  local suite_dir="$2"
   local cursorrules; cursorrules=$(_cursorrules_path "$project_dir")
   local rules_dir; rules_dir=$(_cursor_rules_dir "$project_dir")
   local skills_dest="$project_dir/.cursor/skills"
@@ -262,6 +265,7 @@ agent_uninstall_project() {
   
   _remove_skills "$skills_dest"
   _remove_meta "$meta_dest"
+  _remove_rules "$rules_dir" "$suite_dir"
   
   if [[ -d "$project_dir/.cursor/templates" ]]; then rm -rf "$project_dir/.cursor/templates"; fi
   if [[ -d "$project_dir/.cursor/scripts" ]]; then rm -rf "$project_dir/.cursor/scripts"; fi
@@ -291,6 +295,7 @@ agent_uninstall_global() {
   
   _remove_skills "$skills_dest"
   _remove_meta "$meta_dest"
+  _remove_rules "$HOME/.cursor/rules" "$suite_dir"
   if [[ -d "$HOME/.cursor/templates" ]]; then rm -rf "$HOME/.cursor/templates"; fi
   if [[ -d "$HOME/.cursor/scripts" ]]; then rm -rf "$HOME/.cursor/scripts"; fi
   

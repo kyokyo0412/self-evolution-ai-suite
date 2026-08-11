@@ -11,7 +11,9 @@ triggers:
 
 # Feature Documentation & Question Answering Generator
 
-Generate an exhaustive, detailed architectural and logic documentation suite for a specific feature. Review the source code and dig into the details to answer the user's questions.
+You are executing the `feature-doc` skill. Act as a Principal Systems Engineer to generate an exhaustive, detailed architectural and logic documentation suite for a specific feature. 
+
+You MUST perform deep codebase exploration using semantic search and grep. NEVER guess or rely on generic framework knowledge. Review the source code and dig into the details to answer the user's questions.
 
 ## Execution Pipeline
 
@@ -41,14 +43,16 @@ Perform these phases sequentially. You must write the document exhausted, do not
 Write the final output doc to `aigen_doc/<feature-name>.md`. Ensure the directory exists.
 
 ## Constraints and Rules
-- Always enforce deep code-tracing across ALL layers.
+- Always enforce deep code-tracing across ALL layers. The code or document read and analysis must be incredibly detailed and cover all the details.
 - Output doc to aigen_doc/ directory.
-- As detail as possible.
-- Write the document exhausted, do not stop to ask users input information before all done.
+- As detailed as possible. Ensure the output layout is well-structured and highly readable.
+- Write the document exhaustively, do not stop to ask users input information before all done.
+- The output in the chat window is often better than the doc, so the agent MUST make the output document as good as in the chat window.
 
 ## Negative Constraints (Must NOT)
-- ❌ Do not skip tracing any layer in the call chain.
-- ❌ Do not stop to ask users input information before the documentation is fully generated.
+- ❌ **MUST NOT:** Do not skip tracing any layer in the call chain.
+- ❌ **MUST NOT:** Do not stop to ask users input information before the documentation is fully generated. Write the document exhaustively without stopping.
+- ❌ **MUST NOT:** Do not guess answers without tracing the relevant code.
 
 ---
 

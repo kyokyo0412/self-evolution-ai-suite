@@ -234,6 +234,7 @@ assert_file_not_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >
                                                                                               "disable: marker removed"
 assert_not_file    "$FAKE_PROJECT/.cursor/rules/cursor-suite-production-safety.mdc"           "disable: safety .mdc removed"
 assert_not_file    "$FAKE_PROJECT/.cursor/rules/cursor-suite-agent-directives.mdc"            "disable: directives .mdc removed"
+ls -la "$FAKE_PROJECT/.cursor/rules" 2>/dev/null || true
 assert_not_dir     "$FAKE_PROJECT/.cursor/rules"                                              "disable: empty .cursor/rules cleaned up"
 assert_not_dir     "$FAKE_PROJECT/.cursor"                                                    "disable: empty .cursor cleaned up"
 

@@ -80,6 +80,7 @@ while [[ $# -gt 0 ]]; do
     --host)         HOST="${2:?--host requires user@host}"; shift 2 ;;
     --remote-path)  REMOTE_PATH="${2:?--remote-path requires a path}"; shift 2 ;;
     --remote-scope) REMOTE_SCOPE="${2:?--remote-scope requires project|global}"; shift 2 ;;
+    --domain)       export AI_SUITE_DOMAIN="${2:?--domain requires a domain name}"; shift 2 ;;
     --dry-run)      export AI_SUITE_DRY_RUN=1; shift ;;
     --verify)       VERIFY=1; shift ;;
     --install-hook) INSTALL_HOOK=1; shift ;;
@@ -316,6 +317,12 @@ do_remote_scope() {
       ;;
     *) die "invalid --remote-scope: $REMOTE_SCOPE (project|global)" 1 ;;
   esac
+  
+  if [[ -n "${AI_SUITE_DOMAIN:-}" ]]; then
+    local q_dom
+    q_dom="'$(printf '%s' "$AI_SUITE_DOMAIN" | sed "s/'/'\\\\''/g")'"
+    remote_cmd="$remote_cmd --domain $q_dom"
+  fi
 
   log "ssh $HOST -> $remote_cmd"
   run ssh "$HOST" "$remote_cmd"

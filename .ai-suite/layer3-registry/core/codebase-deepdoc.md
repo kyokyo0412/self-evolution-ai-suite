@@ -11,7 +11,9 @@ triggers:
 
 # Codebase Deep-Documentation Generator
 
-Generate a hierarchical, exhaustive documentation suite under `aigen_doc/`. Read every directory, every significant file. Synthesize, do not summarize.
+You are executing the `codebase-deepdoc` skill. Act as a Principal Systems Architect to generate a hierarchical, exhaustive documentation suite under `aigen_doc/`. 
+
+You MUST perform deep codebase exploration using semantic search and grep. NEVER guess or rely on generic framework knowledge. Read every directory, every significant file. Synthesize, do not summarize.
 
 Reader outcomes (the docs must enable each):
 1. Non-tech + tech readers understand system purpose, concepts, day-in-the-life usage.
@@ -93,13 +95,13 @@ Per component: `05_enhancement_guide.md` — enhancement opportunities backed by
 
 ## Negative Constraints (Must NOT)
 
-- ❌ Do not stop and ask the user to say "continue" mid-suite.
-- ❌ Do not summarize a component as "handles requests" — name the specific requests, middleware, returns, errors.
-- ❌ Do not include vague generic content. Every paragraph must reference a real file / line / symbol.
-- ❌ Do not skip components from the inventory.
-- ❌ Do not invent design patterns the code doesn't actually use.
-- ❌ Do not use Windows-style paths.
-- ❌ Do not write doc files outside `aigen_doc/`.
+- ❌ **MUST NOT:** Do not stop and ask the user to say "continue" mid-suite. Write the document exhaustively without stopping.
+- ❌ **MUST NOT:** Do not summarize a component as "handles requests" — name the specific requests, middleware, returns, errors.
+- ❌ **MUST NOT:** Do not include vague generic content. Every paragraph must reference a real file / line / symbol.
+- ❌ **MUST NOT:** Do not skip components from the inventory.
+- ❌ **MUST NOT:** Do not invent design patterns the code doesn't actually use. NEVER guess.
+- ❌ **MUST NOT:** Do not use Windows-style paths.
+- ❌ **MUST NOT:** Do not write doc files outside `aigen_doc/`.
 
 ## Verification
 

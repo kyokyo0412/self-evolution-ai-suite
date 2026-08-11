@@ -29,6 +29,8 @@ if [[ -d "$SCRIPT_DIR/.ai-suite" ]]; then
   
   # Copy install scripts
   cp "$SCRIPT_DIR/"*.sh "$PKG_DIR/" 2>/dev/null || true
+  cp "$SCRIPT_DIR/README.md" "$PKG_DIR/" 2>/dev/null || true
+  cp "$SCRIPT_DIR/README.md" "$PKG_DIR/" 2>/dev/null || true
   
   # Create tarball
   cd "$TMP_DIR"
@@ -60,6 +62,8 @@ elif [[ "$SCRIPT_DIR" == */meta/scripts ]]; then
   
   # Copy root scripts
   cp "$SCRIPT_DIR/"*.sh "$PKG_DIR/" 2>/dev/null || true
+  cp "$SCRIPT_DIR/README.md" "$PKG_DIR/" 2>/dev/null || true
+  cp "$SCRIPT_DIR/README.md" "$PKG_DIR/" 2>/dev/null || true
   
   # For skills, we don't know exactly which were core and which were cursor-specific,
   # but for a published package, we can put them all in core/skills or agents/cursor/skills.

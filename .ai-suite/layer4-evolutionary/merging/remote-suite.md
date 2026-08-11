@@ -104,10 +104,10 @@ bash enable_suite.sh --scope remote --host "alice@dev.example.com"
 # Claude agent
 bash enable_suite.sh --scope remote --host "alice@dev.example.com" --agent claude
 
-# All agents + linux domain pack
+# All agents + Custom domain pack
 bash enable_suite.sh --scope remote \
   --host "alice@dev.example.com" \
-  --agent all --domain linux
+  --agent all --domain my-company
 
 # Project-scoped install
 bash enable_suite.sh --scope remote \
@@ -337,7 +337,7 @@ Agent: bash enable_suite.sh --scope remote --host "alice@dev.example.com" --dry-
 ## Safety
 
 - **Never auto-commit.** After `collect`, always print git commands for manual review.
-- **Never skip the production guard.** Hosts matching `prod` require explicit user confirmation.
+- **Never skip the production guard.** Hosts matching `prod`,  require explicit user confirmation.
 - **Never invent a host.** If no `USER@HOST` is found in the user's message, ask before proceeding.
 - **Never run destructive remote commands** beyond what `enable_suite.sh`, `evolve_suite.sh`, or `disable_suite.sh` prescribe.
 - Check that required scripts exist (`enable_suite.sh`, `evolve_suite.sh`, `disable_suite.sh`) as a preflight before running any operation.

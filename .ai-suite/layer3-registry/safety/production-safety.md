@@ -37,19 +37,18 @@ The agent MUST refuse and ask for explicit user confirmation before executing an
 - `git filter-branch` / `git filter-repo` / history rewrites on shared branches.
 - Skipping hooks with `--no-verify` / `--no-gpg-sign` unless the user asked.
 
-### Remote Hosts (SSH )
+### Remote Hosts (SSH)
 
 - Any command on a hostname matching: `prod`, `production`, `-pr-`, `.prod.`, `release`, `customer`, or a user-supplied blocklist regex.
-- `infravisor restart`, `systemctl stop service ...`, `systemctl stop network-manager` on remote hosts not confirmed as testbeds.
 
 ## Required Behaviors
 
 1. **Explain before destructive ops.** Before any state-changing remote command, state what will change, the rollback recipe, and ask for `yes` confirmation unless the user pre-authorized the session.
 2. **Idempotent forms.** Prefer `apt-get install -y --no-upgrade pkg` over `apt-get install pkg`. Prefer `systemctl enable --now svc` over chained start/enable.
-3. **Dry-run first.** Where supported ( `bazel build --nobuild`, `terraform plan`, `kubectl apply --dry-run=server`), run dry-run and show the diff.
+3. **Dry-run first.** Where supported (`bazel build --nobuild`, `terraform plan`, `kubectl apply --dry-run=server`), run dry-run and show the diff.
 4. **Capture rollback state.** Before mutating remote state, snapshot the relevant config (`cp /etc/X /tmp/X.bak.$(date +%s)`) and record the path.
 5. **No secrets in chat or logs.** Redact passwords, API tokens, private keys before quoting.
-6. **Scope discipline.** Only edit files in scope of the user's task. For linux work specifically, do not modify the build framework or other gobuild targets unless the task explicitly requests it.
+6. **Scope discipline.** Only edit files in scope of the user\'s task.
 
 ## Exceptions
 

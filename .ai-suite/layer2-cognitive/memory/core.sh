@@ -227,6 +227,22 @@ if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
     printf '[ai-suite] mirrored %d skill(s) to %s\n' "$count" "$skills_dest"
   }
 
+  
+  _remove_rules() {
+    local rules_dest="$1"
+    local suite_dir="$2"
+    # We don't remove the whole directory because user might have their own rules
+    # But we can remove the ones we mirrored.
+    if [[ -d "$rules_dest" && -d "$suite_dir" ]]; then
+      # Find all rules that might have been copied from anywhere in the suite and remove them
+      find "$suite_dir" -name "*.mdc" -type f -exec basename {} \; 2>/dev/null | while read rule_file; do
+        rm -f "$rules_dest/$rule_file"
+      done
+      # specific removals
+      rm -f "$rules_dest"/interactive-workflow.md 2>/dev/null || true
+    fi
+  }
+
   _remove_skills() {
     local skills_dest="$1"
     if [[ -d "$skills_dest" ]]; then
