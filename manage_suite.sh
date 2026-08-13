@@ -5,7 +5,7 @@
 #   manage_suite.sh domain install <git-url> [--domain <name>]
 #
 # Example:
-#   manage_suite.sh domain install https://github.com/org/ai-skills.git --domain vmware
+#   manage_suite.sh domain install https://github.com/org/ai-skills.git --domain xxx
 
 set -euo pipefail
 
