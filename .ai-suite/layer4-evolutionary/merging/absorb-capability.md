@@ -60,6 +60,6 @@ This skill is active when the user says:
 3. Print a summary of absorbed capabilities to the user.
 
 ## Negative Constraints (Must NOT)
-- Do not modify `evolve_suite.sh` or break the existing evolutionary loop.
+- Do not modify `ai-suite evolve` or break the existing evolutionary loop.
 - Do not auto-commit the changes.
 - Do not merge duplicate capabilities without synthetically unifying them if there are semantic differences.

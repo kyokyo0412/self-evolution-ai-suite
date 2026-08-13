@@ -23,8 +23,8 @@ The AI suite Agent can publish its capabilities to an AI suite publish package. 
    - Otherwise, it is a normal AI suite Agent.
 
 2. **Publish from AI suite developing agent**:
-   - Run the `publish_suite.sh` script in the workspace root.
-   - `bash publish_suite.sh`
+   - Run the `ai-suite publish` script in the workspace root.
+   - `bash ai-suite publish`
 
 3. **Publish from normal AI suite Agent**:
    - Create a temporary directory for the package structure.

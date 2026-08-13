@@ -1,8 +1,8 @@
 # Production Safety Guardrails
 
-> **This file is the source of truth.** `enable_suite.sh` deploys this content as
+> **This file is the source of truth.** `ai-suite enable` deploys this content as
 > `.cursor/rules/cursor-suite-production-safety.mdc` with `alwaysApply: true` so
-> Cursor enforces it on every task in the workspace. `disable_suite.sh` removes
+> Cursor enforces it on every task in the workspace. `ai-suite disable` removes
 > the deployed copy.
 
 These rules apply to every command, every file edit, and every remote interaction the agent performs in this workspace.

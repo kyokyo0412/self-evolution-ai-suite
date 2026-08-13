@@ -66,7 +66,7 @@ OPTIONS
   --remote-path PATH    Remote install directory.
                         Default: \$HOME/.ai-suite-deploy  (resolved on remote)
   --remote-scope SCOPE  Scope for enable_suite.sh on remote. Default: global
-  --agent AGENT         cursor (default) | claude | opencode | continue | roo-code | all
+  --agent AGENT         cursor (default) | claude | opencode | continue | roo-code | codex | all
   --dry-run             Print what would happen; make no changes.
   --help                Show this help.
 
@@ -364,12 +364,16 @@ do_push() {
     # Simulate a remote .ai-suite structure in tmpdir by copying from local global installations
     mkdir -p "$tmpdir/layer1-abstraction/agents/cursor/skills"
     mkdir -p "$tmpdir/layer1-abstraction/agents/claude/skills"
+    mkdir -p "$tmpdir/layer1-abstraction/agents/codex/skills"
     
     if [[ -d "$HOME/.cursor/skills" ]]; then
       cp -r "$HOME/.cursor/skills/"* "$tmpdir/layer1-abstraction/agents/cursor/skills/" 2>/dev/null || true
     fi
     if [[ -d "$HOME/.claude/skills" ]]; then
       cp -r "$HOME/.claude/skills/"* "$tmpdir/layer1-abstraction/agents/claude/skills/" 2>/dev/null || true
+    if [[ -d "$HOME/.codex/skills" ]]; then
+      cp -r "$HOME/.codex/skills/"* "$tmpdir/layer1-abstraction/agents/codex/skills/" 2>/dev/null || true
+    fi
     fi
     # Also copy core skills if they exist globally (usually they are mirrored to the agent skills)
     

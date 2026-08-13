@@ -16,12 +16,13 @@
 #       Default --remote-scope: global
 #
 # Agent flags:
-#   --agent AGENT    cursor (default) | claude | opencode | continue | roo-code | all
+#   --agent AGENT    cursor (default) | claude | opencode | continue | roo-code | codex | all
 #                    cursor: writes .cursorrules + ~/.cursor/skills/
 #                    claude: writes CLAUDE.md
 #                    opencode: writes .opencode/instructions.md
 #                    continue: writes .continue/prompts/ai-suite.prompt
 #                    roo-code: writes .roorules
+#                    codex:    writes AGENTS.md + .codex/skills/
 #                    all:    all supported agents
 #
 # Common flags:
@@ -75,7 +76,7 @@ usage() { sed -n '2,26p' "$0"; exit "${1:-0}"; }
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --scope)        SCOPE="${2:?--scope requires project|global|remote}"; shift 2 ;;
-    --agent)        AGENT="${2:?--agent requires cursor|claude|opencode|continue|roo-code|all}"; shift 2 ;;
+    --agent)        AGENT="${2:?--agent requires cursor|claude|opencode|continue|roo-code|codex|all}"; shift 2 ;;
     --project)      PROJECT_PATH="${2:?--project requires a path}"; shift 2 ;;
     --host)         HOST="${2:?--host requires user@host}"; shift 2 ;;
     --remote-path)  REMOTE_PATH="${2:?--remote-path requires a path}"; shift 2 ;;
@@ -93,8 +94,8 @@ done
 
 # -- Validate agent -----------------------------------------------------------
 case "$AGENT" in
-  cursor|claude|opencode|continue|roo-code|all) ;;
-  *) die "Unsupported agent: '$AGENT'. Valid: cursor | claude | opencode | continue | roo-code | all" 1 ;;
+  cursor|claude|opencode|continue|roo-code|codex|all) ;;
+  *) die "Unsupported agent: '$AGENT'. Valid: cursor | claude | opencode | continue | roo-code | codex | all" 1 ;;
 esac
 
 case "$SCOPE" in
@@ -336,9 +337,9 @@ if [[ "$SCOPE" == "remote" ]]; then
   do_remote_scope
 else
   case "$AGENT" in
-    cursor|claude|opencode|continue|roo-code) do_install_for_agent "$AGENT" ;;
+    cursor|claude|opencode|continue|roo-code|codex) do_install_for_agent "$AGENT" ;;
     all)
-      for a in cursor claude opencode continue roo-code; do
+      for a in cursor claude opencode continue roo-code codex; do
         do_install_for_agent "$a"
       done ;;
   esac

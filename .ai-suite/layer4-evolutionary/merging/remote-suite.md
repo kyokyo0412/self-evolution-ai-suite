@@ -47,9 +47,9 @@ The local deployment root is **always** `~/.ai-suite-deploy/`. Do NOT search for
 | `~/.ai-suite-deploy/` | Deployment root |
 | `~/.ai-suite-deploy/.ai-suite/` | Suite source tree |
 | `~/.ai-suite-deploy/.ai-suite/layer4-evolutionary/validation/` | Protocols, evolution reports |
-| `~/.ai-suite-deploy/enable_suite.sh` | Install script |
-| `~/.ai-suite-deploy/disable_suite.sh` | Uninstall script |
-| `~/.ai-suite-deploy/evolve_suite.sh` | Evolution sync script |
+| `~/.ai-suite-deploy/ai-suite enable` | Install script |
+| `~/.ai-suite-deploy/ai-suite disable` | Uninstall script |
+| `~/.ai-suite-deploy/ai-suite evolve` | Evolution sync script |
 | `~/.cursor/skills/` | Deployed skills (agent reads these) |
 | `~/.cursor/rules/` | Deployed rules (always-apply) |
 
@@ -82,7 +82,7 @@ skill count (source vs deployed), rules deployed ✅/❌.
 
 ### 1. Install (deploy ai-suite to a remote host)
 
-Maps to: `bash enable_suite.sh --scope remote --host USER@HOST [options]`
+Maps to: `bash ai-suite enable --scope remote --host USER@HOST [options]`
 
 **Options extracted from the user's message:**
 
@@ -99,30 +99,30 @@ Maps to: `bash enable_suite.sh --scope remote --host USER@HOST [options]`
 
 ```bash
 # Default: cursor agent, global scope
-bash enable_suite.sh --scope remote --host "alice@dev.example.com"
+bash ai-suite enable --scope remote --host "alice@dev.example.com"
 
 # Claude agent
-bash enable_suite.sh --scope remote --host "alice@dev.example.com" --agent claude
+bash ai-suite enable --scope remote --host "alice@dev.example.com" --agent claude
 
 # All agents + Custom domain pack
-bash enable_suite.sh --scope remote \
+bash ai-suite enable --scope remote \
   --host "alice@dev.example.com" \
   --agent all --domain my-company
 
 # Project-scoped install
-bash enable_suite.sh --scope remote \
+bash ai-suite enable --scope remote \
   --host "alice@dev.example.com" \
   --remote-path "/home/alice/myproject" \
   --remote-scope project
 
 # Multiple hosts (run once per host)
-bash enable_suite.sh --scope remote --host "alice@host1"
-bash enable_suite.sh --scope remote --host "bob@host2"
+bash ai-suite enable --scope remote --host "alice@host1"
+bash ai-suite enable --scope remote --host "bob@host2"
 ```
 
 ### 2. Collect (pull remote evolutions into local git)
 
-Maps to: `bash evolve_suite.sh collect --host USER@HOST [--remote-path PATH] [--dry-run]`
+Maps to: `bash ai-suite evolve collect --host USER@HOST [--remote-path PATH] [--dry-run]`
 
 After running, the agent MUST:
 - Display the evolution report from `.ai-suite/layer4-evolutionary/reflection/evolutions/`
@@ -133,39 +133,39 @@ After running, the agent MUST:
 
 ```bash
 # Collect from one host
-bash evolve_suite.sh collect --host "alice@dev.example.com"
+bash ai-suite evolve collect --host "alice@dev.example.com"
 
 # Collect from multiple hosts
-bash evolve_suite.sh collect \
+bash ai-suite evolve collect \
   --host "alice@dev.example.com" \
   --host "bob@ci.example.com"
 
 # Collect from a specific project path
-bash evolve_suite.sh collect \
+bash ai-suite evolve collect \
   --host "alice@dev.example.com" \
   --remote-path "/home/alice/myproject"
 
 # Preview only
-bash evolve_suite.sh collect --host "alice@dev.example.com" --dry-run
+bash ai-suite evolve collect --host "alice@dev.example.com" --dry-run
 ```
 
 ### 3. Push (send local evolved suite to remote hosts)
 
-Maps to: `bash evolve_suite.sh push --host USER@HOST [--remote-path PATH] [--remote-scope SCOPE] [--dry-run]`
+Maps to: `bash ai-suite evolve push --host USER@HOST [--remote-path PATH] [--remote-scope SCOPE] [--dry-run]`
 
 **Example commands:**
 
 ```bash
 # Push to one host
-bash evolve_suite.sh push --host "alice@dev.example.com"
+bash ai-suite evolve push --host "alice@dev.example.com"
 
 # Push to multiple hosts
-bash evolve_suite.sh push \
+bash ai-suite evolve push \
   --host "alice@dev.example.com" \
   --host "bob@ci.example.com"
 
 # Push to a specific project
-bash evolve_suite.sh push \
+bash ai-suite evolve push \
   --host "alice@dev.example.com" \
   --remote-path "/home/alice/myproject" \
   --remote-scope project
@@ -189,22 +189,22 @@ ssh USER@HOST "
 
 ### 5. Remove (uninstall from remote host)
 
-Maps to: `bash disable_suite.sh --scope remote --host USER@HOST [options]`
+Maps to: `bash ai-suite disable --scope remote --host USER@HOST [options]`
 
 **Example commands:**
 
 ```bash
 # Remove global install
-bash disable_suite.sh --scope remote --host "alice@dev.example.com"
+bash ai-suite disable --scope remote --host "alice@dev.example.com"
 
 # Remove a specific project install
-bash disable_suite.sh --scope remote \
+bash ai-suite disable --scope remote \
   --host "alice@dev.example.com" \
   --remote-path "/home/alice/myproject" \
   --remote-scope project
 
 # Remove for a specific agent only
-bash disable_suite.sh --scope remote \
+bash ai-suite disable --scope remote \
   --host "alice@dev.example.com" \
   --agent claude
 ```
@@ -255,7 +255,7 @@ If the user lists multiple `USER@HOST` patterns (e.g. "alice@host1 and bob@host2
 
 Before running any command:
 
-1. **Script check:** Confirm `enable_suite.sh`, `disable_suite.sh`, and `evolve_suite.sh` exist in the workspace. If any is missing, report the missing file and stop.
+1. **Script check:** Confirm `ai-suite enable`, `ai-suite disable`, and `ai-suite evolve` exist in the workspace. If any is missing, report the missing file and stop.
 2. **Production guard:** If the host contains `prod` or `prd`, warn:
    > "⚠️ `USER@HOST` looks like a production target. Please confirm you want to proceed."
    Wait for explicit confirmation before continuing.
@@ -290,14 +290,14 @@ Stream output so the user sees progress in real time.
 
 ```
 User:  install ai-suite on alice@dev.example.com
-Agent: bash enable_suite.sh --scope remote --host "alice@dev.example.com"
+Agent: bash ai-suite enable --scope remote --host "alice@dev.example.com"
 ```
 
 ### Collect remote evolution
 
 ```
 User:  collect evolution from alice@dev.example.com
-Agent: bash evolve_suite.sh collect --host "alice@dev.example.com"
+Agent: bash ai-suite evolve collect --host "alice@dev.example.com"
        [displays report + copy-paste git commands]
 ```
 
@@ -305,8 +305,8 @@ Agent: bash evolve_suite.sh collect --host "alice@dev.example.com"
 
 ```
 User:  push the evolved suite to alice@host1 and bob@host2
-Agent: bash evolve_suite.sh push --host "alice@host1"
-       bash evolve_suite.sh push --host "bob@host2"
+Agent: bash ai-suite evolve push --host "alice@host1"
+       bash ai-suite evolve push --host "bob@host2"
 ```
 
 ### Check status
@@ -321,14 +321,14 @@ Agent: ssh alice@dev.example.com "... status probe ..."
 
 ```
 User:  remove ai-suite from alice@dev.example.com
-Agent: bash disable_suite.sh --scope remote --host "alice@dev.example.com"
+Agent: bash ai-suite disable --scope remote --host "alice@dev.example.com"
 ```
 
 ### Dry-run preview
 
 ```
 User:  preview installing ai-suite on alice@dev.example.com
-Agent: bash enable_suite.sh --scope remote --host "alice@dev.example.com" --dry-run
+Agent: bash ai-suite enable --scope remote --host "alice@dev.example.com" --dry-run
        No changes were made. This was a preview.
 ```
 
@@ -339,8 +339,8 @@ Agent: bash enable_suite.sh --scope remote --host "alice@dev.example.com" --dry-
 - **Never auto-commit.** After `collect`, always print git commands for manual review.
 - **Never skip the production guard.** Hosts matching `prod`,  require explicit user confirmation.
 - **Never invent a host.** If no `USER@HOST` is found in the user's message, ask before proceeding.
-- **Never run destructive remote commands** beyond what `enable_suite.sh`, `evolve_suite.sh`, or `disable_suite.sh` prescribe.
-- Check that required scripts exist (`enable_suite.sh`, `evolve_suite.sh`, `disable_suite.sh`) as a preflight before running any operation.
+- **Never run destructive remote commands** beyond what `ai-suite enable`, `ai-suite evolve`, or `ai-suite disable` prescribe.
+- Check that required scripts exist (`ai-suite enable`, `ai-suite evolve`, `ai-suite disable`) as a preflight before running any operation.
 
 ---
 

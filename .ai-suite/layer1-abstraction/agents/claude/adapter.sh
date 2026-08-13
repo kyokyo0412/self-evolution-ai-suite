@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # .ai-suite/layer1-abstraction/agents/claude/adapter.sh — Claude Code adapter for ai-suite.
 #
-# Sourced by enable_suite.sh and disable_suite.sh.
+# Sourced by ai-suite enable and ai-suite disable.
 # Implements the standard adapter interface:
 #   agent_install_project SUITE_DIR PROJECT_DIR
 #   agent_install_global  SUITE_DIR

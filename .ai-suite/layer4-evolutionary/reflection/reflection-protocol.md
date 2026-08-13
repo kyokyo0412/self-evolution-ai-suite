@@ -105,7 +105,7 @@ Before choosing which file to edit, run the **3-Question Generality Gate**:
   `.ai-suite/layer3-registry/core/tdd-team.md` or `.ai-suite/layer1-abstraction/agents/cursor/skills/ai-suite-architect.md`
 - **(b) Create a new file** — state the tier-qualified path and justify why no existing file covers this
 - **(c) Edit `.ai-suite/layer4-evolutionary/validation/` infrastructure** — only if friction was caused by the meta layer itself
-  (validate-suite.sh, run-acceptance-tests.sh, etc.); NOT enable_suite.sh / disable_suite.sh / evolve_suite.sh
+  (validate-suite.sh, run-acceptance-tests.sh, etc.); NOT ai-suite enable / ai-suite disable / ai-suite evolve
 
 State: *"Improvement target: `<path>` (tier: `<core|agents/X|domains/X>`) — rationale: <one sentence>."*
 
@@ -182,7 +182,7 @@ Use `date -u +%Y%m%dT%H%M%SZ` for the timestamp. Create the `evolutions/` direct
 ```
 
 **Why this report exists:**
-The `evolutions/` directory is shared with `evolve_suite.sh collect`.
+The `evolutions/` directory is shared with `ai-suite evolve collect`.
 When a remote SSH instance runs Reflection, the evolution report is produced there.
 On the next `collect` run, the report is synced back to the local git repository alongside
 the edited skill/template files, giving you a machine-readable history of every improvement.

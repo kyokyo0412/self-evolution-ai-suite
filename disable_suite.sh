@@ -55,7 +55,7 @@ usage() { sed -n '2,22p' "$0"; exit "${1:-0}"; }
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --scope)         SCOPE="${2:?--scope requires project|global|remote}"; shift 2 ;;
-    --agent)         AGENT="${2:?--agent requires cursor|claude|opencode|continue|roo-code|all}"; shift 2 ;;
+    --agent)         AGENT="${2:?--agent requires cursor|claude|opencode|continue|roo-code|codex|all}"; shift 2 ;;
     --project)       PROJECT_PATH="${2:?--project requires a path}"; shift 2 ;;
     --host)          HOST="${2:?--host requires user@host}"; shift 2 ;;
     --remote-path)   REMOTE_PATH="${2:?--remote-path requires a path}"; shift 2 ;;
@@ -69,8 +69,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$AGENT" in
-  cursor|claude|opencode|continue|roo-code|all) ;;
-  *) die "Unsupported agent: '$AGENT'. Valid: cursor | claude | opencode | continue | roo-code | all" 1 ;;
+  cursor|claude|opencode|continue|roo-code|codex|all) ;;
+  *) die "Unsupported agent: '$AGENT'. Valid: cursor | claude | opencode | continue | roo-code | codex | all" 1 ;;
 esac
 
 _load_adapter() {
@@ -193,9 +193,9 @@ if [[ "$SCOPE" == "remote" ]]; then
   do_remote_scope
 else
   case "$AGENT" in
-    cursor|claude|opencode|continue|roo-code) do_uninstall_for_agent "$AGENT" ;;
+    cursor|claude|opencode|continue|roo-code|codex) do_uninstall_for_agent "$AGENT" ;;
     all)
-      for a in cursor claude opencode continue roo-code; do
+      for a in cursor claude opencode continue roo-code codex; do
         do_uninstall_for_agent "$a"
       done ;;
   esac

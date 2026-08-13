@@ -22,9 +22,9 @@ Manage ai-suite on the local machine using natural language. Covers local projec
 
 ### 1. Install / Update (enable, update, or push evolution locally or globally)
 
-Maps to: `bash enable_suite.sh --scope [project|global] [options]`
+Maps to: `bash ai-suite enable --scope [project|global] [options]`
 
-**Note on updating/pushing:** If the user asks to "push the evolution" or "update" locally, this maps to the Install operation. Re-running `enable_suite.sh` safely overwrites the deployed skills with the newly evolved ones.
+**Note on updating/pushing:** If the user asks to "push the evolution" or "update" locally, this maps to the Install operation. Re-running `ai-suite enable` safely overwrites the deployed skills with the newly evolved ones.
 
 **Options extracted from user's message:**
 - "global" -> `--scope global`
@@ -37,23 +37,23 @@ Maps to: `bash enable_suite.sh --scope [project|global] [options]`
 **Example commands:**
 ```bash
 # Local project scope for cursor
-bash enable_suite.sh --scope project --agent cursor
+bash ai-suite enable --scope project --agent cursor
 
 # Global scope for all agents
-bash enable_suite.sh --scope global --agent all
+bash ai-suite enable --scope global --agent all
 ```
 
 ### 2. Remove (disable ai-suite locally or globally)
 
-Maps to: `bash disable_suite.sh --scope [project|global] [options]`
+Maps to: `bash ai-suite disable --scope [project|global] [options]`
 
 **Example commands:**
 ```bash
 # Disable globally
-bash disable_suite.sh --scope global
+bash ai-suite disable --scope global
 
 # Disable for current project
-bash disable_suite.sh --scope project
+bash ai-suite disable --scope project
 ```
 
 ### 3. Collect (sync local evolutions back to repo)
@@ -95,7 +95,7 @@ After running, if changes were collected, you MUST write an Evolution Report man
 ## Step-by-Step Execution
 
 1. Identify the operation (install/enable vs remove/disable) and scope (project vs global).
-2. Check if `enable_suite.sh` or `disable_suite.sh` exist in the workspace. If they do not exist, report an error.
+2. Check if `ai-suite enable` or `ai-suite disable` exist in the workspace. If they do not exist, report an error.
 3. Run the appropriate command and stream output to the user.
 4. Confirm success or report the error to the user.
 

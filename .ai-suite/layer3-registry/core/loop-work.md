@@ -32,7 +32,7 @@ When `interactive-workflow` is enabled or active, you MUST handle it carefully t
 ## State Tracking (Required for Long Loops)
 
 When looping multiple times (e.g., up to 100 times), the context window may drop early iterations. You MUST maintain external state:
-- Create a `.loop_state.md` file in the workspace to log progress.
+- Create or append to a `.loop_state.md` file in the workspace to log progress. You MUST append to this file so that all iterations are logged instead of only the last one.
 - Log the iteration number, the strategy used, the result (Success/Failure), and the planned improvement for the next iteration.
 - Read this file at the start of any new iteration if you need to recover context.
 
@@ -60,6 +60,7 @@ For `i = 1` to `N` (or until the task is perfectly achieved):
 - Invoke the user-specified skill (e.g., `tdd-team`) to perform the task.
 - Follow all instructions and constraints of that target skill strictly for this iteration.
 - **CRITICAL:** Output the `step-action-visibility` details (VLLM Reasoning, Execution Plan, Implementation) for this specific iteration.
+- **CRITICAL:** The output of the target skill (e.g., `tdd-team`) MUST be correct and fully outputted to the chat window. Do not suppress, summarize, or skip the target skill's required outputs.
 - **CRITICAL:** After the target skill completes its execution (e.g., finishes its final phase), you MUST explicitly return to the loop-work Execution Protocol (Step 2) to validate and continue.
 
 ### Step 2: Validate Result (LLM Reasoning)
@@ -67,8 +68,8 @@ For `i = 1` to `N` (or until the task is perfectly achieved):
 - **Ask yourself:** Did this iteration fully solve the problem? Are there edge cases missed? Did it meet all constraints?
 
 ### Step 3: Output Iteration Report & Update State
-- Provide a detailed output for the current iteration in the chat message.
-- Update the `.loop_state.md` file via the `Write` or `Shell` tool.
+- Provide a detailed output for the current iteration in the chat message. Each iteration step/action and result MUST be outputted to the chat window.
+- Append to the `.loop_state.md` file via the `Write` or `Shell` tool (e.g., using `>>` or reading and appending).
 - **Format:**
   - **Iteration #:** `[Current Iteration] / [Total Iterations]`
   - **Status:** `[Success / Partial Success / Failure]`
@@ -87,6 +88,7 @@ For `i = 1` to `N` (or until the task is perfectly achieved):
 
 ### Step 6: Final Summary & Interactive Workflow Wrap-up
 - **ONLY AFTER ALL ITERATIONS ARE DONE:** Output the final task summary.
+- **Cleanup:** Identify and remove any unused files, temporary files, or leftover artifacts created during the iterations.
 - Proceed to State 2 and State 3 of the `interactive-workflow` (call the `AskQuestion` tool).
 
 ## Negative Constraints (Must NOT)

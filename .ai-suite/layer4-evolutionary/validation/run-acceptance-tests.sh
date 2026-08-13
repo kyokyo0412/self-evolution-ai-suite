@@ -209,7 +209,7 @@ assert_exit_zero "validator accepts minimal valid skill" \
 section "test 3: --scope project round trip"
 reset_sandbox
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" >/dev/null
 assert_file        "$FAKE_PROJECT/.cursorrules"                                              "enable: .cursorrules created"
 assert_file_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >>>>>"  "enable: cursorrules has START marker"
 assert_file_contains "$FAKE_PROJECT/.cursorrules" "# <<<<< cursor-ai-suite <<<<"    "enable: cursorrules has END marker"
@@ -229,7 +229,7 @@ assert_file_contains "$FAKE_PROJECT/.cursor/rules/cursor-suite-agent-directives.
 assert_file_contains "$FAKE_PROJECT/.cursor/rules/cursor-suite-agent-directives.mdc" \
                    "Actual Verification Required"                                            "enable: directives .mdc has verification rule"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --scope project --project "$FAKE_PROJECT" >/dev/null
 assert_file_not_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >>>>>" \
                                                                                               "disable: marker removed"
 assert_not_file    "$FAKE_PROJECT/.cursor/rules/cursor-suite-production-safety.mdc"           "disable: safety .mdc removed"
@@ -244,13 +244,13 @@ assert_not_dir     "$FAKE_PROJECT/.cursor"                                      
 section "test 4: --scope project idempotency"
 reset_sandbox
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" >/dev/null
 marker_count="$(grep -c "# >>>>> cursor-ai-suite >>>>>" "$FAKE_PROJECT/.cursorrules")"
 assert_eq "$marker_count" "1" "enable x2 leaves exactly 1 marker block"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --scope project --project "$FAKE_PROJECT" >/dev/null
 assert_file_not_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >>>>>" \
                                                                                               "disable x2 still has no marker"
 
@@ -261,10 +261,10 @@ section "test 5: existing .cursorrules content preserved"
 reset_sandbox
 printf '# Existing user rule\nDo not delete me.\n' > "$FAKE_PROJECT/.cursorrules"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" >/dev/null
 assert_file_contains "$FAKE_PROJECT/.cursorrules" "Do not delete me." "enable: pre-existing line preserved"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --scope project --project "$FAKE_PROJECT" >/dev/null
 assert_file_contains "$FAKE_PROJECT/.cursorrules" "Do not delete me." "disable: pre-existing line still preserved"
 assert_file_not_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >>>>>" \
                                                                        "disable: marker block gone"
@@ -276,17 +276,17 @@ section "test 6: stray empty .cursorrules directory repaired"
 reset_sandbox
 mkdir -p "$FAKE_PROJECT/.cursorrules"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null 2>&1
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" >/dev/null 2>&1
 assert_file        "$FAKE_PROJECT/.cursorrules"      "stray dir replaced by file"
 assert_file_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >>>>>" \
                                                      "stray dir: marker now present in file"
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --scope project --project "$FAKE_PROJECT" >/dev/null
 
 # Non-empty .cursorrules dir should be REFUSED.
 reset_sandbox
 mkdir -p "$FAKE_PROJECT/.cursorrules"
 printf 'unexpected\n' > "$FAKE_PROJECT/.cursorrules/junk"
-out="$(HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$FAKE_PROJECT" 2>&1)"
+out="$(HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" 2>&1)"
 exit_code=$?
 [[ "$exit_code" -ne 0 ]] \
   && pass "non-empty .cursorrules dir causes non-zero exit" \
@@ -300,7 +300,7 @@ rm -rf "$FAKE_HOME" "$SANDBOX/proj with space"
 mkdir -p "$FAKE_HOME" "$SANDBOX/proj with space"
 git -C "$SANDBOX/proj with space" init -q
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$SANDBOX/proj with space" >/dev/null 2>&1
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$SANDBOX/proj with space" >/dev/null 2>&1
 exit_code=$?
 assert_eq "$exit_code" "0" "enable with path containing spaces exit=0"
 assert_file        "$SANDBOX/proj with space/.cursorrules"  "spaces path: .cursorrules created"
@@ -309,7 +309,7 @@ assert_file        "$SANDBOX/proj with space/.cursor/rules/cursor-suite-producti
 assert_file        "$SANDBOX/proj with space/.cursor/rules/cursor-suite-agent-directives.mdc" \
                                                             "spaces path: directives .mdc deployed"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --scope project --project "$SANDBOX/proj with space" >/dev/null 2>&1
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --scope project --project "$SANDBOX/proj with space" >/dev/null 2>&1
 assert_file_not_contains "$SANDBOX/proj with space/.cursorrules" "# >>>>> cursor-ai-suite >>>>>" \
                                                             "spaces path: disable removed marker"
 assert_not_file    "$SANDBOX/proj with space/.cursor/rules/cursor-suite-production-safety.mdc" \
@@ -323,7 +323,7 @@ assert_not_file    "$SANDBOX/proj with space/.cursor/rules/cursor-suite-agent-di
 section "test 8: --scope global round trip (sandbox HOME)"
 reset_sandbox
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope global >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope global >/dev/null
 assert_dir         "$FAKE_HOME/.cursor/skills"                                          "global: skills dir created"
   assert_file        "$FAKE_HOME/.cursor/skills/tdd-team/SKILL.md"                        "global: tdd-team mirrored"
 assert_file        "$FAKE_HOME/.cursor/rules/cursor-suite-production-safety.mdc"        "global: safety rule deployed to ~/.cursor/rules"
@@ -339,11 +339,11 @@ skill_count="$(find "$FAKE_HOME/.cursor/skills" -mindepth 1 -maxdepth 1 -type d 
 assert_eq "$skill_count" "$EXPECTED_SKILL_COUNT" "global: $EXPECTED_SKILL_COUNT skill mirrors present"
 
 # Idempotency
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope global >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope global >/dev/null
 skill_count2="$(find "$FAKE_HOME/.cursor/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
 assert_eq "$skill_count2" "$EXPECTED_SKILL_COUNT" "global: re-enable still $EXPECTED_SKILL_COUNT mirrors (idempotent)"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --scope global >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --scope global >/dev/null
   assert_not_dir     "$FAKE_HOME/.cursor/skills/tdd-team"                           "global: mirrors removed after disable"
 assert_not_file    "$FAKE_HOME/.cursor/rules/cursor-suite-production-safety.mdc"        "global: safety rule removed"
 assert_not_file    "$FAKE_HOME/.cursor/rules/cursor-suite-agent-directives.mdc"         "global: directives rule removed"
@@ -355,7 +355,7 @@ section "test 9: --install-hook variants"
 
 for sh_flag in zsh bash both; do
   reset_sandbox
-  HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --install-hook --shell "$sh_flag" >/dev/null
+  HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --install-hook --shell "$sh_flag" >/dev/null
   case "$sh_flag" in
     zsh)
       assert_file_contains "$FAKE_HOME/.zshrc"  "### AI SUITE AUTO-ENABLE HOOK START ###" "hook --shell zsh: zshrc has marker"
@@ -372,14 +372,14 @@ for sh_flag in zsh bash both; do
   esac
 
   # Idempotency
-  HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --install-hook --shell "$sh_flag" >/dev/null
+  HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --install-hook --shell "$sh_flag" >/dev/null
   for rc in zshrc bashrc; do
     [[ -f "$FAKE_HOME/.$rc" ]] || continue
     count="$(grep -c "### AI SUITE AUTO-ENABLE HOOK START ###" "$FAKE_HOME/.$rc")"
     assert_eq "$count" "1" "hook --shell $sh_flag: $rc has exactly 1 marker after re-enable"
   done
 
-  HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --uninstall-hook --shell "$sh_flag" >/dev/null
+  HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --uninstall-hook --shell "$sh_flag" >/dev/null
   for rc in zshrc bashrc; do
     [[ -f "$FAKE_HOME/.$rc" ]] || continue
     assert_file_not_contains "$FAKE_HOME/.$rc" "### AI SUITE AUTO-ENABLE HOOK START ###" \
@@ -390,7 +390,7 @@ done
 # Auto-detection: when only .zshrc exists, auto should pick zsh
 reset_sandbox
 touch "$FAKE_HOME/.zshrc"   # exists but no bashrc
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --install-hook --shell auto >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --install-hook --shell auto >/dev/null
 assert_file_contains "$FAKE_HOME/.zshrc"  "### AI SUITE AUTO-ENABLE HOOK START ###" "hook auto: picked zshrc"
 [[ -f "$FAKE_HOME/.bashrc" ]] && fail "hook auto: created bashrc when only zshrc existed" \
                               || pass "hook auto: did NOT create bashrc"
@@ -402,27 +402,27 @@ section "test 10: pre-existing .zshrc content preserved across hook install/unin
 reset_sandbox
 printf 'export PATH=$PATH:/my/bin\n# my zsh setup\n' > "$FAKE_HOME/.zshrc"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --install-hook --shell zsh >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --install-hook --shell zsh >/dev/null
 assert_file_contains "$FAKE_HOME/.zshrc" "export PATH=" "hook install: PATH line preserved"
 assert_file_contains "$FAKE_HOME/.zshrc" "# my zsh setup" "hook install: comment preserved"
 
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/disable_suite.sh" --uninstall-hook --shell zsh >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --uninstall-hook --shell zsh >/dev/null
 assert_file_contains "$FAKE_HOME/.zshrc" "export PATH=" "hook uninstall: PATH line still present"
 
 # ============================================================================
 # Test 11 — --verify on shipped skills
 # ============================================================================
 section "test 11: --verify"
-assert_exit_zero "enable_suite.sh --verify passes" \
-  bash "$PROJECT_ROOT/enable_suite.sh" --verify
+assert_exit_zero "ai-suite enable --verify passes" \
+  bash "$PROJECT_ROOT/ai-suite" enable --verify
 
 # ============================================================================
-# Test 12 — --uninstall delegation reaches disable_suite.sh
+# Test 12 — --uninstall delegation reaches ai-suite disable
 # ============================================================================
 section "test 12: --uninstall delegation"
 reset_sandbox
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$FAKE_PROJECT" >/dev/null
-HOME="$FAKE_HOME" bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project "$FAKE_PROJECT" --uninstall >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" >/dev/null
+HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" --uninstall >/dev/null
 assert_file_not_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >>>>>" \
                                                                                               "--uninstall delegation removed marker"
 assert_not_file    "$FAKE_PROJECT/.cursor/rules/cursor-suite-production-safety.mdc"           "--uninstall delegation removed .mdc"
@@ -468,7 +468,7 @@ reset_sandbox
 HOME="$FAKE_HOME" \
   PATH="$SHIM_PATH:$PATH" \
   RECORDER_LOG="$RECORDER_LOG" \
-  bash "$PROJECT_ROOT/enable_suite.sh" --scope remote --host nobody@example.invalid >/dev/null 2>&1
+  bash "$PROJECT_ROOT/ai-suite" enable --scope remote --host nobody@example.invalid >/dev/null 2>&1
 
 if grep -Fq '$HOME/.ai-suite' "$RECORDER_LOG"; then
   pass "remote ssh argv contains literal \$HOME (no local expansion)"
@@ -493,9 +493,9 @@ reset_sandbox
 HOME="$FAKE_HOME" \
   PATH="$SHIM_PATH:$PATH" \
   RECORDER_LOG="$RECORDER_LOG" \
-  bash "$PROJECT_ROOT/enable_suite.sh" --scope remote --host nobody@example.invalid --remote-path "/var/tmp/path with space" >/dev/null 2>&1
+  bash "$PROJECT_ROOT/ai-suite" enable --scope remote --host nobody@example.invalid --remote-path "/var/tmp/path with space" >/dev/null 2>&1
 
-if grep -Fq '"/var/tmp/path with space/enable_suite.sh"' "$RECORDER_LOG" || grep -Fq "'/var/tmp/path with space/enable_suite.sh'" "$RECORDER_LOG" || grep -Fq "/var/tmp/path\ with\ space" "$RECORDER_LOG"; then
+if grep -Fq '"/var/tmp/path with space/ai-suite" enable' "$RECORDER_LOG" || grep -Fq "'/var/tmp/path with space/ai-suite' enable" "$RECORDER_LOG" || grep -Fq '"/var/tmp/path with space/ai-suite"' "$RECORDER_LOG" || grep -Fq "/var/tmp/path\ with\ space" "$RECORDER_LOG"; then
   pass "remote ssh argv correctly quotes --remote-path with spaces"
 else
   fail "remote ssh argv MISSING quotes for --remote-path with spaces. log: $(cat "$RECORDER_LOG")"
@@ -505,11 +505,11 @@ fi
 # Test 14 — invalid args fail cleanly with non-zero exit
 # ============================================================================
 section "test 13: invalid args fail with non-zero exit"
-assert_exit_nonzero "unknown flag rejected"           bash "$PROJECT_ROOT/enable_suite.sh" --no-such-flag
-assert_exit_nonzero "bad scope rejected"              bash "$PROJECT_ROOT/enable_suite.sh" --scope wat
-assert_exit_nonzero "bad shell rejected"              bash "$PROJECT_ROOT/enable_suite.sh" --install-hook --shell fish
-assert_exit_nonzero "missing --host on remote scope"  bash "$PROJECT_ROOT/enable_suite.sh" --scope remote
-assert_exit_nonzero "nonexistent --project path"      bash "$PROJECT_ROOT/enable_suite.sh" --scope project --project /no/such/place
+assert_exit_nonzero "unknown flag rejected"           bash "$PROJECT_ROOT/ai-suite" enable --no-such-flag
+assert_exit_nonzero "bad scope rejected"              bash "$PROJECT_ROOT/ai-suite" enable --scope wat
+assert_exit_nonzero "bad shell rejected"              bash "$PROJECT_ROOT/ai-suite" enable --install-hook --shell fish
+assert_exit_nonzero "missing --host on remote scope"  bash "$PROJECT_ROOT/ai-suite" enable --scope remote
+assert_exit_nonzero "nonexistent --project path"      bash "$PROJECT_ROOT/ai-suite" enable --scope project --project /no/such/place
 
 # ============================================================================
 # Cleanup + summary
