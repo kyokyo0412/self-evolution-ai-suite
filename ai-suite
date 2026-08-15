@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat <<'HELP'
+AI Suite CLI - Universal Self-Evolving Agent Framework
+
+USAGE:
+  ai-suite <command> [options]
+
+COMMANDS:
+  enable      Enable the AI suite for a specific agent
+  disable     Disable the AI suite
+  evolve      Collect or push evolutions
+  workflow    Run workflow commands (absorb, integrate, etc.)
+  manage      Manage domain skills
+  publish     Publish the AI suite package
+HELP
+}
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 0
+fi
+
+CMD="$1"
+shift
+
+case "$CMD" in
+  enable)
+    exec "$SCRIPT_DIR/.ai-suite/cli/enable.sh" "$@"
+    ;;
+  disable)
+    exec "$SCRIPT_DIR/.ai-suite/cli/disable.sh" "$@"
+    ;;
+  evolve)
+    exec "$SCRIPT_DIR/.ai-suite/cli/evolve.sh" "$@"
+    ;;
+  workflow)
+    exec "$SCRIPT_DIR/.ai-suite/cli/workflow.sh" "$@"
+    ;;
+  manage)
+    exec "$SCRIPT_DIR/.ai-suite/cli/manage.sh" "$@"
+    ;;
+  publish)
+    exec "$SCRIPT_DIR/.ai-suite/cli/publish.sh" "$@"
+    ;;
+  *)
+    echo "Unknown command: $CMD"
+    usage
+    exit 1
+    ;;
+esac

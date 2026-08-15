@@ -23,9 +23,9 @@ At the **very beginning of any task** (before any other action), you MUST use th
 ### Step 1: NORMAL TASK EXECUTION
 
 Once the user answers Step 0:
-1. **Execute the main task normally.** Follow all user instructions, core directives, and skills EXACTLY as requested by the user prompt.
-2. Treat the main task completely independently from this interactive workflow. **DO NOT** let this interactive workflow distract you from doing a thorough, complete job.
-3. You MUST wait until the main task is 100% complete before moving to Step 2.
+1. **Execute the main task normally.** Follow all user instructions, core directives, and skills EXACTLY as requested by the user prompt. Output the step info for processing the main task as you go.
+2. Treat the main task completely independently from this interactive workflow. **DO NOT** let this interactive workflow distract you from doing a thorough, complete job. You must not stop action before the task is fully done. Be thorough and autonomous, do not act stupid or lazy.
+3. You MUST wait until the main task is 100% complete and the main task has output its execution summary before moving to Step 2. **NEVER call `echo 'Interactive workflow summary rendered'` before the main task is finished and the main task summary is output.**
 
 ### Step 2: WRAP-UP & SUMMARY ISOLATION
 
@@ -33,8 +33,8 @@ When the main task is fully completed:
 1. **If the user selected "No" in Step 0**, gracefully end your turn and STOP here. Do NOT advance to Step 3.
 2. **If the user selected "Yes" in Step 0**, you must output your detailed task execution summary to the chat window.
 3. **CRITICAL HARD BLOCK FOR FINAL OUTPUT**: To ensure the user sees the summary before the final question, you MUST do the following in ONE response:
-   - Output the full execution summary text.
-   - Call the `Shell` tool with: `echo 'Interactive workflow summary rendered'`
+   - **CRITICAL**: You MUST write the full execution summary text (and the final To-Do list status, if applicable) explicitly in your conversational response text so it is visible in the chat window. Do NOT just silently call a tool.
+   - After the main task is 100% finished and the summary text is output, call the `Shell` tool with: `echo 'Interactive workflow summary rendered'`
    - **DO NOT call `AskQuestion` in this response.**
 4. Wait for the `Shell` tool to return.
 
@@ -54,6 +54,7 @@ Once Step 2's `echo` shell tool has returned:
 - **EXCEPTION for Reflection Protocol:** If the custom text input is a trigger for the Reflection Protocol (e.g., "run reflection", "improve the suite"), immediately break this loop and run the strict one-turn Reflection Protocol.
 
 ## Negative Constraints (Must NOT)
+- ❌ **PREMATURE SUMMARY FORBIDDEN**: You MUST NOT call `echo 'Interactive workflow summary rendered'` before the main task is 100% finished and the main task summary has been output to the chat window.
 - ❌ Do NOT make other agents (like Claude Code, Roo Code, etc.) use this interactive workflow. This is strictly for the Cursor Agent.
 - ❌ Do NOT call `AskQuestion` at the end of the task without first doing the `echo 'Interactive workflow summary rendered'` step to force the summary output.
 - ❌ Do NOT treat a custom text follow-up as a simple chat question. You MUST execute it as a full, new task using your tools and rules.

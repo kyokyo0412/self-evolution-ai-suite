@@ -36,10 +36,7 @@ Perform these phases sequentially. You must write the document exhausted, do not
 3. Extract **design key points** and identify any **subtle or tricky logic** that a developer must know when modifying this feature.
 4. Gather **extra information which benefits the user**.
 
-### Phase 4: Performance & Efficiency
-1. **Efficiency & Performance**: Maximize parallel tool calls whenever independent tasks can be run concurrently (e.g., executing parallel searches, reading multiple files) to improve AI agent execution efficiency.
-
-### Phase 5: Document Generation
+### Phase 4: Document Generation
 Write the final output doc to `aigen_doc/<feature-name>.md`. Ensure the directory exists.
 
 ## Constraints and Rules

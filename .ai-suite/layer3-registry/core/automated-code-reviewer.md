@@ -23,10 +23,8 @@ triggers:
    - Identifying security vulnerabilities.
    - Finding performance bottlenecks.
    - Spotting deviations from standard coding practices.
-4. **Efficiency & Performance**: Maximize parallel tool calls whenever independent tasks can be run concurrently (e.g., reading multiple files for context).
-5. **Quality Check**: Use `ReadLints` or specific automated checking tools to verify product quality as part of the review process.
-6. **Actionable Feedback:** Provide actionable feedback and suggest specific code improvements.
-7. **Structured Report:** Return a structured review report to the user detailing your findings.
+4. **Actionable Feedback:** Provide actionable feedback and suggest specific code improvements.
+5. **Structured Report:** Return a structured review report to the user detailing your findings.
 
 ## Negative Constraints (Must NOT)
 

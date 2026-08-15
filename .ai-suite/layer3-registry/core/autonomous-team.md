@@ -27,12 +27,9 @@ Use `tdd-team` instead when correctness is paramount and stage isolation matters
 
 1. **Live workspace only.** Use `Read` / `StrReplace` / `Write` / `Shell`, not chat code dumps.
 2. **Real tests.** Placeholder / `assert True` tests are forbidden.
-3. **Continuous Master To-Do list (Dynamic To-Do List).** Use `TodoWrite` if available (Cursor); otherwise maintain a markdown `[ ]` / `[x]` list updated at the end of every response. If you find any issues during execution that require a change in plan, dynamically update the To-Do list, and then continue running the new To-Do list.
-4. **Circuit breaker.** If the same step fails 3× in a row, pause and ask the user.
-5. **Closure criteria.** Every `[x]`, every test passes, terminal-verified.
-6. **Production safety.** Never run destructive commands on remote/production hosts without explicit user confirmation.
-7. **Efficiency & Performance**: Maximize parallel tool calls whenever independent tasks can be run concurrently (e.g., executing parallel linters, reading multiple files) to improve AI agent execution efficiency.
-8. **Quality Check**: Use `ReadLints` or specific automated checking tools after code modifications to maintain a high standard of product developing quality.
+3. **Circuit breaker.** If the same step fails 3× in a row, pause and ask the user.
+4. **Closure criteria.** Every `[x]`, every test passes, terminal-verified.
+5. **Production safety.** Never run destructive commands on remote/production hosts without explicit user confirmation.
 
 ## Execution Protocol
 

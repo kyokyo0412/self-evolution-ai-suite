@@ -30,7 +30,6 @@ Reader outcomes (the docs must enable each):
 4. **Actionable.** Every document names extension points + anti-patterns.
 5. **Markdown only.** Use headings, tables, Mermaid for dependency / data-flow / sequence / component / state / ER diagrams.
 6. **One-shot.** Do not stop or wait for "continue". If you must cut, cut prose, not technical content.
-7. **Efficiency & Performance**: Maximize parallel tool calls whenever independent tasks can be run concurrently (e.g., reading multiple files, parallel greps) to improve AI agent execution efficiency.
 
 ## Output Tree (mandatory)
 

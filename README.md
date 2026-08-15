@@ -20,7 +20,7 @@ AI Suite is a structured set of skills, templates, and meta-protocols that makes
 |       \-- ...
 |-- layer2-cognitive/     <- The Brain (Memory & Compilation)
 |   |-- memory/           <- Hierarchical Memory System (memory.sh)
-|   |-- meta-compiler/    <- Meta-Cognitive prompts (ai-expert, prompt-enhancer)
+|   |-- meta-compiler/    <- Meta-Cognitive prompts (prompt-compiler)
 |   \-- templates/        <- Universal prompt templates
 |-- layer3-registry/      <- The Muscle (Capabilities)
 |   |-- core/             <- Universal skills (TDD, docs, review)
@@ -245,13 +245,11 @@ Package the ai-suite for distribution, excluding vendor-specific domain knowledg
 | `autonomous-team` | "act as a team", "end-to-end delivery" |
 | `codebase-deepdoc` | "deep doc", "full architectural documentation" |
 | `ai-review-fix` | provide a code-review URL + "fix comments" |
-| `ai-review-fix-manual` | same, but "I will commit myself" |
 | `evolve-collect` | "collect evolution from", "sync reflection" |
 | `remote-suite` | "install ai-suite on", "check ai-suite status on", "remove ai-suite from", "deploy ai-suite to" |
 | `absorb-capability` | "absorb capability", "absorb agent", "ingest external agent" |
 | `integrate-capability` | "integrate ai suite", "push capability", "merge to external agent" |
-| `prompt-enhancer` | "enhance prompt", "improve prompt", "refine prompt", "compile prompt" |
-| `ai-expert` | "AI Expert", "Prompt Architect", "optimize prompt", "review enhancement" |
+| `prompt-compiler` | "compile prompt", "meta-cognitive", "AI Expert", "optimize prompt", "Prompt Architect" |
 
 ### Cursor-Specific Skills
 

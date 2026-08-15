@@ -44,6 +44,15 @@ These are general rules the AI agent MUST adhere to across all tasks and interac
 - **Unused Files**: The agent MUST actively identify and clean up any unused files, deprecated code files, or redundant assets that are no longer needed after the task is done.
 - **No Pollution**: Do not leave the user's workspace polluted with artifacts that were only needed for intermediate steps.
 
+## 9. Efficiency & Performance
+- **Parallel Execution**: Maximize parallel tool calls whenever independent tasks can be run concurrently (e.g., executing parallel linters, reading multiple files) to improve AI agent execution efficiency.
+
+## 10. Quality Check
+- **Linting & Quality**: Use `ReadLints` or specific automated checking tools after code modifications to maintain a high standard of product developing quality.
+
+## 11. Continuous Task Tracking
+- **Dynamic To-Do List**: When executing complex or multi-step tasks, you MUST continuously track your progress. Use the `TodoWrite` tool (if available) or explicit markdown to track task items. Initialize a Master To-Do list and update it dynamically as you work. When an item is completed, explicitly output and show the current status of the To-Do list in the chat window.
+
 ## Negative Constraints (Must NOT)
 - ❌ **Do not run `git commit`**: The AI agent MUST NEVER run `git commit` autonomously. Always leave the execution of `git commit` to the user.
 - ❌ **Do not leave temporary files**: The AI agent MUST NEVER leave unused temporary files after the task is done. Always clean up temporary files before finishing.

@@ -1,11 +1,13 @@
 ---
 name: ai-review-fix
-description: Analyze and resolve code review comments from a URL, updating the local codebase, fixing tests, and verifying changes autonomously. Use when the user provides a code-review URL (Gerrit / GitHub PR / etc.) and asks to fix / resolve / address all review comments. Stops before commit by default; the manual variant `ai-review-fix-manual` forbids all version-control mutations.
+description: Analyze and resolve code review comments from a URL, updating the local codebase, fixing tests, and verifying changes autonomously. Use when the user provides a code-review URL (Gerrit / GitHub PR / etc.) and asks to fix / resolve / address all review comments. In accordance with global directives, it strictly stops before any version-control mutations (no autonomous git commit/push).
 triggers:
   - fix review comments
   - resolve review comments
   - address review feedback
   - apply review fixes
+  - fix review comments manually
+  - I will commit myself
 ---
 
 # Autonomous Code Review Fixer
@@ -33,23 +35,23 @@ triggers:
    - **Exception:** If a review comment targets test code itself, do not write meta-tests-for-tests.
 6. **Verify & iterate.** Autonomously run the relevant test suite for impacted components.
    - On failure → analyze logs, patch, re-run. Loop until green. Do not ask permission to run tests.
-7. **Summarize.** List files changed, comments addressed, and confirmation that the test suite is green.
+7. **Finalization — STOP BEFORE COMMIT.** Save every modified file. **Do NOT stage, commit, or push.**
+8. **Summarize.** List files changed, comments addressed, and confirmation that the test suite is green. Provide the copy-paste git commands for the user to commit manually.
 
 ## Constraints
 
+- **No version-control operations.** `git add`, `git commit`, `git push`, `git reset`, branch creation — all forbidden.
 - **Code integrity.** Do NOT alter logic unrelated to the review comments.
 - **Self-evaluation.** After each fix: *"Does this exactly satisfy the reviewer without introducing new bugs across the wider project?"* The test suite is the source of truth.
 - **No fabricated reviewers.** Quote only comments that actually exist on the URL.
 - **No silent test deletion.** Do not delete a failing test to "make it pass" — fix the underlying code.
-- **Efficiency & Performance**: Maximize parallel tool calls whenever independent tasks can be run concurrently (e.g., executing parallel linters, reading multiple files) to improve AI agent execution efficiency.
-- **Quality Check**: Use `ReadLints` or specific automated checking tools after code modifications to maintain a high standard of product developing quality.
-
-## Default Stop Point
-
-Unless the user explicitly asks you to commit / push, stop at "all tests green + summary printed". The user runs `git commit` and `git push` themselves.
 
 ## Negative Constraints (Must NOT)
 
-- ❌ Do not push to `main` / `master` / `release/*` even if explicitly asked, without verbal re-confirmation.
-- ❌ Do not run `git push --force` unless explicitly authorized for the session.
+- ❌ Do not run `git add` / `git commit` / `git push` under any pretext.
+- ❌ Do not create new branches or stashes that hide diffs.
 - ❌ Do not echo credentials to chat or logs.
+
+## Closing Message (mandatory exact wording)
+
+> Changes saved to disk. Tests green. Please review the diff and commit manually.
