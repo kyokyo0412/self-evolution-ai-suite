@@ -222,7 +222,7 @@ Collect remote ai-suite evolutions into the local git repo, and push the updated
 ### Domain Management (`ai-suite manage`)
 Fetch domain skills from a remote git repository using sparse-checkout.
 ```bash
-./ai-suite manage domain install https://github.com/org/ai-skills.git --domain vmware
+./ai-suite manage domain install https://github.com/org/ai-skills.git --domain linux
 ```
 
 ### Package Distribution (`ai-suite publish`)
@@ -249,6 +249,7 @@ Package the ai-suite for distribution, excluding vendor-specific domain knowledg
 | `remote-suite` | "install ai-suite on", "check ai-suite status on", "remove ai-suite from", "deploy ai-suite to" |
 | `absorb-capability` | "absorb capability", "absorb agent", "ingest external agent" |
 | `integrate-capability` | "integrate ai suite", "push capability", "merge to external agent" |
+| `deep-code-audit` | "deep code audit", "code quality audit", "architecture audit" |
 | `prompt-compiler` | "compile prompt", "meta-cognitive", "AI Expert", "optimize prompt", "Prompt Architect" |
 
 ### Cursor-Specific Skills

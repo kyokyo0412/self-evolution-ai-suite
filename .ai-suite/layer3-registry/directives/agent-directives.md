@@ -40,7 +40,8 @@ These are general rules the AI agent MUST adhere to across all tasks and interac
 - **Feedback Loop**: Ensure lessons learned in execution are captured for Self-Evolution.
 
 ## 8. Workspace Cleanup
-- **Temporary Files**: The agent MUST actively clean up all temporary files (e.g., `.bak`, `.tmp`, temporary `patch.sh` execution scripts) generated during its operations before considering a task complete.
+- **Strict Cleanup Verification**: Before calling a task complete, you MUST execute a terminal command (e.g., `find . -name "*.bak" -o -name "*.tmp" -o -name "patch.sh*" -o -name ".cursor_build.*"`) to verify no temporary files remain in the working directory.
+- **Temporary Files**: The agent MUST actively delete all temporary files (e.g., `.bak`, `.tmp`, temporary `patch.sh` execution scripts, `.cursor_build.log`, `.cursor_build.pid`) generated during its operations.
 - **Unused Files**: The agent MUST actively identify and clean up any unused files, deprecated code files, or redundant assets that are no longer needed after the task is done.
 - **No Pollution**: Do not leave the user's workspace polluted with artifacts that were only needed for intermediate steps.
 
@@ -55,4 +56,4 @@ These are general rules the AI agent MUST adhere to across all tasks and interac
 
 ## Negative Constraints (Must NOT)
 - ❌ **Do not run `git commit`**: The AI agent MUST NEVER run `git commit` autonomously. Always leave the execution of `git commit` to the user.
-- ❌ **Do not leave temporary files**: The AI agent MUST NEVER leave unused temporary files after the task is done. Always clean up temporary files before finishing.
+- ❌ **Do not leave temporary files**: The AI agent MUST NEVER leave unused temporary files after the task is done. Always actively verify and clean up `.bak`, `.tmp`, and `.pid`/`.log` execution files before finishing.

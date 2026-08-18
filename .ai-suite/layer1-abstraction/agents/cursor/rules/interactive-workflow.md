@@ -4,6 +4,8 @@ This rule enforces a collaborative wrapper around your normal execution. It ensu
 
 **CRITICAL RULE:** This interactive workflow is ONLY a wrapper. It must NEVER alter, simplify, or skip your normal task execution, rules, or skills. You must handle the main task EXACTLY as you would if this rule did not exist.
 
+**CONSTRAINT:** This interactive workflow is strictly and ONLY for the Cursor Agent. It will NOT be installed to or used by any other agents.
+
 ## The 4-Step Interactive Wrapper
 
 To prevent the interactive workflow from causing abnormal main task execution or skipping questions, you MUST strictly follow this 4-Step machine for EVERY task.
@@ -13,19 +15,20 @@ To prevent the interactive workflow from causing abnormal main task execution or
 **🛑 HARD BLOCK: You MUST NOT execute any state-changing tools (e.g., Shell, Write, StrReplace) or begin the main task execution until you have FIRST called the `AskQuestion` tool to ask if the user wants an interactive workflow and received their answer.**
 
 At the **very beginning of any task** (before any other action), you MUST use the `AskQuestion` tool:
-- **prompt**: "Do you need an interactive workflow for this task? (This allows you to provide follow-up prompts after the task is done without consuming extra Cursor included requests.)"
+- **prompt**: "Do you need an interactive workflow for this task? (This allows you to provide follow-up prompts after the task is done without consuming extra Cursor included requests. If no response is received in 3 minutes, it will default to No.)"
 - **options**:
   1. `{"id": "yes", "label": "Yes, start an interactive workflow."}`
   2. `{"id": "no", "label": "No, just run the task and stop."}`
 
-*Wait for the user's answer before proceeding to Step 1.*
+*Wait for the user's answer before proceeding to Step 1. If the system or user environment causes a timeout after 3 minutes of waiting for input, you MUST assume the user selected "No" and proceed immediately to execute the main task without the interactive workflow wrapper.*
 
-### Step 1: NORMAL TASK EXECUTION
+### Step 1: NORMAL TASK EXECUTION (Daemon Mode)
 
-Once the user answers Step 0:
-1. **Execute the main task normally.** Follow all user instructions, core directives, and skills EXACTLY as requested by the user prompt. Output the step info for processing the main task as you go.
-2. Treat the main task completely independently from this interactive workflow. **DO NOT** let this interactive workflow distract you from doing a thorough, complete job. You must not stop action before the task is fully done. Be thorough and autonomous, do not act stupid or lazy.
-3. You MUST wait until the main task is 100% complete and the main task has output its execution summary before moving to Step 2. **NEVER call `echo 'Interactive workflow summary rendered'` before the main task is finished and the main task summary is output.**
+Once the user answers Step 0, the Interactive Wrapper enters "Daemon Mode" (runs silently in the background).
+1. **Execute the main task normally.** Follow all user instructions, core directives, and skills EXACTLY as requested by the user prompt. 
+2. **Absolute Isolation:** Treat the main task completely independently from this interactive workflow. **DO NOT** let this interactive workflow distract you from doing a thorough, complete job. You must pretend the wrapper does not exist during this step. Do not act stupid, lazy, or skip any steps specified by other skills.
+3. You MUST wait until the main task is 100% complete. If you are using a To-Do list, every single item MUST be marked as COMPLETED before you can even think about moving to Step 2.
+4. **NEVER call `echo 'Interactive workflow summary rendered'` before the main task is completely finished, verified, and the execution summary is fully output.**
 
 ### Step 2: WRAP-UP & SUMMARY ISOLATION
 
@@ -55,8 +58,9 @@ Once Step 2's `echo` shell tool has returned:
 
 ## Negative Constraints (Must NOT)
 - ❌ **PREMATURE SUMMARY FORBIDDEN**: You MUST NOT call `echo 'Interactive workflow summary rendered'` before the main task is 100% finished and the main task summary has been output to the chat window.
+- ❌ **PREMATURE WRAP-UP FORBIDDEN**: You MUST NOT ask the follow-up question or stop working if there are still pending tasks in your To-Do list or if the user's core request is not fully met.
 - ❌ Do NOT make other agents (like Claude Code, Roo Code, etc.) use this interactive workflow. This is strictly for the Cursor Agent.
 - ❌ Do NOT call `AskQuestion` at the end of the task without first doing the `echo 'Interactive workflow summary rendered'` step to force the summary output.
-- ❌ Do NOT treat a custom text follow-up as a simple chat question. You MUST execute it as a full, new task using your tools and rules.
+- ❌ Do NOT treat a custom text follow-up as a simple chat question. You MUST execute it as a full, new task using your tools and rules. You must re-initialize your mental state to Step 1 and execute fully.
 - ❌ Do NOT skip the primary task's steps or summary. You MUST fully complete the primary task.
 - ❌ Must NOT cost any extra Cursor included request in the interactive workflow.
