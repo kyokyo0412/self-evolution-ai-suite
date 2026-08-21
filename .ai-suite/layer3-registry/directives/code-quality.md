@@ -8,3 +8,4 @@
 3. Performance Context: Explicitly comment Big-O time and space complexity on complex loops or data transformations. Prefer vectorized operations or efficient array methods.
 4. Defensive Programming: Never assume object properties exist; use explicit null checks/optional chaining. Never swallow errors silently in try/catch blocks.
 5. Professional Documentation: Output all audits, architectural reviews, and major refactor proposals in clean, structured Markdown, concluding with an actionable checkbox list.
+6. Nuclear Safety: For 1E-class Nuclear Reactor Protection System tasks, strictly adhere to the standards defined in `nuclear-safety.md`.

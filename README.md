@@ -47,6 +47,7 @@ AI Suite is a structured set of skills, templates, and meta-protocols that makes
 - **Domain Registry**: Share and install specialized AI skills across teams instantly using a lightweight Git-backed registry.
 - **Smart 3-Way Merge**: Intelligently merge remote evolutions back to your local repository without silently overwriting data.
 - **Production Safety & General Directives**: Built-in guardrails to prevent destructive actions on production environments, and universal directives that enforce strict negative constraints against autonomous `git commit` execution and temporary file pollution, concise task summaries (which follow normal skill reports), support for executing multiple skills together without skipping steps, and mandatory verification of all tasks.
+- **1E-Class Nuclear Safety Standards**: Built-in code quality and testing standards specifically designed for 1E-class safety systems (e.g., Nuclear Reactor Protection Systems), enforcing deterministic execution, formal verification, MC/DC coverage, and strict traceability.
 - **Efficiency & Quality**: Core skills enforce parallel tool execution for faster performance and mandatory linter/quality checks to ensure high product development quality.
 
 ---

@@ -30,13 +30,14 @@ triggers:
 1. **Authenticate (local only).** Read credentials from the local file if the URL requires auth. Do not write anything to disk on the local host.
 2. **Analyze feedback.** Fetch the review URL. Enumerate every unresolved comment; map each to the file / line / behavior it targets.
 3. **Global context.** Before editing, read enough of the **current workspace** to understand architecture, shared utilities, conventions. Do not rely on prior context alone.
-4. **Holistic implementation.** Calculate the explicit Blast Radius (e.g., use semantic search to find all callers of modified functions). Apply changes in the current workspace. Fixes must consider project-wide impact (shared modules, global state, public interfaces) based on the calculated radius.
-5. **Update unit tests.** Modify or add UTs covering the new behavior / edge cases mentioned in the review.
-   - **Exception:** If a review comment targets test code itself, do not write meta-tests-for-tests.
-6. **Verify & iterate.** Autonomously run the relevant test suite for impacted components.
-   - On failure → analyze logs, patch, re-run. Loop until green. Do not ask permission to run tests.
-7. **Finalization — STOP BEFORE COMMIT.** Save every modified file. **Do NOT stage, commit, or push.**
-8. **Summarize.** List files changed, comments addressed, and confirmation that the test suite is green. Provide the copy-paste git commands for the user to commit manually.
+4. **Fix via tdd-team.** For **each** comment, you MUST invoke the `tdd-team` skill to fix the issue. Delegate the holistic implementation, test updates, and verification to the strict `tdd-team` Red-Green-Refactor cycle. Ensure each fix considers the project-wide impact (shared modules, global state, public interfaces).
+5. **Record the Fix.** After a comment is fixed, generate a record and append it to `aigen_doc/ai-review-fix-report.md`. Each record MUST contain:
+   - The source code location
+   - The original comment in the gitreview
+   - How it was fixed
+   - The comment generated to let user copy to reply to the gitreview thread.
+6. **Finalization — STOP BEFORE COMMIT.** Save every modified file and the markdown report. **Do NOT stage, commit, or push.**
+7. **Summarize.** List files changed, comments addressed, and confirmation that all test suites are green. Provide the copy-paste git commands for the user to commit manually.
 
 ## Constraints
 
@@ -48,6 +49,7 @@ triggers:
 
 ## Negative Constraints (Must NOT)
 
+- ❌ **Do not update the gitreview comments.** You are strictly forbidden from using any API or tool to reply to, resolve, or update comments on the code review system. Let the user copy-paste your generated reply from the report.
 - ❌ Do not run `git add` / `git commit` / `git push` under any pretext.
 - ❌ Do not create new branches or stashes that hide diffs.
 - ❌ Do not echo credentials to chat or logs.
