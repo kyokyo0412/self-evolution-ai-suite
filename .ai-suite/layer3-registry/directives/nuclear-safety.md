@@ -1,9 +1,9 @@
-# 1E-Class Nuclear Safety Standards
+# 1E-Class Security Standards
 
 > **This file is the source of truth.** `ai-suite enable` deploys this content as
 > `.cursor/rules/cursor-suite-nuclear-safety.mdc` with `alwaysApply: true`.
 
-These standards MUST be strictly adhered to when developing, reviewing, or testing software for the 1E-class Nuclear Reactor Protection System.
+These standards MUST be strictly adhered to when developing, reviewing, or testing ALL software produced by the AI suite. While originating from the 1E-class Nuclear Reactor Protection System, these absolute security and quality measures are mandated universally for all generated code.
 
 ## 1. Code Quality & Implementation Standards
 

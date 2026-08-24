@@ -25,68 +25,59 @@ _directives_rule_name="cursor-suite-agent-directives.mdc"
 _step_action_visibility_rule_name="cursor-suite-step-action-visibility.mdc"
 _interactive_workflow_rule_name="cursor-suite-interactive-workflow.mdc"
 
-_deploy_safety_rule() {
+_deploy_registry_rules() {
   local rules_dir="$1" suite_dir="$2"
-  local safety_src="$suite_dir/layer3-registry/safety/production-safety.md"
-  local safety_dst="$rules_dir/$_safety_rule_name"
   mkdir -p "$rules_dir"
-  {
-    printf -- '---\ndescription: Production Safety Guardrails\nglobs: "*"\nalwaysApply: true\n---\n\n'
-    cat "$safety_src"
-  } > "$safety_dst"
+  
+  # Deploy directives
+  for src in "$suite_dir/layer3-registry/directives/"*.md; do
+    [[ -f "$src" ]] || continue
+    local filename
+    filename=$(basename "$src" .md)
+    local dst="$rules_dir/cursor-suite-${filename}.mdc"
+    local desc
+    desc=$(grep '^# ' "$src" | head -1 | sed 's/^# *//')
+    [[ -z "$desc" ]] && desc="AI Suite Directive: $filename"
+    {
+      printf -- '---\ndescription: %s\nglobs: "*"\nalwaysApply: true\n---\n\n' "$desc"
+      cat "$src"
+    } > "$dst"
+  done
+
+  # Deploy safety
+  for src in "$suite_dir/layer3-registry/safety/"*.md; do
+    [[ -f "$src" ]] || continue
+    local filename
+    filename=$(basename "$src" .md)
+    local dst="$rules_dir/cursor-suite-${filename}.mdc"
+    local desc
+    desc=$(grep '^# ' "$src" | head -1 | sed 's/^# *//')
+    [[ -z "$desc" ]] && desc="AI Suite Safety: $filename"
+    {
+      printf -- '---\ndescription: %s\nglobs: "*"\nalwaysApply: true\n---\n\n' "$desc"
+      cat "$src"
+    } > "$dst"
+  done
+  
+  # Deploy cursor specific rules
+  for src in "$suite_dir/layer1-abstraction/agents/cursor/rules/"*.md; do
+    [[ -f "$src" ]] || continue
+    local filename
+    filename=$(basename "$src" .md)
+    local dst="$rules_dir/cursor-suite-${filename}.mdc"
+    local desc
+    desc=$(grep '^# ' "$src" | head -1 | sed 's/^# *//')
+    [[ -z "$desc" ]] && desc="AI Suite Cursor Rule: $filename"
+    {
+      printf -- '---\ndescription: %s\nglobs: "*"\nalwaysApply: true\n---\n\n' "$desc"
+      cat "$src"
+    } > "$dst"
+  done
 }
 
-_deploy_directives_rule() {
-  local rules_dir="$1" suite_dir="$2"
-  local directives_src="$suite_dir/layer3-registry/directives/agent-directives.md"
-  local directives_dst="$rules_dir/$_directives_rule_name"
-  mkdir -p "$rules_dir"
-  {
-    printf -- '---\ndescription: Agent General Directives\nglobs: "*"\nalwaysApply: true\n---\n\n'
-    cat "$directives_src"
-  } > "$directives_dst"
-}
-
-_deploy_step_action_visibility_rule() {
-  local rules_dir="$1" suite_dir="$2"
-  local src="$suite_dir/layer3-registry/directives/step-action-visibility.md"
-  local dst="$rules_dir/$_step_action_visibility_rule_name"
-  mkdir -p "$rules_dir"
-  {
-    printf -- '---\ndescription: Forces the AI to output its step-by-step reasoning in the chat before executing or coding.\nglobs: "*"\nalwaysApply: true\n---\n\n'
-    cat "$src"
-  } > "$dst"
-}
-
-_deploy_interactive_workflow_rule() {
-  local rules_dir="$1" suite_dir="$2"
-  local src="$suite_dir/layer1-abstraction/agents/cursor/rules/interactive-workflow.md"
-  local dst="$rules_dir/$_interactive_workflow_rule_name"
-  mkdir -p "$rules_dir"
-  {
-    printf -- '---\ndescription: Enforce an interactive workflow by asking the user for the next step using the AskQuestion tool.\nglobs: "*"\nalwaysApply: true\n---\n\n'
-    cat "$src"
-  } > "$dst"
-}
-
-_remove_safety_rule() {
+_remove_registry_rules() {
   local rules_dir="$1"
-  rm -f "$rules_dir/$_safety_rule_name"
-}
-
-_remove_directives_rule() {
-  local rules_dir="$1"
-  rm -f "$rules_dir/$_directives_rule_name"
-}
-
-_remove_step_action_visibility_rule() {
-  local rules_dir="$1"
-  rm -f "$rules_dir/$_step_action_visibility_rule_name"
-}
-
-_remove_interactive_workflow_rule() {
-  local rules_dir="$1"
-  rm -f "$rules_dir/$_interactive_workflow_rule_name"
+  rm -f "$rules_dir"/cursor-suite-*.mdc
 }
 
 _append_cursorrules_block() {
@@ -197,10 +188,7 @@ agent_install_project() {
   # Remove existing block first (idempotent)
   _remove_cursorrules_block "$cursorrules"
   _append_cursorrules_block "$cursorrules" "$suite_dir" "$project_dir"
-  _deploy_safety_rule "$rules_dir" "$suite_dir"
-  _deploy_directives_rule "$rules_dir" "$suite_dir"
-  _deploy_step_action_visibility_rule "$rules_dir" "$suite_dir"
-  _deploy_interactive_workflow_rule "$rules_dir" "$suite_dir"
+  _deploy_registry_rules "$rules_dir" "$suite_dir"
   
   # Mirror skills and meta to project .cursor
   _mirror_skills "$suite_dir" "$skills_dest" "cursor"
@@ -235,10 +223,7 @@ agent_install_global() {
 
   # Deploy production-safety rule globally
   local global_rules_dir="$HOME/.cursor/rules"
-  _deploy_safety_rule "$global_rules_dir" "$suite_dir"
-  _deploy_directives_rule "$global_rules_dir" "$suite_dir"
-  _deploy_step_action_visibility_rule "$global_rules_dir" "$suite_dir"
-  _deploy_interactive_workflow_rule "$global_rules_dir" "$suite_dir"
+  _deploy_registry_rules "$global_rules_dir" "$suite_dir"
 
   # Auto-initialize memory system
   if [[ -f "$suite_dir/layer2-cognitive/memory/memory.sh" ]]; then
@@ -258,10 +243,7 @@ agent_uninstall_project() {
   local meta_dest="$project_dir/.cursor/meta"
 
   _remove_cursorrules_block "$cursorrules"
-  _remove_safety_rule "$rules_dir"
-  _remove_directives_rule "$rules_dir"
-  _remove_step_action_visibility_rule "$rules_dir"
-  _remove_interactive_workflow_rule "$rules_dir"
+  _remove_registry_rules "$rules_dir"
   
   _remove_skills "$skills_dest"
   _remove_meta "$meta_dest"
@@ -302,9 +284,6 @@ agent_uninstall_global() {
   # Remove the global ~/.cursorrules block
   local global_cr="$HOME/.cursorrules"
   [[ -f "$global_cr" ]] && _remove_cursorrules_block "$global_cr"
-  _remove_safety_rule "$HOME/.cursor/rules"
-  _remove_directives_rule "$HOME/.cursor/rules"
-  _remove_step_action_visibility_rule "$HOME/.cursor/rules"
-  _remove_interactive_workflow_rule "$HOME/.cursor/rules"
+  _remove_registry_rules "$HOME/.cursor/rules"
   printf '[cursor-adapter] global uninstall done\n'
 }

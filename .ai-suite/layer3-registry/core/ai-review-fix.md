@@ -29,15 +29,18 @@ triggers:
 
 1. **Authenticate (local only).** Read credentials from the local file if the URL requires auth. Do not write anything to disk on the local host.
 2. **Analyze feedback.** Fetch the review URL. Enumerate every unresolved comment; map each to the file / line / behavior it targets.
-3. **Global context.** Before editing, read enough of the **current workspace** to understand architecture, shared utilities, conventions. Do not rely on prior context alone.
-4. **Fix via tdd-team.** For **each** comment, you MUST invoke the `tdd-team` skill to fix the issue. Delegate the holistic implementation, test updates, and verification to the strict `tdd-team` Red-Green-Refactor cycle. Ensure each fix considers the project-wide impact (shared modules, global state, public interfaces).
-5. **Record the Fix.** After a comment is fixed, generate a record and append it to `aigen_doc/ai-review-fix-report.md`. Each record MUST contain:
+3. **Global context & Deep Code Review.** Before editing, read enough of the **current workspace** to understand architecture, shared utilities, conventions. You MUST review all related code and deeply understand how it works. Do not rely on prior context alone.
+4. **Comment Validation.** Check the comment carefully against the codebase:
+   - If it is a **false issue** (e.g., the code already handles the concern, or the suggestion is incorrect), skip the code fix. You MUST write the detailed reason/analysis in the reply comment in the records file.
+   - If it is a **true issue**, proceed to the next step to continue the fix.
+5. **Fix via tdd-team.** For **each** true issue, you MUST invoke the `tdd-team` skill to fix the issue. Delegate the holistic implementation, test updates, and verification to the strict `tdd-team` Red-Green-Refactor cycle. Ensure each fix considers the project-wide impact (shared modules, global state, public interfaces).
+6. **Record the Fix/Analysis.** After a comment is processed (either fixed or rejected as a false issue), generate a record and append it to `aigen_doc/ai-review-fix-report.md`. Each record MUST contain:
    - The source code location
    - The original comment in the gitreview
-   - How it was fixed
-   - The comment generated to let user copy to reply to the gitreview thread.
-6. **Finalization — STOP BEFORE COMMIT.** Save every modified file and the markdown report. **Do NOT stage, commit, or push.**
-7. **Summarize.** List files changed, comments addressed, and confirmation that all test suites are green. Provide the copy-paste git commands for the user to commit manually.
+   - How it was fixed (or why it was rejected as a false issue)
+   - The comment generated to let user copy to reply to the gitreview thread (including detailed reason/analysis if it's a false issue).
+7. **Finalization — STOP BEFORE COMMIT.** Save every modified file and the markdown report. **Do NOT stage, commit, or push.**
+8. **Summarize.** List files changed, comments addressed, and confirmation that all test suites are green. Provide the copy-paste git commands for the user to commit manually.
 
 ## Constraints
 

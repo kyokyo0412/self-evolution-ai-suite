@@ -362,12 +362,16 @@ If you learn new facts or complete a task, update the memory using the bash func
 Refer to $skills_dir/<skill-name>/SKILL.md for full instructions.
 FOOTER
 
-    cat "$suite_dir/layer3-registry/directives/agent-directives.md" 2>/dev/null || true
-    echo ""
-    cat "$suite_dir/layer3-registry/directives/step-action-visibility.md" 2>/dev/null || true
-    echo ""
-    cat "$suite_dir/layer3-registry/safety/production-safety.md" 2>/dev/null || true
-    echo ""
+    for src in "$suite_dir/layer3-registry/directives/"*.md; do
+      [[ -f "$src" ]] || continue
+      cat "$src"
+      echo ""
+    done
+    for src in "$suite_dir/layer3-registry/safety/"*.md; do
+      [[ -f "$src" ]] || continue
+      cat "$src"
+      echo ""
+    done
 
     if [[ -n "$end_marker" ]]; then
       printf '%s\n' "$end_marker"
