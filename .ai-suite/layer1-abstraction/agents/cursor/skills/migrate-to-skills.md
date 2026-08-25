@@ -35,7 +35,7 @@ Notes:
 
 ## Conversion Format
 
-### Rules: .mdc → SKILL.md
+### Rules: .mdc -> SKILL.md
 
 ```markdown
 # Before: .cursor/rules/my-rule.mdc
@@ -60,7 +60,7 @@ Body content...
 
 Changes: Add `name` field, remove `globs`/`alwaysApply`, keep body exactly.
 
-### Commands: .md → SKILL.md
+### Commands: .md -> SKILL.md
 
 ```markdown
 # Before: .cursor/commands/commit.md
@@ -89,7 +89,7 @@ Changes: Add frontmatter with `name` (from filename), `description` (infer from 
 - `description` is critical for skill discovery
 - Optionally delete originals after verifying migration works
 
-### Migrate a Rule (.mdc → SKILL.md)
+### Migrate a Rule (.mdc -> SKILL.md)
 
 1. Read the rule file
 2. Extract the `description` from the frontmatter
@@ -98,7 +98,7 @@ Changes: Add frontmatter with `name` (from filename), `description` (infer from 
 5. Write `SKILL.md` with new frontmatter (`name` and `description`) + the EXACT original body content (preserve all whitespace, formatting, code blocks verbatim)
 6. Delete the original rule file
 
-### Migrate a Command (.md → SKILL.md)
+### Migrate a Command (.md -> SKILL.md)
 
 1. Read the command file
 2. Extract description from the first heading (remove `#` prefix)

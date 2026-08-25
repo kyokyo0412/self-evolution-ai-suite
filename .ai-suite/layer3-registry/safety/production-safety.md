@@ -18,19 +18,19 @@ The agent MUST refuse and ask for explicit user confirmation before executing an
 
 ### Shell
 
-- `cat << EOF > file` or `echo "..." > file` for multi-line or UTF-8 file creation — ALWAYS use the native agent file-writing tool (e.g., `Write` or `StrReplace`) to prevent encoding corruption and escaping bugs.
+- `cat << EOF > file` or `echo "..." > file` for multi-line or UTF-8 file creation - ALWAYS use the native agent file-writing tool (e.g., `Write` or `StrReplace`) to prevent encoding corruption and escaping bugs.
 - `rm -rf /` or `rm -rf $VAR` where `$VAR` is unset / unbound.
-- `dd if=... of=/dev/[hs]d*` — any raw block-device write.
-- `mkfs.*` — filesystem creation on a target the agent did not provision in-session.
+- `dd if=... of=/dev/[hs]d*` - any raw block-device write.
+- `mkfs.*` - filesystem creation on a target the agent did not provision in-session.
 - `>` redirect into `/dev/[hs]d*` or `/dev/nvme*`.
 - `chmod -R 777 /` or any `chmod -R` on `/`, `/etc`, `/usr`, `/var`.
 - `iptables -F`, `nft flush ruleset` on a host not confirmed as a testbed.
 - `:(){ :|:& };:` (fork bomb).
-- `curl ... | sudo bash` — pipe-to-shell from untrusted sources.
+- `curl ... | sudo bash` - pipe-to-shell from untrusted sources.
 
 ### Git
 
-- `git commit` — NEVER autonomously commit changes to the repository. Always pause and ask the user to review and commit manually.
+- `git commit` - NEVER autonomously commit changes to the repository. Always pause and ask the user to review and commit manually.
 - `git push` / `git push --force` / `git push -f` / `git push --force-with-lease` to `main`, `master`, `release/*`, `prod/*`.
 - `git reset --hard` on a branch that has been pushed, without confirming with the user.
 - `git branch -D` / `git push origin --delete` of any branch the user did not explicitly name.

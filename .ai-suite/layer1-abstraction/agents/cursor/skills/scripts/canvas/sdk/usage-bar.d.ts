@@ -1,5 +1,5 @@
 /**
- * Segmented usage bar primitive — proportional pills + remainder, with an
+ * Segmented usage bar primitive - proportional pills + remainder, with an
  * optional one-line label row above. Visually matches `packages/ui`
  * `ContextUsageTray`'s usage bar, themed for canvas via the shared `Color`
  * palette and `useHostTheme()` semantic tokens.
@@ -30,7 +30,7 @@ export type UsageBarProps = {
     readonly style?: CSSProperties;
 };
 /**
- * Segmented horizontal usage bar — proportional category pills with a
+ * Segmented horizontal usage bar - proportional category pills with a
  * remainder span. Use to visualize a fixed-budget breakdown (context window
  * tokens, storage usage, etc.).
  *

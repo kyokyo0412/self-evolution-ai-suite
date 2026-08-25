@@ -1,5 +1,5 @@
 /**
- * Chart primitives for `cursor/canvas` — multi-series, stacked, and pie charts
+ * Chart primitives for `cursor/canvas` - multi-series, stacked, and pie charts
  * rendered as pure inline SVG with zero external dependencies.
  *
  * Distilled from the portal-website Highcharts analytics charting layer.
@@ -8,7 +8,7 @@ import type { CSSProperties, JSX } from "react";
 /**
  * Semantic tone for a chart series or slice. Mirrors the tone vocabulary
  * used by `Stat`, `Pill`, `Table`, and other SDK primitives so colors
- * match across a canvas — e.g. a `Stat tone="success"` and a
+ * match across a canvas - e.g. a `Stat tone="success"` and a
  * `ChartSeries tone="success"` render in the same green.
  *
  * Omit `tone` to let the chart auto-assign a distinct color from the
@@ -33,7 +33,7 @@ export type ChartSeries = {
     tone?: ChartTone;
 };
 /**
- * A dashed marker line drawn across the plot at a fixed value — for targets,
+ * A dashed marker line drawn across the plot at a fixed value - for targets,
  * SLOs, budgets, means, or limits. Drawn horizontally on line / vertical-bar
  * charts and vertically on `horizontal` bar charts; either way it marks the
  * value axis and is folded into the auto domain so it stays on-canvas.
@@ -49,14 +49,14 @@ export type ChartReferenceLine = {
 /**
  * Shared value-axis controls (the y-axis, or the x-axis on `horizontal` bar
  * charts). By default the axis starts at zero; override to zoom into a tight
- * range. On stacked / normalized bars these are ignored — those always start
+ * range. On stacked / normalized bars these are ignored - those always start
  * at zero.
  */
 type ValueAxisProps = {
     /**
      * Start the value axis at zero. Defaults to `true`. Set `false` to
-     * auto-fit the axis to the data range — useful for tightly-clustered
-     * series (e.g. uptime 99.0–99.9%) that a zero baseline would flatten.
+     * auto-fit the axis to the data range - useful for tightly-clustered
+     * series (e.g. uptime 99.0-99.9%) that a zero baseline would flatten.
      */
     beginAtZero?: boolean;
     /** Explicit axis minimum. Overrides `beginAtZero`. */
@@ -84,9 +84,9 @@ export type BarChartProps = ValueAxisProps & {
     valuePrefix?: string;
     /**
      * Print each bar's value as a label. Defaults to auto: on for a single
-     * series with ≤8 categories, off otherwise. Set `true` to force labels on
+     * series with <=8 categories, off otherwise. Set `true` to force labels on
      * (e.g. grouped multi-series), or `false` to force them off. No effect on
-     * `stacked` / `normalized` charts — use the hover tooltip there.
+     * `stacked` / `normalized` charts - use the hover tooltip there.
      */
     showValues?: boolean;
     style?: CSSProperties;
@@ -101,7 +101,7 @@ export type LineChartProps = ValueAxisProps & {
     valueSuffix?: string;
     /** Prefix for value labels (e.g. "$"). */
     valuePrefix?: string;
-    /** Print the value next to every data point (≤20 categories). */
+    /** Print the value next to every data point (<=20 categories). */
     showValues?: boolean;
     /** Draw a vertical guide through the cursor while hovering. Defaults to `true`. */
     showHoverGuide?: boolean;
@@ -123,7 +123,7 @@ export type PieChartProps = {
  *
  * Pass `categories` for x-axis labels and one or more `series` whose `data`
  * arrays align by index. With a single series you get simple bars; with
- * multiple series the default is grouped (side-by-side) — set `stacked` for
+ * multiple series the default is grouped (side-by-side) - set `stacked` for
  * stacked columns or `normalized` for 100%-stacked share-mode.
  *
  * Colors are auto-assigned from the chart palette. With a **single series**,
@@ -131,7 +131,7 @@ export type PieChartProps = {
  * shows 5 colors out of the box). With **multiple series**, each series gets
  * its own color. A legend appears when there are 2+ series.
  *
- * For semantic coloring, pass `tone` on a series — it maps to the same
+ * For semantic coloring, pass `tone` on a series - it maps to the same
  * palette entries used by `Stat`, `Pill`, and `Table` so your chart matches
  * tonal elements elsewhere on the page.
  *
@@ -154,7 +154,7 @@ export type PieChartProps = {
  *   stacked
  * />
  *
- * // Semantic tones — "accepted" renders in the same green as
+ * // Semantic tones - "accepted" renders in the same green as
  * // <Stat tone="success"> elsewhere on the page.
  * <BarChart
  *   categories={["Mon", "Tue", "Wed"]}
@@ -184,11 +184,11 @@ export declare function BarChart({ categories, series, height, stacked, horizont
  * Set `fill` to shade the area under every line. Hover over any category
  * column to see a tooltip with all series values and a vertical cursor guide.
  *
- * This is **not** a time-series component — it does not parse dates.
+ * This is **not** a time-series component - it does not parse dates.
  * Pass pre-formatted date strings as `categories` if plotting over time.
  *
  * Colors are auto-assigned from the chart palette. For semantic coloring,
- * pass `tone` on a series — it maps to the same palette entries used by
+ * pass `tone` on a series - it maps to the same palette entries used by
  * `Stat`, `Pill`, and `Table`.
  *
  * @example
@@ -209,7 +209,7 @@ export declare function BarChart({ categories, series, height, stacked, horizont
  *   fill
  * />
  *
- * // Semantic tones — "errors" renders in the same red as a
+ * // Semantic tones - "errors" renders in the same red as a
  * // <Pill tone="danger"> elsewhere on the page.
  * <LineChart
  *   categories={["00:00", "06:00", "12:00", "18:00"]}
@@ -236,7 +236,7 @@ export declare function LineChart({ categories, series, height, fill, valueSuffi
  * portal-website Highcharts analytics charts.
  *
  * Unlike `BarChart` and `LineChart`, `PieChart` takes a flat `data` array of
- * `{ label, value }` points — each slice is its own category. Colors are
+ * `{ label, value }` points - each slice is its own category. Colors are
  * auto-assigned from the chart palette; pass `tone` on a point to give a
  * slice a semantic color that matches other tonal elements on the page.
  *
@@ -244,7 +244,7 @@ export declare function LineChart({ categories, series, height, fill, valueSuffi
  * item does the same. A tooltip with value and percentage appears below the
  * chart. Set `donut` for a hollow center that shows the summed total.
  *
- * **Do not** use for bar-style comparisons — use `BarChart` instead.
+ * **Do not** use for bar-style comparisons - use `BarChart` instead.
  *
  * @example
  * ```tsx

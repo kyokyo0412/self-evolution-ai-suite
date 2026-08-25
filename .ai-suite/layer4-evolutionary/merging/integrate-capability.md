@@ -54,7 +54,7 @@ The AI suite is a tool for self evolution. It can push itself to different hosts
 - **No Unintended Modifications**: Do not modify files outside the target agent's configuration directory.
 
 ## Negative Constraints (Must NOT)
-- ‚M-^]M-^L Do not create duplicate capabilities.
-- ‚M-^]M-^L Do not modify files outside the target agent's configuration directory.
-- ‚M-^]M-^L Do not proceed with the integration if the remote fetch fails silently.
-- ‚M-^]M-^L Do not omit boundary validation when analyzing semantic overlap (if confidence is low, gracefully abort or prompt for clarification).
+- [X] Do not create duplicate capabilities.
+- [X] Do not modify files outside the target agent's configuration directory.
+- [X] Do not proceed with the integration if the remote fetch fails silently.
+- [X] Do not omit boundary validation when analyzing semantic overlap (if confidence is low, gracefully abort or prompt for clarification).

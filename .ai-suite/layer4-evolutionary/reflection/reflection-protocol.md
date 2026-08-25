@@ -1,10 +1,10 @@
-# The Reflection Protocol — Deep Self-Improvement Loop for `.ai-suite/`
+# The Reflection Protocol - Deep Self-Improvement Loop for `.ai-suite/`
 
 **Command triggers (case-insensitive, exact-phrase):**
 - `Run Reflection`
 - `Reflect on the last task`
 - `Improve the suite`
-- `运行反思`
+- `Run Reflection`
 
 These triggers, or any explicit instruction referencing this file, place you (the AI) into
 **Reflection Mode** for exactly one turn.
@@ -20,7 +20,7 @@ Before any other action in Reflection Mode you MUST:
 
 1. **Acknowledge the mode switch** in chat with the single line: `Reflection Mode engaged.`
 2. **Refuse the trigger** if no concrete prior task exists in the conversation. Reply:
-   *"No prior task to reflect on — please describe what you would like me to evaluate."*
+   *"No prior task to reflect on - please describe what you would like me to evaluate."*
 3. **Pause all non-reflection work.** Do not continue the original task.
 
 ## CORE EVOLUTION PRINCIPLES
@@ -34,7 +34,7 @@ Every evolution MUST adhere to these semantic principles:
 
 ## STRICT PROTOCOL (execute in this exact order)
 
-### Step 1 — Deep 6-Category Analysis & Contextual Memory
+### Step 1 - Deep 6-Category Analysis & Contextual Memory
 
 Analyze the previous task across **all six categories** and tag each finding with a severity:
 
@@ -57,7 +57,7 @@ Produce a **short candid table** of findings. Example:
 |---|---|---|
 | Trigger Accuracy      | Wrong skill fired; tdd-team not triggered       | High     |
 | Instruction Gaps      | Missing "always run shellcheck" constraint       | Medium   |
-| Safety Guard Gaps     | None                                            | —        |
+| Safety Guard Gaps     | None                                            | -        |
 | Tool-Use Efficiency   | Re-read same file 4 times                       | Medium   |
 | Output Quality        | Final summary lacked copy-paste git commands    | High     |
 | Tier Accuracy         | Placed general skill in agent-specific dir      | High     |
@@ -65,32 +65,32 @@ Produce a **short candid table** of findings. Example:
 
 **Selection rule:** Only `Critical` or `High` findings drive the improvement target.
 If multiple Critical/High issues exist, pick the **highest-severity** one for this call.
-State: *"Selected issue: `<category>` / `<severity>` — rationale: <one sentence>."*
+State: *"Selected issue: `<category>` / `<severity>` - rationale: <one sentence>."*
 
 ---
 
-### Step 2 — Generality Gate + Identify Improvement Target
+### Step 2 - Generality Gate + Identify Improvement Target
 
 Before choosing which file to edit, run the **3-Question Generality Gate**:
 
 ```
         Q1. Applies to all agents (general skills/prompts)?
-            → YES: target lives in  .ai-suite/core/
+            -> YES: target lives in  .ai-suite/core/
 
         Q2. Is it a task process procedure (TDD, SWE, quality)?
-            → YES: target lives in  .ai-suite/layer3-registry/core/
+            -> YES: target lives in  .ai-suite/layer3-registry/core/
 
         Q3. Is this improvement specific to ONE AI agent
             (e.g., Cursor IDE, Claude Code)?
-            → YES: target lives in  .ai-suite/layer1-abstraction/agents/<agent-name>/
+            -> YES: target lives in  .ai-suite/layer1-abstraction/agents/<agent-name>/
 
         Q4. Is this improvement specific to ONE software domain
             (e.g., Kubernetes, vendor-specific)?
-            → YES: target lives in  .ai-suite/layer3-registry/domains/<domain-name>/
+            -> YES: target lives in  .ai-suite/layer3-registry/domains/<domain-name>/
 ```
 
 **Gate result MUST be stated before any edit begins:**
-> *"Gate result: Q1=YES / Q2=NO / Q3=NO → target is in `.ai-suite/core/`."*
+> *"Gate result: Q1=YES / Q2=NO / Q3=NO -> target is in `.ai-suite/core/`."*
 
 **Tier invariants to enforce:**
 - A file in `core/` must NOT contain agent-specific APIs, token names, or host references
@@ -101,38 +101,38 @@ Before choosing which file to edit, run the **3-Question Generality Gate**:
 
 **Then choose exactly ONE of:**
 
-- **(a) Edit an existing file** — name the exact tier-qualified path, e.g.,
+- **(a) Edit an existing file** - name the exact tier-qualified path, e.g.,
   `.ai-suite/layer3-registry/core/tdd-team.md` or `.ai-suite/layer1-abstraction/agents/cursor/skills/ai-suite-architect.md`
-- **(b) Create a new file** — state the tier-qualified path and justify why no existing file covers this
-- **(c) Edit `.ai-suite/layer4-evolutionary/validation/` infrastructure** — only if friction was caused by the meta layer itself
+- **(b) Create a new file** - state the tier-qualified path and justify why no existing file covers this
+- **(c) Edit `.ai-suite/layer4-evolutionary/validation/` infrastructure** - only if friction was caused by the meta layer itself
   (validate-suite.sh, run-acceptance-tests.sh, etc.); NOT ai-suite enable / ai-suite disable / ai-suite evolve
 
-State: *"Improvement target: `<path>` (tier: `<core|agents/X|domains/X>`) — rationale: <one sentence>."*
+State: *"Improvement target: `<path>` (tier: `<core|agents/X|domains/X>`) - rationale: <one sentence>."*
 
 If a **new file** is created, the closing summary MUST explicitly state the tier chosen and justify it
 (e.g., "New file placed in `agents/cursor/` because it uses Cursor-specific APIs and IDE constructs.").
 
 ---
 
-### Step 3 — Edit the Skill / Template / Meta File
+### Step 3 - Edit the Skill / Template / Meta File
 
 - Use file-edit tools (`Read` first, then `StrReplace` or `Write`).
   Do **NOT** pipe `sed` or `cat` into files.
 - Preserve YAML `---` frontmatter and the existing `name:` / `description:` / `triggers:` fields
   unless those are the bug.
-- Skill descriptions MUST keep the `Use when …` phrase so the dist-format validator keeps passing.
-- Make changes **modular**, **strict**, and **highly actionable** — every new instruction must be testable.
+- Skill descriptions MUST keep the `Use when ...` phrase so the dist-format validator keeps passing.
+- Make changes **modular**, **strict**, and **highly actionable** - every new instruction must be testable.
 - Ensure your changes adhere to the **CORE EVOLUTION PRINCIPLES** (Semantic Understanding, Agent Effectiveness, End-User Usability).
 - **AI-Expert Review**: Before finalizing the edit, assume the **AI-Expert** role to review the enhancement and confirm it improves the AI agent's working capabilities.
 - Keep the file scoped to one responsibility.
   If two improvements would crowd the file, split into a sibling file and address the second in
   the next Reflection call.
 - After editing, run: `bash .ai-suite/layer4-evolutionary/validation/validate-suite.sh`
-  (no arguments — scans all three tiers: core/, agents/, domains/).
+  (no arguments - scans all three tiers: core/, agents/, domains/).
 
 ---
 
-### Step 4 — Autonomous Acceptance Testing (Self-Validation)
+### Step 4 - Autonomous Acceptance Testing (Self-Validation)
 
 Before writing the evolution report, you MUST prove the change works.
 
@@ -142,7 +142,7 @@ Before writing the evolution report, you MUST prove the change works.
 
 ---
 
-### Step 5 — Write the Evolution Report
+### Step 5 - Write the Evolution Report
 
 After completing the edit and the test, write a structured Markdown report to:
 
@@ -156,7 +156,7 @@ Use `date -u +%Y%m%dT%H%M%SZ` for the timestamp. Create the `evolutions/` direct
 
 ```markdown
 ## Task Summary
-<What the human was trying to accomplish in the previous task — 2-3 sentences>
+<What the human was trying to accomplish in the previous task - 2-3 sentences>
 
 ## Improvement Target
 - **File:** `<tier-qualified relative path>`
@@ -168,7 +168,7 @@ Use `date -u +%Y%m%dT%H%M%SZ` for the timestamp. Create the `evolutions/` direct
 - **Description:** <one paragraph explaining the root cause>
 
 ## Change Description
-<What was edited or created, and why — be specific; include the key text delta>
+<What was edited or created, and why - be specific; include the key text delta>
 
 ## Generality Gate Result
 - Q1 (all agents): YES/NO
@@ -178,7 +178,7 @@ Use `date -u +%Y%m%dT%H%M%SZ` for the timestamp. Create the `evolutions/` direct
 - **Justification:** <one sentence>
 
 ## Delta Summary
-<Brief summary of key additions/removals — can be bullet points or inline diff excerpts>
+<Brief summary of key additions/removals - can be bullet points or inline diff excerpts>
 ```
 
 **Why this report exists:**
@@ -189,7 +189,7 @@ the edited skill/template files, giving you a machine-readable history of every 
 
 ---
 
-### Step 6 — Emit the Closing Summary
+### Step 6 - Emit the Closing Summary
 
 End your turn with EXACTLY this block (substituting bracketed values):
 
@@ -199,15 +199,15 @@ Reflection complete.
 - File changed:                `[relative path from workspace root]`
 - Test added/updated:          `[relative path to the test script]`
 - Tier:                        [core | agents/<name> | domains/<name>]
-- Nature of the change:        [one sentence — WHAT was changed]
-- Why it improves future runs: [one sentence — HOW it prevents the same friction]
-- Friction it would have prevented: [one sentence — tied to the original task]
+- Nature of the change:        [one sentence - WHAT was changed]
+- Why it improves future runs: [one sentence - HOW it prevents the same friction]
+- Friction it would have prevented: [one sentence - tied to the original task]
 - Evolution report:            `.ai-suite/layer4-evolutionary/reflection/evolutions/REFLECTION-<timestamp>.md`
 
 Please review the Git diffs manually before committing:
     git diff .ai-suite/
     git status .ai-suite/layer4-evolutionary/reflection/evolutions/
-If the diff looks good, commit it yourself — I will NOT auto-commit:
+If the diff looks good, commit it yourself - I will NOT auto-commit:
     git add .ai-suite/<changed-file> .ai-suite/<test-file> .ai-suite/layer4-evolutionary/reflection/evolutions/REFLECTION-<timestamp>.md
     git commit -m "reflect: <one-line description of the improvement>"
 ```
@@ -216,7 +216,7 @@ If the diff looks good, commit it yourself — I will NOT auto-commit:
 
 ## NON-NEGOTIABLES
 
-- **One improvement per Reflection call.** Do not bundle unrelated edits — that defeats reviewability.
+- **One improvement per Reflection call.** Do not bundle unrelated edits - that defeats reviewability.
   If multiple Critical/High issues exist, address one and tell the user to run Reflection again.
 - **No drive-by refactors.** Touch only the file announced as the improvement target.
 - **No silent rewrites.** If an existing skill is materially restructured, call it out in the summary.
@@ -237,7 +237,7 @@ A skill or template is a candidate for improvement when ANY of these is true:
 | Symptom | Category | Likely Fix |
 |---|---|---|
 | AI asked a clarifying question it could have inferred | Instruction Completeness | Add assumption or stronger trigger to the skill |
-| AI used the wrong skill | Trigger Accuracy | Tighten `description:` (keep "Use when …"); add `triggers:` entry |
+| AI used the wrong skill | Trigger Accuracy | Tighten `description:` (keep "Use when ..."); add `triggers:` entry |
 | AI ran a destructive command without preflight | Safety Guard Gaps | Strengthen Safety Preflight; reference `production-safety.md` |
 | AI's output was too verbose / fluffy | Output Quality | Add "no filler / density-optimised" constraint |
 | AI hallucinated an API / package | Instruction Completeness | Add "MUST cite real path / verify before quoting" constraint |
@@ -255,21 +255,21 @@ A skill or template is a candidate for improvement when ANY of these is true:
 ## INVOCATION EXAMPLES
 
 - *User: "Run Reflection. The last task spent five turns figuring out the setup process."*
-  → Category: Instruction Completeness / High
-  → Gate: Q1=YES → `core/`
-  → Edit `.ai-suite/layer3-registry/core/testbed-setup.md` to mandate the setup path up-front.
+  -> Category: Instruction Completeness / High
+  -> Gate: Q1=YES -> `core/`
+  -> Edit `.ai-suite/layer3-registry/core/testbed-setup.md` to mandate the setup path up-front.
 
-- *User: "Reflect — you ran a command on a prod database without confirming."*
-  → Category: Safety Guard Gaps / Critical
-  → Gate: Q3=YES (Database) → `domains/database/`
-  → Strengthen `.ai-suite/layer3-registry/domains/database/skills/db-setup.md` production guard.
+- *User: "Reflect - you ran a command on a prod database without confirming."*
+  -> Category: Safety Guard Gaps / Critical
+  -> Gate: Q3=YES (Database) -> `domains/database/`
+  -> Strengthen `.ai-suite/layer3-registry/domains/database/skills/db-setup.md` production guard.
 
-- *User: "Improve the suite — tdd-team kept asking whether to commit."*
-  → Category: Instruction Completeness / High
-  → Gate: Q1=YES (TDD applies to all agents) → `core/`
-  → Tighten "Default Stop Point" of `.ai-suite/layer3-registry/core/tdd-team.md`.
+- *User: "Improve the suite - tdd-team kept asking whether to commit."*
+  -> Category: Instruction Completeness / High
+  -> Gate: Q1=YES (TDD applies to all agents) -> `core/`
+  -> Tighten "Default Stop Point" of `.ai-suite/layer3-registry/core/tdd-team.md`.
 
-- *User: "Run Reflection — you put the new skill in .cursor/skills but it should be a core skill."*
-  → Category: Tier Accuracy / High
-  → Gate: Q1=YES (Applies to all agents) → `core/`
-  → Edit `.ai-suite/layer1-abstraction/agents/cursor/skills/ai-suite-architect.md` to explicitly mandate the 3-Question Generality Gate when creating new skills.
+- *User: "Run Reflection - you put the new skill in .cursor/skills but it should be a core skill."*
+  -> Category: Tier Accuracy / High
+  -> Gate: Q1=YES (Applies to all agents) -> `core/`
+  -> Edit `.ai-suite/layer1-abstraction/agents/cursor/skills/ai-suite-architect.md` to explicitly mandate the 3-Question Generality Gate when creating new skills.

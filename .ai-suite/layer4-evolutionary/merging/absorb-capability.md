@@ -8,7 +8,7 @@ triggers:
   - absorb from
 ---
 
-# Absorb Capability — External Agent Ingestion Engine (V2)
+# Absorb Capability - External Agent Ingestion Engine (V2)
 
 Orchestrate the ingestion and structural evolution of external agent capabilities into the AI suite Agent.
 

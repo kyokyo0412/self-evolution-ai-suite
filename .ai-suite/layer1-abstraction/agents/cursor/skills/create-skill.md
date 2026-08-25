@@ -51,12 +51,12 @@ Skills are stored as directories containing a `SKILL.md` file:
 
 ```
 skill-name/
-├── SKILL.md              # Required - main instructions
-├── reference.md          # Optional - detailed documentation
-├── examples.md           # Optional - usage examples
-└── scripts/              # Optional - utility scripts
-    ├── validate.py
-    └── helper.sh
+|-- SKILL.md              # Required - main instructions
+|-- reference.md          # Optional - detailed documentation
+|-- examples.md           # Optional - usage examples
++-- scripts/              # Optional - utility scripts
+    |-- validate.py
+    +-- helper.sh
 ```
 
 ### Storage Locations
@@ -106,13 +106,13 @@ The description is **critical** for skill discovery. The agent uses it to decide
 ### Description Best Practices
 
 1. **Write in third person** (the description is injected into the system prompt):
-   - ✅ Good: "Processes Excel files and generates reports"
-   - ❌ Avoid: "I can help you process Excel files"
-   - ❌ Avoid: "You can use this to process Excel files"
+   - [OK] Good: "Processes Excel files and generates reports"
+   - [X] Avoid: "I can help you process Excel files"
+   - [X] Avoid: "You can use this to process Excel files"
 
 2. **Be specific and include trigger terms**:
-   - ✅ Good: "Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction."
-   - ❌ Vague: "Helps with documents"
+   - [OK] Good: "Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction."
+   - [X] Vague: "Helps with documents"
 
 3. **Include both WHAT and WHEN**:
    - WHAT: What the skill does (specific capabilities)
@@ -291,8 +291,8 @@ Guide through decision points:
 
 1. Determine the modification type:
 
-   **Creating new content?** → Follow "Creation workflow" below
-   **Editing existing content?** → Follow "Editing workflow" below
+   **Creating new content?** -> Follow "Creation workflow" below
+   **Editing existing content?** -> Follow "Editing workflow" below
 
 2. Creation workflow:
    - Use docx-js library
@@ -348,8 +348,8 @@ Make clear whether the agent should **execute** the script (most common) or **re
 ## Anti-Patterns to Avoid
 
 ### 1. Windows-Style Paths
-- ✅ Use: `scripts/helper.py`
-- ❌ Avoid: `scripts\helper.py`
+- [OK] Use: `scripts/helper.py`
+- [X] Avoid: `scripts\helper.py`
 
 ### 2. Too Many Options
 ```markdown
@@ -379,12 +379,12 @@ Use the v2 API endpoint.
 
 ### 4. Inconsistent Terminology
 Choose one term and use it throughout:
-- ✅ Always "API endpoint" (not mixing "URL", "route", "path")
-- ✅ Always "field" (not mixing "box", "element", "control")
+- [OK] Always "API endpoint" (not mixing "URL", "route", "path")
+- [OK] Always "field" (not mixing "box", "element", "control")
 
 ### 5. Vague Skill Names
-- ✅ Good: `processing-pdfs`, `analyzing-spreadsheets`
-- ❌ Avoid: `helper`, `utils`, `tools`
+- [OK] Good: `processing-pdfs`, `analyzing-spreadsheets`
+- [X] Avoid: `helper`, `utils`, `tools`
 
 ---
 
@@ -434,9 +434,9 @@ Here's a complete example of a well-structured skill:
 **Directory structure:**
 ```
 code-review/
-├── SKILL.md
-├── STANDARDS.md
-└── examples.md
+|-- SKILL.md
+|-- STANDARDS.md
++-- examples.md
 ```
 
 **SKILL.md:**
@@ -469,9 +469,9 @@ When reviewing code:
 ## Providing Feedback
 
 Format feedback as:
-- 🔴 **Critical**: Must fix before merge
-- 🟡 **Suggestion**: Consider improving
-- 🟢 **Nice to have**: Optional enhancement
+- **Critical**: Must fix before merge
+- **Suggestion**: Consider improving
+- **Nice to have**: Optional enhancement
 
 ## Additional Resources
 

@@ -1,5 +1,5 @@
 /**
- * Borderless disclosure row — chevron + structured header (title, optional
+ * Borderless disclosure row - chevron + structured header (title, optional
  * leading slot, count, trailing slot) with a body that toggles open. Distilled
  * from baby-glass `ContextTreeRow`'s lightweight list-row chrome (no card
  * border, no background fill).
@@ -40,7 +40,7 @@ export type CollapsibleSectionProps = {
  * indented under the row so nested `CollapsibleSection`s read as a tree.
  *
  * For a bordered, card-shaped collapsible surface, use `<Card collapsible>`
- * instead — `CollapsibleSection` has no border or background and is meant to
+ * instead - `CollapsibleSection` has no border or background and is meant to
  * sit in a list of similar rows.
  *
  * @example

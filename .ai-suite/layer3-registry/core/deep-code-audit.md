@@ -38,6 +38,6 @@ Once all scans are complete, use the filesystem to create a new file named `code
 - **Remediation Action Plan:** A prioritized checklist using `- [ ]` syntax of the top 5 most critical issues across all domains requiring immediate developer intervention.
 
 ## Negative Constraints
-- ❌ Do not skip any of the audit phases.
-- ❌ Do not write the report to any file other than `code_quality_audit_report.md`.
-- ❌ Do not modify the code directly; only generate the audit report.
+- [X] Do not skip any of the audit phases.
+- [X] Do not write the report to any file other than `code_quality_audit_report.md`.
+- [X] Do not modify the code directly; only generate the audit report.

@@ -38,28 +38,28 @@ failed=0
 
 for layer in "${LAYERS[@]}"; do
     if [[ ! -d "$layer" ]]; then
-        echo "‚M-^]M-^L Missing layer: $layer"
+        echo "[X] Missing layer: $layer"
         failed=1
     else
-        echo "‚M-^\M-^E Found layer: $layer"
+        echo "[OK] Found layer: $layer"
     fi
 done
 
 for contract in "${CONTRACTS[@]}"; do
     if [[ ! -f "$contract" ]]; then
-        echo "‚M-^]M-^L Missing contract file: $contract"
+        echo "[X] Missing contract file: $contract"
         failed=1
     else
-        echo "‚M-^\M-^E Found contract file: $contract"
+        echo "[OK] Found contract file: $contract"
     fi
 done
 
 for forbidden in "${FORBIDDEN[@]}"; do
     if [[ -d "$forbidden" ]]; then
-        echo "‚M-^]M-^L Forbidden directory still exists: $forbidden"
+        echo "[X] Forbidden directory still exists: $forbidden"
         failed=1
     else
-        echo "‚M-^\M-^E Forbidden directory absent: $forbidden"
+        echo "[OK] Forbidden directory absent: $forbidden"
     fi
 done
 

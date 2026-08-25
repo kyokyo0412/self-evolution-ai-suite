@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ai-suite evolve — Collect remote ai-suite evolutions into the local git
+# ai-suite evolve - Collect remote ai-suite evolutions into the local git
 # repo, and push the updated suite back to remote SSH hosts.
 #
 # Sub-commands:
@@ -24,7 +24,7 @@
 
 set -uo pipefail
 
-# ── Locate suite root ─────────────────────────────────────────────────────────
+# -- Locate suite root ---------------------------------------------------------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 SUITE_ROOT="$SCRIPT_DIR"
 SUITE_DIR="$SUITE_ROOT/.ai-suite"
@@ -45,7 +45,7 @@ EXCLUDE_MEMORY=0
 # -- Argument parsing ----------------------------------------------------------
 usage() {
   cat <<'EOF'
-ai-suite evolve — sync ai-suite evolutions between remote hosts and local git
+ai-suite evolve - sync ai-suite evolutions between remote hosts and local git
 
 USAGE
   ai-suite evolve collect [--local] [--host USER@HOST ...] [--remote-path PATH] [--dry-run]
@@ -79,7 +79,7 @@ EXAMPLES
 EOF
 }
 
-# ── Argument parsing ──────────────────────────────────────────────────────────
+# -- Argument parsing ----------------------------------------------------------
 SUBCMD=""
 HOSTS=()
 COLLECT_LOCAL=0
@@ -128,15 +128,15 @@ if [[ ${#HOSTS[@]} -eq 0 && "$COLLECT_LOCAL" == "0" ]]; then
   exit 1
 fi
 
-# ── Timestamp ─────────────────────────────────────────────────────────────────
+# -- Timestamp -----------------------------------------------------------------
 TIMESTAMP=$(date -u '+%Y%m%d-%H%M%S')
 
-# ── Helper: sanitize a host string for use in a filename ──────────────────────
+# -- Helper: sanitize a host string for use in a filename ----------------------
 sanitize_host() {
   printf '%s' "$1" | tr -cs 'A-Za-z0-9._-' '_'
 }
 
-# ── Sub-command: collect ──────────────────────────────────────────────────────
+# -- Sub-command: collect ------------------------------------------------------
 do_collect() {
   local any_changed=false
   local all_staged_files=()
@@ -170,7 +170,7 @@ do_collect() {
     local remote_suite="${REMOTE_PATH}/.ai-suite"
 
     if [[ "$AI_SUITE_DRY_RUN" == "1" ]]; then
-      info "[DRY-RUN] Would rsync $HOST:$remote_suite/ → $tmpdir/"
+      info "[DRY-RUN] Would rsync $HOST:$remote_suite/ -> $tmpdir/"
       info "[DRY-RUN] Would diff $tmpdir/ vs $SUITE_DIR/"
       rm -rf "$tmpdir"
       trap - EXIT
@@ -187,7 +187,7 @@ do_collect() {
     if ! rsync "${rsync_opts[@]}" \
       -e "ssh -o BatchMode=yes -o ConnectTimeout=10" \
       "${HOST}:${remote_suite}/" "${tmpdir}/"; then
-      warn "rsync failed for $HOST — skipping"
+      warn "rsync failed for $HOST - skipping"
       rm -rf "$tmpdir"; trap - EXIT
       continue
     fi
@@ -223,7 +223,7 @@ do_collect() {
     any_changed=true
     info "Changed files from $HOST:"
     for cf in "${changed_files[@]}"; do
-      info "  • $cf"
+      info "  - $cf"
     done
 
     # Process changed/new files (Semantic LLM Merging)
@@ -248,12 +248,12 @@ do_collect() {
     done < <(find "$tmpdir" -type f -print0 | sort -z)
 
     if $requires_ai_merge; then
-      printf '\n%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+      printf '\n%s==============================================================%s\n' \
         "$(_grn)" "$(_off)"
       printf '%s Please prompt your AI agent to perform semantic LLM processing:%s\n' \
         "$(_grn)" "$(_off)"
       printf '  > "Please semantically merge the updated files from %s into the local .ai-suite/ directory."\n' "$tmpdir"
-      printf '%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n\n' \
+      printf '%s==============================================================%s\n\n' \
         "$(_grn)" "$(_off)"
       # Do not clean up tmpdir so the agent can read it
       trap - EXIT
@@ -289,7 +289,7 @@ REPORT
   done # for HOST
 
   if [[ "$AI_SUITE_DRY_RUN" == "1" ]]; then
-    info "[DRY-RUN] complete — no files were modified."
+    info "[DRY-RUN] complete - no files were modified."
     return 0
   fi
 
@@ -303,7 +303,7 @@ REPORT
   if [[ -x "$validator" ]]; then
     info "Running skill validator ..."
     if ! bash "$validator" 2>&1; then
-      warn "Skill validation reported issues — review before committing."
+      warn "Skill validation reported issues - review before committing."
     fi
   fi
 
@@ -327,11 +327,11 @@ REPORT
   # Emit copy-paste git commands
   local commit_hosts="${HOSTS[*]}"
   printf '\n'
-  printf '%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+  printf '%s==============================================================%s\n' \
     "$(_grn)" "$(_off)"
   printf '%s Copy-paste git commands to record this evolution:%s\n' \
     "$(_grn)" "$(_off)"
-  printf '%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n' \
+  printf '%s==============================================================%s\n' \
     "$(_grn)" "$(_off)"
   printf '\n'
   printf '  cd %s\n' "$SUITE_ROOT"
@@ -341,12 +341,12 @@ REPORT
   printf '  git commit -m "feat(evolution): collect remote changes from %s at %s"\n' \
     "$commit_hosts" "$TIMESTAMP"
   printf '\n'
-  printf '%s━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━%s\n\n' \
+  printf '%s==============================================================%s\n\n' \
     "$(_grn)" "$(_off)"
   info "Review the changes above, then run the git commands to commit the evolution."
 }
 
-# ── Sub-command: push ─────────────────────────────────────────────────────────
+# -- Sub-command: push ---------------------------------------------------------
 do_push() {
   local failed_hosts=()
   local total=${#HOSTS[@]}
@@ -472,14 +472,14 @@ do_push() {
 
     # Rsync toggle scripts first
     if ! "${rsync_scripts[@]}"; then
-      warn "rsync scripts to $HOST failed — skipping host"
+      warn "rsync scripts to $HOST failed - skipping host"
       failed_hosts+=("$HOST")
       continue
     fi
 
     # Rsync .ai-suite/
     if ! "${rsync_cmd[@]}"; then
-      warn "rsync .ai-suite/ to $HOST failed — skipping host"
+      warn "rsync .ai-suite/ to $HOST failed - skipping host"
       failed_hosts+=("$HOST")
       continue
     fi
@@ -495,7 +495,7 @@ do_push() {
   done
 
   if [[ "$AI_SUITE_DRY_RUN" == "1" ]]; then
-    info "[DRY-RUN] complete — no hosts were modified."
+    info "[DRY-RUN] complete - no hosts were modified."
     return 0
   fi
 
@@ -512,7 +512,7 @@ do_push() {
   fi
 }
 
-# ── Dispatch ──────────────────────────────────────────────────────────────────
+# -- Dispatch ------------------------------------------------------------------
 case "$SUBCMD" in
   collect) do_collect ;;
   push)    do_push    ;;

@@ -9,32 +9,32 @@
 
 Your mission is to perform a COMPLETE, multi-layered architectural audit of `@codebase`.
 
-## CRITICAL EXECUTION RULE — ONE-SHOT COMPLETION
+## CRITICAL EXECUTION RULE - ONE-SHOT COMPLETION
 
 Provide ALL four layers in this **single** response. Do not stop. Do not ask for "Continue". Do not summarize. If the context window tightens, **prioritize technical density over prose** and deliver the highest-value paths first.
 
 ## DIRECTORY TARGET: `aigen_doc/`
 
-## LAYER 1 — Macro-Architecture (Overview & Strategy)
+## LAYER 1 - Macro-Architecture (Overview & Strategy)
 - Core purpose and "the law of the land" (OS / kernel / virtualization paradigms used).
 - Global directory tree with functional relevance per top-level dir.
 - **Mermaid.js Top-Level Architecture Diagram.**
 
-## LAYER 2 — Component-Level Detailed Design
+## LAYER 2 - Component-Level Detailed Design
 - Every major component / subsystem.
 - For each: Interface (APIs), Abstraction Model, Interaction Logic.
 - **Mermaid.js Sequence Diagrams** for cross-component communication.
 
-## LAYER 3 — Implementation Deep Dive (The "How")
+## LAYER 3 - Implementation Deep Dive (The "How")
 - Exhaustive source analysis.
 - Internal data structures (structs / classes), critical logic paths.
-- Cite file names and line-logic (e.g. "the scheduler in `core/sched.c` uses a red-black tree for …").
+- Cite file names and line-logic (e.g. "the scheduler in `core/sched.c` uses a red-black tree for ...").
 - Synchronization primitives (locks, semaphores), performance optimizations.
 
-## LAYER 4 — Developer Enablement (The "Manual")
+## LAYER 4 - Developer Enablement (The "Manual")
 - **Learning:** the path a new engineer takes to grasp the logic.
 - **Development:** step-by-step build, deploy, unit test.
-- **Enhancement:** explicit extension points — exactly where to inject new features or modify behavior.
+- **Enhancement:** explicit extension points - exactly where to inject new features or modify behavior.
 
 ## Formatting & Constraints
 - Strict Markdown output.

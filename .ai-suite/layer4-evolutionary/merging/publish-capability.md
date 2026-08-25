@@ -42,6 +42,6 @@ The AI suite Agent can publish its capabilities to an AI suite publish package. 
 - **No Unintended Modifications**: Do not modify the source capabilities during publishing.
 
 ## Negative Constraints (Must NOT)
-- ‚M-^]M-^L Do not modify the source capabilities during publishing.
-- ‚M-^]M-^L Do not publish any domains (`layer3-registry/domains`) to avoid copyright or data leaks.
-- ‚M-^]M-^L Do not leave temporary directories behind if the archiving process fails.
+- [X] Do not modify the source capabilities during publishing.
+- [X] Do not publish any domains (`layer3-registry/domains`) to avoid copyright or data leaks.
+- [X] Do not leave temporary directories behind if the archiving process fails.

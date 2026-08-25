@@ -32,7 +32,7 @@ export AI_SUITE_LOG_PREFIX="workflow"
 
 usage() {
   cat <<'EOF'
-ai-suite workflow — Streamlined workflow orchestration for ai-suite
+ai-suite workflow - Streamlined workflow orchestration for ai-suite
 
 USAGE
   ai-suite workflow <command> [options]

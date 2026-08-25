@@ -38,11 +38,11 @@ Feature: Agent-generality gate before editing
     When Step 2 chooses an improvement target
     Then the AI runs a 3-question generality gate before editing:
       Q1: Does this improvement apply to ALL agents (Cursor, Claude, OpenCode, ...)?
-          YES → place / keep in .ai-suite/core/
+          YES -> place / keep in .ai-suite/core/
       Q2: Is it specific to one AI agent (Cursor IDE, Claude Code, ...)?
-          YES → place / keep in .ai-suite/layer1-abstraction/agents/<agent-name>/
+          YES -> place / keep in .ai-suite/layer1-abstraction/agents/<agent-name>/
       Q3: Is it specific to one software domain (CustomDomain, ...)?
-          YES → place / keep in .ai-suite/layer3-registry/domains/<domain-name>/
+          YES -> place / keep in .ai-suite/layer3-registry/domains/<domain-name>/
     And the AI states the gate result before making any edit
 
   Scenario: Core tier improvement must not contain agent-specific content
@@ -102,7 +102,7 @@ Feature: Preserved constraints and backward compatibility
   Scenario: Reflection triggers remain backward compatible
     When any of the following is typed:
       "Run Reflection" / "Reflect on the last task" /
-      "Improve the suite" / "运行反思"
+      "Improve the suite" / "Run Reflection"
     Then reflection mode is engaged regardless of agent type
     And works identically in Cursor, Claude Code, and any other AI agent
 

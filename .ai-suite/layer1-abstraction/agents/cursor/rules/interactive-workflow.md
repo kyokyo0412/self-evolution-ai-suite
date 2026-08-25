@@ -12,7 +12,7 @@ To prevent the interactive workflow from causing abnormal main task execution or
 
 ### Step 0: INITIALIZATION (Hard Block)
 
-**M-^_M-^[M-^Q HARD BLOCK: You MUST NOT execute any state-changing tools (e.g., Shell, Write, StrReplace) or begin the main task execution until you have FIRST called the `AskQuestion` tool to ask if the user wants an interactive workflow and received their answer. You MUST always ask this FIRST before any other actions.**
+** HARD BLOCK: You MUST NOT execute any state-changing tools (e.g., Shell, Write, StrReplace) or begin the main task execution until you have FIRST called the `AskQuestion` tool to ask if the user wants an interactive workflow and received their answer. You MUST always ask this FIRST before any other actions.**
 
 At the **very beginning of any task** (before any other action), you MUST use the `AskQuestion` tool:
 - **prompt**: "Do you need an interactive workflow for this task? (This allows you to provide follow-up prompts after the task is done without consuming extra Cursor included requests. If no response is received in 3 minutes, it will default to No.)"
@@ -57,10 +57,10 @@ Once Step 2's `echo` shell tool has returned:
 - **EXCEPTION for Reflection Protocol:** If the custom text input is a trigger for the Reflection Protocol (e.g., "run reflection", "improve the suite"), immediately break this loop and run the strict one-turn Reflection Protocol.
 
 ## Negative Constraints (Must NOT)
-- ‚M-^]M-^L **PREMATURE SUMMARY FORBIDDEN**: You MUST NOT call `echo 'Interactive workflow summary rendered'` before the main task is 100% finished and the main task summary has been output to the chat window.
-- ‚M-^]M-^L **PREMATURE WRAP-UP FORBIDDEN**: You MUST NOT ask the follow-up question or stop working if there are still pending tasks in your To-Do list or if the user's core request is not fully met.
-- ‚M-^]M-^L Do NOT make other agents (like Claude Code, Roo Code, etc.) use this interactive workflow. This is strictly for the Cursor Agent.
-- ‚M-^]M-^L Do NOT call `AskQuestion` at the end of the task without first doing the `echo 'Interactive workflow summary rendered'` step to force the summary output.
-- ‚M-^]M-^L Do NOT treat a custom text follow-up as a simple chat question. You MUST execute it as a full, new task using your tools and rules. You must re-initialize your mental state to Step 1 and execute fully.
-- ‚M-^]M-^L Do NOT skip the primary task's steps or summary. You MUST fully complete the primary task.
-- ‚M-^]M-^L Must NOT cost any extra Cursor included request in the interactive workflow.
+- [X] **PREMATURE SUMMARY FORBIDDEN**: You MUST NOT call `echo 'Interactive workflow summary rendered'` before the main task is 100% finished and the main task summary has been output to the chat window.
+- [X] **PREMATURE WRAP-UP FORBIDDEN**: You MUST NOT ask the follow-up question or stop working if there are still pending tasks in your To-Do list or if the user's core request is not fully met.
+- [X] Do NOT make other agents (like Claude Code, Roo Code, etc.) use this interactive workflow. This is strictly for the Cursor Agent.
+- [X] Do NOT call `AskQuestion` at the end of the task without first doing the `echo 'Interactive workflow summary rendered'` step to force the summary output.
+- [X] Do NOT treat a custom text follow-up as a simple chat question. You MUST execute it as a full, new task using your tools and rules. You must re-initialize your mental state to Step 1 and execute fully.
+- [X] Do NOT skip the primary task's steps or summary. You MUST fully complete the primary task.
+- [X] Must NOT cost any extra Cursor included request in the interactive workflow.

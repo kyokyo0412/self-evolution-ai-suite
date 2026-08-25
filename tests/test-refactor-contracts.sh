@@ -14,8 +14,8 @@ _off()  { [[ -t 1 ]] && printf '\033[0m'  || true; }
 pass() { PASS=$((PASS+1)); printf '  %sPASS%s  %s\n' "$(_grn)" "$(_off)" "$*"; }
 fail() { FAIL=$((FAIL+1)); printf '  %sFAIL%s  %s\n' "$(_red)" "$(_off)" "$*"; }
 
-dir_exists()  { if [[ -d "$2" ]]; then pass "$1"; else fail "$1 ‚M-^@M-^T dir not found: $2"; fi; }
-file_exists() { if [[ -f "$2" ]]; then pass "$1"; else fail "$1 ‚M-^@M-^T file not found: $2"; fi; }
+dir_exists()  { if [[ -d "$2" ]]; then pass "$1"; else fail "$1 - dir not found: $2"; fi; }
+file_exists() { if [[ -f "$2" ]]; then pass "$1"; else fail "$1 - file not found: $2"; fi; }
 
 echo "=== Phase 2 Contract Tests: .ai-suite/ refactoring ==="
 echo ""

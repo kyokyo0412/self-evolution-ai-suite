@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# run-acceptance-tests.sh — Production-readiness acceptance suite.
+# run-acceptance-tests.sh - Production-readiness acceptance suite.
 #
 # Runs every enable/disable variant in a sandbox HOME so the real ~/.cursor/,
 # ~/.zshrc, ~/.bashrc are NEVER touched. Verifies actual on-disk state after
@@ -84,7 +84,7 @@ assert_exit_nonzero() {
 }
 
 # ============================================================================
-# Test 0 — _portable.sh helpers in isolation
+# Test 0 - _portable.sh helpers in isolation
 # ============================================================================
 section "test 0: portable helpers"
 (
@@ -129,7 +129,7 @@ section "test 0: portable helpers"
 )
 
 # ============================================================================
-# Test 1 — validate-suite.sh against shipped skills
+# Test 1 - validate-suite.sh against shipped skills
 # ============================================================================
 section "test 1: validator on shipped skills"
 set +e
@@ -144,20 +144,20 @@ else
 fi
 
 # ============================================================================
-# Test 2 — validator rejects malformed skills
+# Test 2 - validator rejects malformed skills
 # ============================================================================
 section "test 2: validator rejects malformed skills"
 FIXTURES="$SANDBOX/fixtures"
 mkdir -p "$FIXTURES"
 
-# 2a — no frontmatter at all
+# 2a - no frontmatter at all
 cat > "$FIXTURES/no-frontmatter.md" <<EOF
 # Just a markdown file with no YAML
 EOF
 assert_exit_nonzero "validator rejects no-frontmatter" \
   bash "$PROJECT_ROOT/.ai-suite/layer4-evolutionary/validation/validate-suite.sh" "$FIXTURES/no-frontmatter.md"
 
-# 2b — name contains uppercase
+# 2b - name contains uppercase
 cat > "$FIXTURES/Uppercase.md" <<EOF
 ---
 name: Uppercase
@@ -168,7 +168,7 @@ EOF
 assert_exit_nonzero "validator rejects uppercase name" \
   bash "$PROJECT_ROOT/.ai-suite/layer4-evolutionary/validation/validate-suite.sh" "$FIXTURES/Uppercase.md"
 
-# 2c — name doesn't match basename
+# 2c - name doesn't match basename
 cat > "$FIXTURES/mismatch.md" <<EOF
 ---
 name: different-name
@@ -179,7 +179,7 @@ EOF
 assert_exit_nonzero "validator rejects name != basename" \
   bash "$PROJECT_ROOT/.ai-suite/layer4-evolutionary/validation/validate-suite.sh" "$FIXTURES/mismatch.md"
 
-# 2d — description missing 'Use when'
+# 2d - description missing 'Use when'
 cat > "$FIXTURES/no-trigger.md" <<EOF
 ---
 name: no-trigger
@@ -190,7 +190,7 @@ EOF
 assert_exit_nonzero "validator rejects missing 'Use when'" \
   bash "$PROJECT_ROOT/.ai-suite/layer4-evolutionary/validation/validate-suite.sh" "$FIXTURES/no-trigger.md"
 
-# 2e — valid minimum
+# 2e - valid minimum
 cat > "$FIXTURES/minimal-ok.md" <<EOF
 ---
 name: minimal-ok
@@ -207,7 +207,7 @@ assert_exit_zero "validator accepts minimal valid skill" \
   bash "$PROJECT_ROOT/.ai-suite/layer4-evolutionary/validation/validate-suite.sh" "$FIXTURES/minimal-ok.md"
 
 # ============================================================================
-# Test 3 — scope=project: full enable -> disable round trip
+# Test 3 - scope=project: full enable -> disable round trip
 # ============================================================================
 section "test 3: --scope project round trip"
 reset_sandbox
@@ -242,7 +242,7 @@ assert_not_dir     "$FAKE_PROJECT/.cursor/rules"                                
 assert_not_dir     "$FAKE_PROJECT/.cursor"                                                    "disable: empty .cursor cleaned up"
 
 # ============================================================================
-# Test 4 — scope=project: idempotency (enable x2, disable x2)
+# Test 4 - scope=project: idempotency (enable x2, disable x2)
 # ============================================================================
 section "test 4: --scope project idempotency"
 reset_sandbox
@@ -258,7 +258,7 @@ assert_file_not_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >
                                                                                               "disable x2 still has no marker"
 
 # ============================================================================
-# Test 5 — scope=project: pre-existing .cursorrules content is preserved
+# Test 5 - scope=project: pre-existing .cursorrules content is preserved
 # ============================================================================
 section "test 5: existing .cursorrules content preserved"
 reset_sandbox
@@ -273,7 +273,7 @@ assert_file_not_contains "$FAKE_PROJECT/.cursorrules" "# >>>>> cursor-ai-suite >
                                                                        "disable: marker block gone"
 
 # ============================================================================
-# Test 6 — scope=project: stray .cursorrules DIRECTORY is repaired
+# Test 6 - scope=project: stray .cursorrules DIRECTORY is repaired
 # ============================================================================
 section "test 6: stray empty .cursorrules directory repaired"
 reset_sandbox
@@ -298,7 +298,7 @@ set -e
   || fail "non-empty .cursorrules dir DID NOT fail (exit=$exit_code, out=$out)"
 
 # ============================================================================
-# Test 7 — scope=project against a path with SPACES
+# Test 7 - scope=project against a path with SPACES
 # ============================================================================
 section "test 7: path with spaces"
 rm -rf "$FAKE_HOME" "$SANDBOX/proj with space"
@@ -325,7 +325,7 @@ assert_not_file    "$SANDBOX/proj with space/.cursor/rules/cursor-suite-agent-di
                                                             "spaces path: directives .mdc removed"
 
 # ============================================================================
-# Test 8 — scope=global round trip with isolated HOME
+# Test 8 - scope=global round trip with isolated HOME
 # ============================================================================
 section "test 8: --scope global round trip (sandbox HOME)"
 reset_sandbox
@@ -356,7 +356,7 @@ assert_not_file    "$FAKE_HOME/.cursor/rules/cursor-suite-production-safety.mdc"
 assert_not_file    "$FAKE_HOME/.cursor/rules/cursor-suite-agent-directives.mdc"         "global: directives rule removed"
 
 # ============================================================================
-# Test 9 — install-hook + uninstall-hook (zsh, bash, both, auto)
+# Test 9 - install-hook + uninstall-hook (zsh, bash, both, auto)
 # ============================================================================
 section "test 9: --install-hook variants"
 
@@ -403,7 +403,7 @@ assert_file_contains "$FAKE_HOME/.zshrc"  "### AI SUITE AUTO-ENABLE HOOK START #
                               || pass "hook auto: did NOT create bashrc"
 
 # ============================================================================
-# Test 10 — pre-existing user content in .zshrc preserved
+# Test 10 - pre-existing user content in .zshrc preserved
 # ============================================================================
 section "test 10: pre-existing .zshrc content preserved across hook install/uninstall"
 reset_sandbox
@@ -417,14 +417,14 @@ HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --uninstall-hook --shell
 assert_file_contains "$FAKE_HOME/.zshrc" "export PATH=" "hook uninstall: PATH line still present"
 
 # ============================================================================
-# Test 11 — --verify on shipped skills
+# Test 11 - --verify on shipped skills
 # ============================================================================
 section "test 11: --verify"
 assert_exit_zero "ai-suite enable --verify passes" \
   bash "$PROJECT_ROOT/ai-suite" enable --verify
 
 # ============================================================================
-# Test 12 — --uninstall delegation reaches ai-suite disable
+# Test 12 - --uninstall delegation reaches ai-suite disable
 # ============================================================================
 section "test 12: --uninstall delegation"
 reset_sandbox
@@ -436,7 +436,7 @@ assert_not_file    "$FAKE_PROJECT/.cursor/rules/cursor-suite-production-safety.m
 assert_not_file    "$FAKE_PROJECT/.cursor/rules/cursor-suite-agent-directives.mdc"            "--uninstall delegation removed directives .mdc"
 
 # ============================================================================
-# Test 13 — regression: --scope remote keeps $HOME literal in ssh command.
+# Test 13 - regression: --scope remote keeps $HOME literal in ssh command.
 #
 # Bug history: an earlier `run() { eval "$@"; }` caused a second round of shell
 # expansion, which expanded $HOME to the LOCAL user's home instead of leaving
@@ -480,18 +480,18 @@ HOME="$FAKE_HOME" \
 if grep -Fq '$HOME/.ai-suite' "$RECORDER_LOG"; then
   pass "remote ssh argv contains literal \$HOME (no local expansion)"
 else
-  fail "remote ssh argv MISSING literal \$HOME — local expansion regression. log: $(cat "$RECORDER_LOG")"
+  fail "remote ssh argv MISSING literal \$HOME - local expansion regression. log: $(cat "$RECORDER_LOG")"
 fi
 
 if grep -Fq "/Users/$(whoami)/.ai-suite" "$RECORDER_LOG" 2>/dev/null \
    || grep -Fq "$FAKE_HOME/.ai-suite" "$RECORDER_LOG"; then
-  fail "remote ssh argv contains LOCALLY-EXPANDED \$HOME path — bug regression"
+  fail "remote ssh argv contains LOCALLY-EXPANDED \$HOME path - bug regression"
 else
   pass "remote ssh argv does NOT contain locally-expanded \$HOME"
 fi
 
 # ============================================================================
-# Test 13b — regression: --scope remote with spaces in --remote-path
+# Test 13b - regression: --scope remote with spaces in --remote-path
 # ============================================================================
 section "test 13b: --scope remote with spaces in --remote-path"
 : > "$RECORDER_LOG"
@@ -509,7 +509,7 @@ else
 fi
 
 # ============================================================================
-# Test 14 — invalid args fail cleanly with non-zero exit
+# Test 14 - invalid args fail cleanly with non-zero exit
 # ============================================================================
 section "test 13: invalid args fail with non-zero exit"
 assert_exit_nonzero "unknown flag rejected"           bash "$PROJECT_ROOT/ai-suite" enable --no-such-flag

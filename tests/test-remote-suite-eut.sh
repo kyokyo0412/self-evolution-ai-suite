@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-remote-suite-eut.sh — EUT for remote-suite.md skill.
+# test-remote-suite-eut.sh - EUT for remote-suite.md skill.
 # Verifies: intent mapping table, command examples, safety constraints,
 # multiple-host coverage, missing-host rule, and cross-skill consistency.
 #
@@ -22,7 +22,7 @@ hasp() { grep -qE  -- "$2" "$SKILL" 2>/dev/null; }
 echo "=== EUT: remote-suite.md ==="
 echo ""
 
-# ── E1: All five operations documented ───────────────────────────────────────
+# -- E1: All five operations documented ---------------------------------------
 echo "--- E1: five operations ---"
 for op in install collect push status remove; do
   if hasp "E1: $op operation covered" \
@@ -35,7 +35,7 @@ for op in install collect push status remove; do
   fi
 done
 
-# ── E2: All five scripts referenced correctly ─────────────────────────────────
+# -- E2: All five scripts referenced correctly ---------------------------------
 echo ""
 echo "--- E2: script references ---"
 for cmd in "ai-suite enable --scope remote" \
@@ -46,7 +46,7 @@ for cmd in "ai-suite enable --scope remote" \
   else fail "E2: '$cmd' missing from skill"; fi
 done
 
-# ── E3: Agent flag examples ───────────────────────────────────────────────────
+# -- E3: Agent flag examples ---------------------------------------------------
 echo ""
 echo "--- E3: agent flag examples ---"
 for agent in cursor claude all; do
@@ -55,7 +55,7 @@ for agent in cursor claude all; do
 done
 
 
-# ── E5: Multiple --host covered ───────────────────────────────────────────────
+# -- E5: Multiple --host covered -----------------------------------------------
 echo ""
 echo "--- E5: multiple hosts ---"
 host_count=$(grep -c -- "--host" "$SKILL" 2>/dev/null || echo 0)
@@ -65,7 +65,7 @@ else
   fail "E5: --host only appears $host_count times (expected >=4)"
 fi
 
-# ── E6: Missing-host question phrase ─────────────────────────────────────────
+# -- E6: Missing-host question phrase -----------------------------------------
 echo ""
 echo "--- E6: missing-host rule ---"
 if hasp "E6a" "(ask|Which remote host|user@hostname)"; then
@@ -79,7 +79,7 @@ if grep -qF "Do NOT proceed" "$SKILL" 2>/dev/null || \
   pass "E6b: skill says to ask before proceeding without host"
 else fail "E6b: skill does not say to block on missing host"; fi
 
-# ── E7: Production safety warning ─────────────────────────────────────────────
+# -- E7: Production safety warning ---------------------------------------------
 echo ""
 echo "--- E7: production safety ---"
 for prod_kw in prod; do
@@ -88,7 +88,7 @@ for prod_kw in prod; do
   else fail "E7: '$prod_kw' not mentioned in skill"; fi
 done
 
-# ── E8: No auto-commit rule ───────────────────────────────────────────────────
+# -- E8: No auto-commit rule ---------------------------------------------------
 echo ""
 echo "--- E8: no auto-commit ---"
 if hasp "E8a" "(auto.commit|never.*commit|Do not auto-commit|do not.*commit)"; then
@@ -101,21 +101,21 @@ if grep -qiF "git commands" "$SKILL" 2>/dev/null || \
   pass "E8b: copy-paste git commands instruction present"
 else fail "E8b: no copy-paste git commands instruction"; fi
 
-# ── E9: dry-run handling ──────────────────────────────────────────────────────
+# -- E9: dry-run handling ------------------------------------------------------
 echo ""
 echo "--- E9: dry-run ---"
 if hasp "E9" "(dry.run|--dry-run|preview)"; then
   pass "E9: dry-run / preview mentioned in skill"
 else fail "E9: dry-run not mentioned"; fi
 
-# ── E10: Script preflight check ──────────────────────────────────────────────
+# -- E10: Script preflight check ----------------------------------------------
 echo ""
 echo "--- E10: preflight ---"
 if hasp "E10" "(Script check|preflight|missing.*script|script.*missing|not found.*script|check.*exist)"; then
   pass "E10: script preflight check documented"
 else fail "E10: script preflight check not found"; fi
 
-# ── E11: Examples section has all five operations ─────────────────────────────
+# -- E11: Examples section has all five operations -----------------------------
 echo ""
 echo "--- E11: examples coverage ---"
 for op_kw in "install" "collect" "push" "status" "remove"; do
@@ -130,7 +130,7 @@ for op_kw in "install" "collect" "push" "status" "remove"; do
   fi
 done
 
-# ── E12: Negative constraints section ────────────────────────────────────────
+# -- E12: Negative constraints section ----------------------------------------
 echo ""
 echo "--- E12: negative constraints ---"
 for nc in "auto-commit" "prod" "host" "dry-run"; do
@@ -145,7 +145,7 @@ for nc in "auto-commit" "prod" "host" "dry-run"; do
   fi
 done
 
-# ── E13: Relationship to evolve-collect.md (co-existence) ────────────────────
+# -- E13: Relationship to evolve-collect.md (co-existence) --------------------
 echo ""
 echo "--- E13: co-existence with evolve-collect ---"
 if [[ -f "$EVOLVE_COLLECT" ]]; then
@@ -158,7 +158,7 @@ if grep -qF "ai-suite evolve" "$SKILL" 2>/dev/null && \
   pass "E13b: both skills reference ai-suite evolve (consistent commands)"
 else fail "E13b: command inconsistency between remote-suite and evolve-collect"; fi
 
-# ── E14: validate-suite.sh final gate ────────────────────────────────────────
+# -- E14: validate-suite.sh final gate ----------------------------------------
 echo ""
 echo "--- E14: full validator gate ---"
 val_out=$(bash "$SUITE_ROOT/.ai-suite/layer4-evolutionary/validation/validate-suite.sh" 2>&1)
@@ -170,10 +170,10 @@ pass_count=$(printf '%s' "$val_out" | grep -c "^  PASS" || true)
 if [[ "$pass_count" -ge 27 ]]; then pass "E14b: >=27 checks"
 else fail "E14b: expected >=27 checks, got $pass_count"; fi
 
-# ── Summary ───────────────────────────────────────────────────────────────────
+# -- Summary -------------------------------------------------------------------
 printf '\n'
 if [[ "$FAIL" -eq 0 ]]; then
-  printf '%s[EUT] %d/%d passed — PHASE 4 GATE: PASSED%s\n' \
+  printf '%s[EUT] %d/%d passed - PHASE 4 GATE: PASSED%s\n' \
     "$(_grn)" "$PASS" "$TOTAL" "$(_off)"
   exit 0
 else

@@ -6,7 +6,7 @@
  *
  * ```tsx
  * const [name, setName] = useCanvasState("name", "");
- * <TextInput value={name} onChange={setName} placeholder="Enter name…" />
+ * <TextInput value={name} onChange={setName} placeholder="Enter name..." />
  * ```
  */
 import { type CSSProperties, type JSX, type ReactNode } from "react";
@@ -23,14 +23,14 @@ export type TextInputProps = {
  * Single-line text input (28px height). Use for names, titles, search
  * queries, and short text fields.
  *
- * `onChange` receives the **string value**, not a DOM event — this pairs
+ * `onChange` receives the **string value**, not a DOM event - this pairs
  * directly with `useCanvasState` setters.
  *
  * @example
  * ```tsx
  * const [name, setName] = useCanvasState("name", "");
  *
- * <TextInput value={name} onChange={setName} placeholder="Task title…" />
+ * <TextInput value={name} onChange={setName} placeholder="Task title..." />
  * ```
  */
 export declare function TextInput({ value, onChange, placeholder, disabled, type, style }: TextInputProps): JSX.Element;
@@ -56,7 +56,7 @@ export type TextAreaProps = {
  * ```tsx
  * const [notes, setNotes] = useCanvasState("notes", "");
  *
- * <TextArea value={notes} onChange={setNotes} placeholder="Add notes…" rows={4} />
+ * <TextArea value={notes} onChange={setNotes} placeholder="Add notes..." rows={4} />
  * ```
  */
 export declare function TextArea({ value, onChange, placeholder, disabled, rows, style }: TextAreaProps): JSX.Element;
@@ -84,7 +84,7 @@ export type CheckboxProps = {
  *
  * @example
  * ```tsx
- * // Checkbox in a list — no label, parent handles layout
+ * // Checkbox in a list - no label, parent handles layout
  * <Checkbox checked={item.done} onChange={(v) => toggleItem(item.id, v)} />
  * ```
  */
@@ -170,7 +170,7 @@ export type IconButtonProps = {
 };
 /**
  * Compact icon-only button for inline actions on list items (delete, edit,
- * expand, etc.). Accepts **any** `children` as the icon — use an inline SVG,
+ * expand, etc.). Accepts **any** `children` as the icon - use an inline SVG,
  * an emoji, or a unicode character.
  *
  * Always provide `title` for accessibility (screen-reader label + tooltip).
@@ -180,7 +180,7 @@ export type IconButtonProps = {
  * @example
  * ```tsx
  * // Delete button on a card
- * <IconButton title="Delete" onClick={() => remove(id)}>✕</IconButton>
+ * <IconButton title="Delete" onClick={() => remove(id)}>x</IconButton>
  *
  * // Edit button with an SVG icon
  * <IconButton title="Edit" variant="circle" size="sm" onClick={edit}>

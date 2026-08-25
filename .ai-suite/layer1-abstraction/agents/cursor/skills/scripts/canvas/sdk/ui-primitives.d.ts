@@ -6,16 +6,16 @@ import { type CSSProperties, type JSX, type ReactNode } from "react";
  * Shallow-merge style objects with `override` taking precedence.
  *
  * Use for small tweaks on built-in components (e.g. extra padding or width).
- * **Do not** use this to build elaborate custom chrome — prefer the built-in
+ * **Do not** use this to build elaborate custom chrome - prefer the built-in
  * components and flat solid token colors. No gradients, no box-shadows.
  *
  * @example
  * ```tsx
- * // Good — minor override on a built-in component
- * <CardBody style={mergeStyle({ padding: 16 })}>…</CardBody>
+ * // Good - minor override on a built-in component
+ * <CardBody style={mergeStyle({ padding: 16 })}>...</CardBody>
  *
- * // Bad — hand-rolled decorative styling
- * <div style={mergeStyle(base, { background: "linear-gradient(…)" })}>…</div>
+ * // Bad - hand-rolled decorative styling
+ * <div style={mergeStyle(base, { background: "linear-gradient(...)" })}>...</div>
  * ```
  */
 export declare function mergeStyle(base: CSSProperties, override?: CSSProperties): CSSProperties;
@@ -31,8 +31,8 @@ export type StackProps = {
  * ```tsx
  * <Stack gap={16}>
  *   <H1>Dashboard</H1>
- *   <Card>…</Card>
- *   <Card>…</Card>
+ *   <Card>...</Card>
+ *   <Card>...</Card>
  * </Stack>
  * ```
  */
@@ -108,7 +108,7 @@ export declare function Divider({ style }: DividerProps): JSX.Element;
 export declare function Spacer(): JSX.Element;
 /** Horizontal alignment for a table column. */
 export type TableColumnAlign = "left" | "center" | "right";
-/** Semantic tone for a table row — marker dot in the first column. */
+/** Semantic tone for a table row - marker dot in the first column. */
 export type TableRowTone = "success" | "danger" | "warning" | "info" | "neutral";
 export type TableProps = {
     /** Column titles, left to right. Column count is fixed by this array. */
@@ -138,13 +138,13 @@ export type TableProps = {
 };
 /**
  * Data table with column headers and rows. Framed by default with its own
- * bordered container — **do not wrap in a Card** unless the card itself is
+ * bordered container - **do not wrap in a Card** unless the card itself is
  * a named entity that happens to contain a table. Render directly under a
  * heading in the normal case.
  *
  * @example
  * ```tsx
- * // Good — table directly under a heading
+ * // Good - table directly under a heading
  * <H2>Active services</H2>
  * <Table
  *   headers={["Service", "Status", "RPS"]}
@@ -155,10 +155,10 @@ export type TableProps = {
  *   columnAlign={["left", "left", "right"]}
  * />
  *
- * // Allowed — table inside a named-entity card
+ * // Allowed - table inside a named-entity card
  * <Card>
  *   <CardHeader>billing-service</CardHeader>
- *   <CardBody><Table headers={…} rows={…} /></CardBody>
+ *   <CardBody><Table headers={...} rows={...} /></CardBody>
  * </Card>
  * ```
  */
@@ -180,12 +180,12 @@ export type TextProps = {
     italic?: boolean;
     /**
      * Truncate overflowing text with an ellipsis on a single line.
-     * - `true` / `"end"` — ellipsis at the end (default truncation).
-     * - `"start"` — ellipsis at the start. Useful for file paths where the
+     * - `true` / `"end"` - ellipsis at the end (default truncation).
+     * - `"start"` - ellipsis at the start. Useful for file paths where the
      *   filename matters more than the directory prefix.
      *
      * Requires the parent to have a bounded width (flex child with
-     * `minWidth: 0`, fixed width, etc.) — otherwise the text just expands
+     * `minWidth: 0`, fixed width, etc.) - otherwise the text just expands
      * and never overflows.
      */
     truncate?: boolean | "start" | "end";
@@ -217,13 +217,13 @@ export type H1Props = {
 };
 /**
  * Page-level heading. Use once at the top of a canvas.
- * **Do not** place inside `CardHeader` — card headers use their own label.
+ * **Do not** place inside `CardHeader` - card headers use their own label.
  *
  * @example
  * ```tsx
  * <Stack>
  *   <H1>Performance Report</H1>
- *   <Card>…</Card>
+ *   <Card>...</Card>
  * </Stack>
  * ```
  */
@@ -234,14 +234,14 @@ export type H2Props = {
 };
 /**
  * Section heading. Use between groups of cards or sections.
- * **Do not** place inside `CardHeader` — card headers use their own label.
+ * **Do not** place inside `CardHeader` - card headers use their own label.
  *
  * @example
  * ```tsx
  * <Stack>
  *   <H2>Recent activity</H2>
- *   <Card>…</Card>
- *   <Card>…</Card>
+ *   <Card>...</Card>
+ *   <Card>...</Card>
  * </Stack>
  * ```
  */
@@ -271,7 +271,7 @@ export type CodeProps = {
  * Inline `<code>` span for identifiers, file names, or short snippets.
  * Uses `0.92em` so it scales with surrounding text (headings, body, etc.).
  *
- * Prefer writing backtick markdown inside `Text` — e.g. `` <Text>Run `npm install`</Text> `` —
+ * Prefer writing backtick markdown inside `Text` - e.g. `` <Text>Run `npm install`</Text> `` -
  * which is automatically parsed. Use `<Code>` only when you need an explicit element.
  *
  * @example
@@ -288,7 +288,7 @@ export type LinkProps = {
 /**
  * Inline link that opens in the user's default browser.
  *
- * Prefer writing markdown links inside `Text` — e.g. `<Text>See the [docs](url)</Text>` —
+ * Prefer writing markdown links inside `Text` - e.g. `<Text>See the [docs](url)</Text>` -
  * which are automatically parsed. Use `<Link>` when you need an explicit anchor
  * outside of a text flow or when composing with other elements.
  *
@@ -317,7 +317,7 @@ export type CardProps = {
     /**
      * When true, the header uses `position: sticky` so it stays visible while
      * the card body scrolls. Requires the card (or a parent) to have a
-     * constrained height and `overflow: auto` — the canvas host controls this,
+     * constrained height and `overflow: auto` - the canvas host controls this,
      * so sticky behavior depends on the host viewport.
      */
     stickyHeader?: boolean;
@@ -335,7 +335,7 @@ export type CardProps = {
     style?: CSSProperties;
 };
 /**
- * Bordered surface for a **labeled, self-contained unit** — a file, a service,
+ * Bordered surface for a **labeled, self-contained unit** - a file, a service,
  * a config block, or a table with a title. Compose with `CardHeader` + `CardBody`.
  *
  * **When to use Card:**
@@ -344,13 +344,13 @@ export type CardProps = {
  * - A distinct, bounded section the user might scan by header label.
  *
  * **When NOT to use Card:**
- * - General text sections — use `<H2>` + `<Text>` instead. Not every section
+ * - General text sections - use `<H2>` + `<Text>` instead. Not every section
  *   needs a border.
- * - Page-level layout — use `<Stack>` with headings. A canvas should not be a
+ * - Page-level layout - use `<Stack>` with headings. A canvas should not be a
  *   wall of stacked cards.
- * - Nesting — do not put cards inside cards. Use `<Divider>` within a card body.
+ * - Nesting - do not put cards inside cards. Use `<Divider>` within a card body.
  *
- * Pass **plain text** as `CardHeader` children — the header provides its own
+ * Pass **plain text** as `CardHeader` children - the header provides its own
  * 12px font. Do **not** put `<H1>` or `<H2>` inside a card header.
  *
  * Set `collapsible` to make the header a toggle that shows/hides `CardBody`.
@@ -373,15 +373,15 @@ export type CardProps = {
  *   <CardBody>Service handles rolling deployments across regions.</CardBody>
  * </Card>
  *
- * // Bad — card wrapping plain text that should just be a heading
- * // Use <H2>Overview</H2><Text>…</Text> instead.
+ * // Bad - card wrapping plain text that should just be a heading
+ * // Use <H2>Overview</H2><Text>...</Text> instead.
  * ```
  */
 export declare function Card({ children, variant, size, stickyHeader, collapsible, defaultOpen, open: openProp, onOpenChange, style }: CardProps): JSX.Element;
 export type CardHeaderProps = {
     /** Plain text title. Do **not** pass headings, buttons, pills, or layout rows. */
     children?: ReactNode;
-    /** Small trailing content aligned to the right edge — a status label, a
+    /** Small trailing content aligned to the right edge - a status label, a
      *  single pill, or a short metadata string. Keep it compact. */
     trailing?: ReactNode;
     style?: CSSProperties;
@@ -389,26 +389,26 @@ export type CardHeaderProps = {
 /**
  * 28px header row (32px at `size="lg"`). A compact label for the card.
  *
- * **`children`** — plain text only. This is a 12px label, not a toolbar.
+ * **`children`** - plain text only. This is a 12px label, not a toolbar.
  * Do **not** pass `<H1>`, `<H2>`, `<Text weight="bold">`, `<Pill>`,
  * `<Button>`, `<Row>`, or any interactive/layout elements as children.
  *
- * **`trailing`** — optional right-aligned slot for small status indicators
+ * **`trailing`** - optional right-aligned slot for small status indicators
  * (a short label, a single `<Pill>`, a metadata string like a timestamp).
  *
  * @example
  * ```tsx
- * // Good — plain title
+ * // Good - plain title
  * <CardHeader>config.yaml</CardHeader>
  *
- * // Good — title with trailing status
+ * // Good - title with trailing status
  * <CardHeader trailing={<Pill active>Healthy</Pill>}>
  *   billing-service
  * </CardHeader>
  *
- * // Bad — heading in header (use CardHeader text, not H2)
- * // Bad — buttons in header (no room, wrong context)
- * // Bad — multiple pills in header (use trailing for one, or move to CardBody)
+ * // Bad - heading in header (use CardHeader text, not H2)
+ * // Bad - buttons in header (no room, wrong context)
+ * // Bad - multiple pills in header (use trailing for one, or move to CardBody)
  * ```
  */
 export declare function CardHeader({ children, trailing, style }: CardHeaderProps): JSX.Element;
@@ -439,7 +439,7 @@ export type ButtonProps = {
 };
 /**
  * Action button (24px height, sized to its label). **Never stretch to full
- * width** — buttons are always inline and hug their text.
+ * width** - buttons are always inline and hug their text.
  *
  * @example
  * ```tsx
@@ -458,17 +458,17 @@ export type PillProps = {
     children?: ReactNode;
     /** Whether the pill is in its selected/active state (filled background). */
     active?: boolean;
-    /** @deprecated Ignored — pills always render with neutral styling. */
+    /** @deprecated Ignored - pills always render with neutral styling. */
     tone?: PillTone;
     /**
      * Visual size. `"md"` (default) is the standard pill. `"sm"` is a
-     * compact variant with smaller text, tighter padding, and no border —
+     * compact variant with smaller text, tighter padding, and no border -
      * designed for tight spaces like `CardHeader` trailing slots.
      */
     size?: PillSize;
     /** Shown before the label (icon, emoji, etc.). */
     leadingContent?: ReactNode;
-    /** e.g. shortcut hint — matches ui `Pill` ghost keyboard hint (muted primary). */
+    /** e.g. shortcut hint - matches ui `Pill` ghost keyboard hint (muted primary). */
     keyboardHint?: string;
     disabled?: boolean;
     title?: string;
@@ -491,7 +491,7 @@ export type PillProps = {
  * </Row>
  *
  * // Action suggestion with shortcut hint
- * <Pill onClick={handlePlan} keyboardHint="⇧Tab">Plan new idea</Pill>
+ * <Pill onClick={handlePlan} keyboardHint="Shift+Tab">Plan new idea</Pill>
  * ```
  */
 export declare function Pill({ children, active, size, leadingContent, keyboardHint, disabled, title, style, onClick }: PillProps): JSX.Element;
@@ -506,7 +506,7 @@ export type StatProps = {
     style?: CSSProperties;
 };
 /**
- * Single metric display — a large value with a compact label beneath it.
+ * Single metric display - a large value with a compact label beneath it.
  * Use inside `<Grid>` for dashboard summary strips.
  *
  * @example

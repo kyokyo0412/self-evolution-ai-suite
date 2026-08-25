@@ -99,7 +99,7 @@ If user says "use dark theme" or "change my theme":
 
 5. **Commit Attribution**: When the user asks about commit attribution, clarify whether they want to edit the **CLI agent** or the **IDE agent**. For the CLI agent, modify `~/.cursor/cli-config.json`. For the IDE agent, it is controlled from the UI at **Cursor Settings > Agent > Attribution** (not settings.json).
 
-## Common User Requests → Settings
+## Common User Requests -> Settings
 
 | User Request | Setting |
 |--------------|---------|

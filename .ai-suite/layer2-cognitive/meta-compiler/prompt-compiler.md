@@ -55,6 +55,6 @@ The optimized prompt you generate MUST include:
 - **Default Action**: Default to presenting the prompt only. Execute the prompt ONLY if explicitly instructed to do so by the user.
 
 ## Negative Constraints
-- ❌ Do not skip the Context Aggregator step.
-- ❌ Do not execute the output prompt unless explicitly instructed to do so.
-- ❌ Always provide the optimized prompt in a clear markdown code block.
+- [X] Do not skip the Context Aggregator step.
+- [X] Do not execute the output prompt unless explicitly instructed to do so.
+- [X] Always provide the optimized prompt in a clear markdown code block.

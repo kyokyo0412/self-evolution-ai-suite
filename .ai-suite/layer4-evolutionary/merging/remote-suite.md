@@ -1,6 +1,6 @@
 ---
 name: remote-suite
-description: Manage the full lifecycle of ai-suite on remote SSH hosts — install, collect evolutions, push evolutions, check status, and remove. Use when the user asks to install ai-suite on a remote machine, deploy ai-suite to an SSH host, collect evolution from a remote host, push the evolved suite, check ai-suite status on a remote host, remove ai-suite from a remote host, or manage remote ai-suite in any way.
+description: Manage the full lifecycle of ai-suite on remote SSH hosts - install, collect evolutions, push evolutions, check status, and remove. Use when the user asks to install ai-suite on a remote machine, deploy ai-suite to an SSH host, collect evolution from a remote host, push the evolved suite, check ai-suite status on a remote host, remove ai-suite from a remote host, or manage remote ai-suite in any way.
 triggers:
   - install ai-suite
   - deploy ai-suite
@@ -18,10 +18,10 @@ triggers:
   - reinstalled
 ---
 
-# Remote Suite — AI-Prompted Remote Lifecycle Manager
+# Remote Suite - AI-Prompted Remote Lifecycle Manager
 
 Manage ai-suite on remote SSH hosts using natural language. Covers all five operations:
-**install · collect · push · status · remove**.
+**install - collect - push - status - remove**.
 
 ---
 
@@ -32,12 +32,12 @@ Act as the remote ai-suite operator. When triggered:
 1. Parse the user's intent (which operation + which host(s)).
 2. Build the exact shell command.
 3. Run it and stream output to the user.
-4. For `collect`: present the evolution report and print copy-paste git commands — **never auto-commit**.
+4. For `collect`: present the evolution report and print copy-paste git commands - **never auto-commit**.
 5. For `install`/`remove`: confirm success or report the error.
 
 ---
 
-## Local Deployment Path (canonical — never guess)
+## Local Deployment Path (canonical - never guess)
 
 The local deployment root is **always** `~/.ai-suite-deploy/`. Do NOT search for
 `.cursor-suite/`, `.ai-suite/` at `~`, or any other variant.
@@ -64,7 +64,7 @@ The local deployment root is **always** `~/.ai-suite-deploy/`. Do NOT search for
 ### 0. Local Status (verify installation on the current machine)
 
 When the user asks "verify", "please verify", "confirm install", "is ai-suite installed",
-or similar — and no `USER@HOST` is present — run this local check:
+or similar - and no `USER@HOST` is present - run this local check:
 
 ```bash
 DEPLOY="$HOME/.ai-suite-deploy"
@@ -77,8 +77,8 @@ echo "=== Skills (deployed) ===" && ls ~/.cursor/skills/ 2>/dev/null || echo "(n
 echo "=== Rules (deployed) ===" && ls ~/.cursor/rules/ 2>/dev/null || echo "(none)"
 ```
 
-Then report: deploy root present ✅/❌, script count, meta present ✅/❌,
-skill count (source vs deployed), rules deployed ✅/❌.
+Then report: deploy root present [OK]/[X], script count, meta present [OK]/[X],
+skill count (source vs deployed), rules deployed [OK]/[X].
 
 ### 1. Install (deploy ai-suite to a remote host)
 
@@ -180,7 +180,7 @@ ssh USER@HOST "
   DEPLOY=\$HOME/.ai-suite-deploy
   if [ -d \"\$DEPLOY/.ai-suite/layer3-registry/core\" ]; then
     count=\$(find \"\$DEPLOY/.ai-suite/layer3-registry/core\" -name '*.md' | wc -l)
-    echo \"[ai-suite] installed — \$count core skill(s) at \$DEPLOY\"
+    echo \"[ai-suite] installed - \$count core skill(s) at \$DEPLOY\"
   else
     echo '[ai-suite] NOT installed at \$DEPLOY'
   fi
@@ -228,9 +228,9 @@ Map the user's words to an operation:
 
 Extract all `USER@HOST` patterns from the user's message.
 
-- If a `USER@HOST` is found → use the **remote** operation (Operations 1–5).
-- If **no** `USER@HOST` is found and the intent is status/verify → use **Operation 0 (Local Status)** immediately. Do NOT ask for a host.
-- If **no** `USER@HOST` is found and the intent is install/collect/push/remove → ask:
+- If a `USER@HOST` is found -> use the **remote** operation (Operations 1-5).
+- If **no** `USER@HOST` is found and the intent is status/verify -> use **Operation 0 (Local Status)** immediately. Do NOT ask for a host.
+- If **no** `USER@HOST` is found and the intent is install/collect/push/remove -> ask:
 
 > "Which remote host? (format: `user@hostname`)"
 
@@ -244,28 +244,28 @@ If the user lists multiple `USER@HOST` patterns (e.g. "alice@host1 and bob@host2
 
 ## Step-by-Step Execution
 
-### Step 1 — Identify operation and hosts
+### Step 1 - Identify operation and hosts
 
 - Operation: local-status / install / collect / push / remote-status / remove (see table above)
-- **Local status shortcut:** if intent is verify/status and no `USER@HOST` is present, run Operation 0 immediately and skip Steps 2–4.
-- Hosts: extract `USER@HOST` patterns — for remote ops, ask if none found
+- **Local status shortcut:** if intent is verify/status and no `USER@HOST` is present, run Operation 0 immediately and skip Steps 2-4.
+- Hosts: extract `USER@HOST` patterns - for remote ops, ask if none found
 - Options: agent, domain, remote-path, remote-scope, dry-run
 
-### Step 2 — Safety preflight
+### Step 2 - Safety preflight
 
 Before running any command:
 
 1. **Script check:** Confirm `ai-suite enable`, `ai-suite disable`, and `ai-suite evolve` exist in the workspace. If any is missing, report the missing file and stop.
 2. **Production guard:** If the host contains `prod` or `prd`, warn:
-   > "⚠️ `USER@HOST` looks like a production target. Please confirm you want to proceed."
+   > "[!] `USER@HOST` looks like a production target. Please confirm you want to proceed."
    Wait for explicit confirmation before continuing.
 
-### Step 3 — Build and run the command
+### Step 3 - Build and run the command
 
 Build the exact shell command per the Intent Recognition table and run it.
 Stream output so the user sees progress in real time.
 
-### Step 4 — Present results
+### Step 4 - Present results
 
 **Install / remove:**
 - Confirm success per host, or report the error and suggest checking SSH connectivity.
@@ -314,7 +314,7 @@ Agent: bash ai-suite evolve push --host "alice@host1"
 ```
 User:  check ai-suite status on alice@dev.example.com
 Agent: ssh alice@dev.example.com "... status probe ..."
-       → [ai-suite] installed — 6 core skill(s) at /home/alice/.ai-suite-deploy
+       -> [ai-suite] installed - 6 core skill(s) at /home/alice/.ai-suite-deploy
 ```
 
 ### Remove from a remote host
@@ -346,10 +346,10 @@ Agent: bash ai-suite enable --scope remote --host "alice@dev.example.com" --dry-
 
 ## Negative Constraints (Must NOT)
 
-- ❌ Do not auto-commit or run `git push` automatically.
-- ❌ Do not proceed with `prod` hosts without explicit user confirmation.
-- ❌ Do not guess a host — always ask if none is provided.
-- ❌ Do not run `push` when the user asked `collect`, or vice versa.
-- ❌ Do not silently add `--dry-run` — state it explicitly if used.
-- ❌ Do not run `install` if the required scripts are missing from the workspace.
-- ❌ Do not combine incompatible flags (e.g., `--remote-scope project` without `--remote-path`).
+- [X] Do not auto-commit or run `git push` automatically.
+- [X] Do not proceed with `prod` hosts without explicit user confirmation.
+- [X] Do not guess a host - always ask if none is provided.
+- [X] Do not run `push` when the user asked `collect`, or vice versa.
+- [X] Do not silently add `--dry-run` - state it explicitly if used.
+- [X] Do not run `install` if the required scripts are missing from the workspace.
+- [X] Do not combine incompatible flags (e.g., `--remote-scope project` without `--remote-path`).

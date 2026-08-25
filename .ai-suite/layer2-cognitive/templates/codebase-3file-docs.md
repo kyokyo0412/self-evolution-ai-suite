@@ -12,34 +12,34 @@ Act as an **Expert Software Architect and Technical Writer**. Analyze this entir
 
 Generate the following three documents.
 
-## 1. `01-System-Overview.md` — High-Level Design & Function
+## 1. `01-System-Overview.md` - High-Level Design & Function
 
-- **System Purpose** — clear, concise explanation of what this source code does and the business / technical problem it solves.
-- **High-Level Architecture** — macro architecture (Microservices, Monolith, Event-Driven, MVC, modular monolith, hexagonal, etc.).
-- **Component Ecosystem** — list the major components / modules.
-- **Interaction Flow** — how the major components interact, plus a Mermaid.js flowchart mapping the high-level architecture and data flow.
+- **System Purpose** - clear, concise explanation of what this source code does and the business / technical problem it solves.
+- **High-Level Architecture** - macro architecture (Microservices, Monolith, Event-Driven, MVC, modular monolith, hexagonal, etc.).
+- **Component Ecosystem** - list the major components / modules.
+- **Interaction Flow** - how the major components interact, plus a Mermaid.js flowchart mapping the high-level architecture and data flow.
 
-## 2. `02-Component-Specs.md` — Detailed Component Implementation
+## 2. `02-Component-Specs.md` - Detailed Component Implementation
 
 For EVERY major component identified in the overview, provide:
 
-- **Component Function** — what exactly does this component do?
-- **File Paths** — the exact directories and source files that make up this component.
-- **Tech Stack** — language, frameworks, libraries used to implement it.
-- **Algorithms & Techniques** — notable design patterns, algorithms, data structures.
-- **Inputs & Outputs** — what data it ingests (APIs, events, DB reads) and what it emits or mutates.
-- **Processing Logic** — step-by-step transformation from input to output.
-- **Sequence Diagram** — a Mermaid.js sequence diagram showing how this component communicates with others.
+- **Component Function** - what exactly does this component do?
+- **File Paths** - the exact directories and source files that make up this component.
+- **Tech Stack** - language, frameworks, libraries used to implement it.
+- **Algorithms & Techniques** - notable design patterns, algorithms, data structures.
+- **Inputs & Outputs** - what data it ingests (APIs, events, DB reads) and what it emits or mutates.
+- **Processing Logic** - step-by-step transformation from input to output.
+- **Sequence Diagram** - a Mermaid.js sequence diagram showing how this component communicates with others.
 
-## 3. `03-Developer-Guide-and-Function-Map.md` — Coding & Design Reference
+## 3. `03-Developer-Guide-and-Function-Map.md` - Coding & Design Reference
 
 Design this as a **daily tool** for the engineer coding and designing enhancements.
 
-- **Design Reference** — guidelines on how to use the existing architecture to design new features. Where should new business logic go? How should state be managed given current patterns?
-- **The Function Map** — a "Where to add code" index. Format as a table or Mermaid mindmap mapping common developer tasks to specific file paths.
-  - *Example:* "To add a new API endpoint → go to `/src/api/routes/` and update `router.go`."
-  - *Example:* "To modify database schemas → go to `/src/db/migrations/`."
-- **Core Abstractions** — the most important interfaces, base classes, or shared utilities that should be reused instead of rewritten.
+- **Design Reference** - guidelines on how to use the existing architecture to design new features. Where should new business logic go? How should state be managed given current patterns?
+- **The Function Map** - a "Where to add code" index. Format as a table or Mermaid mindmap mapping common developer tasks to specific file paths.
+  - *Example:* "To add a new API endpoint -> go to `/src/api/routes/` and update `router.go`."
+  - *Example:* "To modify database schemas -> go to `/src/db/migrations/`."
+- **Core Abstractions** - the most important interfaces, base classes, or shared utilities that should be reused instead of rewritten.
 
 ## Constraints
 

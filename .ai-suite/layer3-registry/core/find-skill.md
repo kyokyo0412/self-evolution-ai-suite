@@ -24,6 +24,6 @@ triggers:
 
 ## Negative Constraints (Must NOT)
 
-- ❌ Do not execute the skill automatically; only present and explain it so the user can decide whether to proceed.
-- ❌ Do not search outside the designated skill directories for workflow definitions.
-- ❌ Do not output executable scripts or Python code to perform the search; the search must be handled natively via system instructions and tool calls.
+- [X] Do not execute the skill automatically; only present and explain it so the user can decide whether to proceed.
+- [X] Do not search outside the designated skill directories for workflow definitions.
+- [X] Do not output executable scripts or Python code to perform the search; the search must be handled natively via system instructions and tool calls.

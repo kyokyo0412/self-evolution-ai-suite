@@ -47,9 +47,9 @@ Write the final output doc to `aigen_doc/<feature-name>.md`. Ensure the director
 - The output in the chat window is often better than the doc, so the agent MUST make the output document as good as in the chat window.
 
 ## Negative Constraints (Must NOT)
-- ❌ **MUST NOT:** Do not skip tracing any layer in the call chain.
-- ❌ **MUST NOT:** Do not stop to ask users input information before the documentation is fully generated. Write the document exhaustively without stopping.
-- ❌ **MUST NOT:** Do not guess answers without tracing the relevant code.
+- [X] **MUST NOT:** Do not skip tracing any layer in the call chain.
+- [X] **MUST NOT:** Do not stop to ask users input information before the documentation is fully generated. Write the document exhaustively without stopping.
+- [X] **MUST NOT:** Do not guess answers without tracing the relevant code.
 
 ---
 

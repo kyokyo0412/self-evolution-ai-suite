@@ -7,7 +7,7 @@ triggers:
   - loop-work
 ---
 
-# Loop-Work Skill — Iterative Agentic Execution
+# Loop-Work Skill - Iterative Agentic Execution
 
 Use this skill when the user requests to run a task for multiple iterations using a specific skill (e.g., `tdd-team`). This skill transforms the agent into an iterative orchestrator that embodies a **never-give-up spirit**.
 
@@ -92,8 +92,8 @@ For `i = 1` to `N` (or until the task is perfectly achieved):
 - Proceed to State 2 and State 3 of the `interactive-workflow` (call the `AskQuestion` tool).
 
 ## Negative Constraints (Must NOT)
-- ❌ Do NOT stop the loop prematurely unless the task is 100% perfectly achieved. You MUST explicitly chain tool calls to maintain execution.
-- ❌ Do NOT break the isolation principle of the AI suite.
-- ❌ Do NOT break or bypass the self-evolution mechanisms.
-- ❌ Do NOT run the next iteration without explicitly validating the previous one, designing improvements, and logging to State Tracking.
-- ❌ Do NOT call `AskQuestion` or trigger `interactive-workflow` State 2/3 until the entire loop of `N` iterations is complete.
+- [X] Do NOT stop the loop prematurely unless the task is 100% perfectly achieved. You MUST explicitly chain tool calls to maintain execution.
+- [X] Do NOT break the isolation principle of the AI suite.
+- [X] Do NOT break or bypass the self-evolution mechanisms.
+- [X] Do NOT run the next iteration without explicitly validating the previous one, designing improvements, and logging to State Tracking.
+- [X] Do NOT call `AskQuestion` or trigger `interactive-workflow` State 2/3 until the entire loop of `N` iterations is complete.

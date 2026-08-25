@@ -24,7 +24,7 @@ The Cursor SDK runs Cursor agents programmatically. Two language variants share 
 - **TypeScript** (`@cursor/sdk`, npm) - docs at [cursor.com/docs/sdk/typescript](https://cursor.com/docs/sdk/typescript)
 - **Python** (`cursor-sdk`, pip) - docs at [cursor.com/docs/sdk/python](https://cursor.com/docs/sdk/python)
 
-Both are in public beta and follow the same `Agent` → `Run` model across local (runs on the caller's machine against `cwd`) and cloud (runs on a Cursor-hosted VM against a cloned repo) runtimes.
+Both are in public beta and follow the same `Agent` -> `Run` model across local (runs on the caller's machine against `cwd`) and cloud (runs on a Cursor-hosted VM against a cloned repo) runtimes.
 
 Use this skill to help someone **bootstrap a working integration quickly** and **avoid the traps that bite new users**. The canonical docs cover the full reference; this skill adds decision-making, failure-mode prevention, and ready-to-extend patterns on top.
 
@@ -33,7 +33,7 @@ Use this skill to help someone **bootstrap a working integration quickly** and *
 Decide before writing any code. The wrong choice means rewriting the whole integration. Order:
 
 1. **The user named it.** `@cursor/sdk`, `cursor-sdk`, `cursor_sdk`, `npm install`, `pip install`, `import { Agent } from "@cursor/sdk"`, `from cursor_sdk import` - go with what they named.
-2. **The codebase signals it.** `pyproject.toml` / `requirements.txt` / `uv.lock` / `.py` files → Python. `package.json` / `tsconfig.json` / `.ts` files → TypeScript. If the integration will live in a polyglot repo, ask which subdirectory it goes into.
+2. **The codebase signals it.** `pyproject.toml` / `requirements.txt` / `uv.lock` / `.py` files -> Python. `package.json` / `tsconfig.json` / `.ts` files -> TypeScript. If the integration will live in a polyglot repo, ask which subdirectory it goes into.
 3. **No signal either way.** Ask one short question and wait: *"TypeScript or Python?"* Don't pick for them.
 
 The rest of this skill shows TypeScript and Python side by side. Concepts are identical; syntax differs - camelCase vs snake_case, async-by-default vs sync-default-with-async-mirror, `await using` vs `with`.
@@ -289,7 +289,7 @@ if run.supports("conversation"):
 export CURSOR_API_KEY="cursor_..."  # user API key or team service-account key
 ```
 
-Both SDKs read `CURSOR_API_KEY` when no key is passed explicitly. User keys live at [Cursor Dashboard → Integrations](https://cursor.com/dashboard/integrations); team service-account keys live in Team Settings → Service accounts. Team Admin API keys are not yet supported.
+Both SDKs read `CURSOR_API_KEY` when no key is passed explicitly. User keys live at [Cursor Dashboard -> Integrations](https://cursor.com/dashboard/integrations); team service-account keys live in Team Settings -> Service accounts. Team Admin API keys are not yet supported.
 
 If you're seeing 401s, the usual suspects are: key pasted with surrounding whitespace, key minted against a different environment, or the key belongs to a user without repo access for a cloud run.
 

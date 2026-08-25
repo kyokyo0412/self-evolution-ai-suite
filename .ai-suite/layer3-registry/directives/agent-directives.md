@@ -55,5 +55,5 @@ These are general rules the AI agent MUST adhere to across all tasks and interac
 - **Dynamic To-Do List**: When executing complex or multi-step tasks, you MUST continuously track your progress. Use the `TodoWrite` tool (if available) or explicit markdown to track task items. Initialize a Master To-Do list and update it dynamically as you work. When an item is completed, explicitly output and show the current status of the To-Do list in the chat window.
 
 ## Negative Constraints (Must NOT)
-- ❌ **Do not run `git commit`**: The AI agent MUST NEVER run `git commit` autonomously. Always leave the execution of `git commit` to the user.
-- ❌ **Do not leave temporary files**: The AI agent MUST NEVER leave unused temporary files after the task is done. Always actively verify and clean up `.bak`, `.tmp`, and `.pid`/`.log` execution files before finishing.
+- [X] **Do not run `git commit`**: The AI agent MUST NEVER run `git commit` autonomously. Always leave the execution of `git commit` to the user.
+- [X] **Do not leave temporary files**: The AI agent MUST NEVER leave unused temporary files after the task is done. Always actively verify and clean up `.bak`, `.tmp`, and `.pid`/`.log` execution files before finishing.

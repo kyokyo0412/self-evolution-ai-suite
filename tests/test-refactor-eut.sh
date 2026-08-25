@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-refactor-eut.sh — End-to-end sandbox tests for the .ai-suite/ refactoring.
+# test-refactor-eut.sh - End-to-end sandbox tests for the .ai-suite/ refactoring.
 #
 # Tests the full enable/disable lifecycle for both Cursor and Claude agents,
 # domain pack loading, idempotency, and backward compatibility.
@@ -38,7 +38,7 @@ trap cleanup EXIT
 echo "=== EUT: .ai-suite/ refactor end-to-end tests ==="
 echo ""
 
-# ── T1: Directory structure integrity ────────────────────────────────────────
+# -- T1: Directory structure integrity ----------------------------------------
 echo "--- T1: directory structure ---"
 for d in layer3-registry/core layer2-cognitive/templates layer1-abstraction/agents/cursor/skills layer1-abstraction/agents/cursor \
           layer1-abstraction/agents/claude layer4-evolutionary/validation; do
@@ -46,7 +46,7 @@ for d in layer3-registry/core layer2-cognitive/templates layer1-abstraction/agen
   else fail "T1: .ai-suite/$d missing"; fi
 done
 
-# ── T2: Cursor agent project install (sandbox) ───────────────────────────────
+# -- T2: Cursor agent project install (sandbox) -------------------------------
 echo ""
 echo "--- T2: cursor agent project install ---"
 SANDBOX=$(make_sandbox)
@@ -75,7 +75,7 @@ else fail "T2d: production-safety rule not deployed"; fi
 
 rm -rf "$SANDBOX" "$SANDBOX2"
 
-# ── T3: Cursor idempotency ────────────────────────────────────────────────────
+# -- T3: Cursor idempotency ----------------------------------------------------
 echo ""
 echo "--- T3: cursor project idempotency ---"
 SANDBOX=$(make_sandbox); SANDBOX2=$(make_sandbox)
@@ -92,7 +92,7 @@ else fail "T3: block duplicated (count=$block_count)"; fi
 
 rm -rf "$SANDBOX" "$SANDBOX2"
 
-# ── T4: Cursor project disable ───────────────────────────────────────────────
+# -- T4: Cursor project disable -----------------------------------------------
 echo ""
 echo "--- T4: cursor project disable ---"
 SANDBOX=$(make_sandbox); SANDBOX2=$(make_sandbox)
@@ -113,7 +113,7 @@ else fail "T4b: production-safety rule still present"; fi
 
 rm -rf "$SANDBOX" "$SANDBOX2"
 
-# ── T5: Claude agent project install ─────────────────────────────────────────
+# -- T5: Claude agent project install -----------------------------------------
 echo ""
 echo "--- T5: claude agent project install ---"
 SANDBOX=$(make_sandbox)
@@ -154,7 +154,7 @@ else fail "T5g: .cursorrules should not exist for claude-only install"; fi
 
 rm -rf "$SANDBOX"
 
-# ── T6: Claude idempotency ────────────────────────────────────────────────────
+# -- T6: Claude idempotency ----------------------------------------------------
 echo ""
 echo "--- T6: claude idempotency ---"
 SANDBOX=$(make_sandbox)
@@ -171,7 +171,7 @@ else fail "T6: claude install not idempotent (sentinel_count=$sentinel_count)"; 
 
 rm -rf "$SANDBOX"
 
-# ── T7: Claude project disable ────────────────────────────────────────────────
+# -- T7: Claude project disable ------------------------------------------------
 echo ""
 echo "--- T7: claude project disable ---"
 SANDBOX=$(make_sandbox)
@@ -194,7 +194,7 @@ else fail "T7b: sentinel block still present after disable"; fi
 
 rm -rf "$SANDBOX"
 
-# ── T8: --agent all installs both cursor and claude ──────────────────────────
+# -- T8: --agent all installs both cursor and claude --------------------------
 echo ""
 echo "--- T8: --agent all ---"
 SANDBOX=$(make_sandbox); SANDBOX2=$(make_sandbox)
@@ -213,7 +213,7 @@ else fail "T8b: CLAUDE.md missing for 'all'"; fi
 rm -rf "$SANDBOX" "$SANDBOX2"
 SANDBOX2=""
 
-# ── T9: --agent unknownagent exits non-zero with helpful message ──────────────
+# -- T9: --agent unknownagent exits non-zero with helpful message --------------
 echo ""
 echo "--- T9: unknown agent rejection ---"
 bad_exit=0
@@ -230,7 +230,7 @@ if printf '%s' "$bad_msg" | grep -iqF "unsupported"; then
   pass "T9b: error message includes 'unsupported'"
 else fail "T9b: error message does not say 'unsupported' (got: $bad_msg)"; fi
 
-# ── T10: Cursor global install (sandbox ~/.cursor/) ───────────────────────────
+# -- T10: Cursor global install (sandbox ~/.cursor/) ---------------------------
 echo ""
 echo "--- T10: cursor global install ---"
 SANDBOX=$(make_sandbox)
@@ -257,7 +257,7 @@ else fail "T10c: only $skill_count skills mirrored (expected >=7)"; fi
 rm -rf "$SANDBOX"
 
 
-# ── T12: Claude global install ────────────────────────────────────────────────
+# -- T12: Claude global install ------------------------------------------------
 echo ""
 echo "--- T12: claude global install ---"
 SANDBOX=$(make_sandbox)
@@ -280,7 +280,7 @@ else fail "T12c: global CLAUDE.md missing skill section"; fi
 
 rm -rf "$SANDBOX"
 
-# ── T13: validate-suite.sh scans all three tiers ─────────────────────────────
+# -- T13: validate-suite.sh scans all three tiers -----------------------------
 echo ""
 echo "--- T13: validate-suite.sh multi-tier ---"
 val_out=$(bash "$AI_SUITE/layer4-evolutionary/validation/validate-suite.sh" 2>&1)
@@ -295,7 +295,7 @@ if [[ "$pass_count" -eq "$expected_check_count" && "$pass_count" -gt 0 ]]; then
   pass "T13b: ${pass_count}/${expected_check_count} skill checks passed"
 else fail "T13b: expected $expected_check_count checks, got $pass_count"; fi
 
-# ── T14: dry-run makes no changes ────────────────────────────────────────────
+# -- T14: dry-run makes no changes --------------------------------------------
 echo ""
 echo "--- T14: dry-run no-op ---"
 SANDBOX=$(make_sandbox)
@@ -313,7 +313,7 @@ else fail "T14b: dry-run created CLAUDE.md (should be no-op)"; fi
 
 rm -rf "$SANDBOX"
 
-# ── Summary ───────────────────────────────────────────────────────────────────
+# -- Summary -------------------------------------------------------------------
 printf '\n'
 if [[ "$FAIL" -eq 0 ]]; then
   printf '%s[eut-refactor] %d/%d passed%s\n' "$(_grn)" "$PASS" "$TOTAL" "$(_off)"

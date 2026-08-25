@@ -70,7 +70,7 @@ export type DAGLayoutRank = {
 export type DAGLayoutResult = {
     nodes: DAGLayoutNode[];
     edges: DAGLayoutEdge[];
-    /** Bounding box per rank — useful for drawing layer bands. */
+    /** Bounding box per rank - useful for drawing layer bands. */
     ranks: DAGLayoutRank[];
     /** The direction used for this layout. */
     direction: "vertical" | "horizontal";
@@ -92,10 +92,10 @@ export type DAGLayoutResult = {
  *   edges: [{ from: "a", to: "b" }, { from: "b", to: "c" }],
  * });
  *
- * // layout.nodes[i].x / .y → position your own SVG/HTML elements
- * // layout.edges[i].sourceX/Y, targetX/Y → draw lines between them
- * // layout.edges[i].isBackEdge → style cycle edges differently
- * // layout.ranks[i] → draw layer bands behind each rank
+ * // layout.nodes[i].x / .y -> position your own SVG/HTML elements
+ * // layout.edges[i].sourceX/Y, targetX/Y -> draw lines between them
+ * // layout.edges[i].isBackEdge -> style cycle edges differently
+ * // layout.ranks[i] -> draw layer bands behind each rank
  * ```
  */
 export declare function computeDAGLayout(options: DAGLayoutOptions): DAGLayoutResult;

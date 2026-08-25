@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-global-cursorrules-eut.sh — Phase 4 EUT: global ~/.cursorrules fix
+# test-global-cursorrules-eut.sh - Phase 4 EUT: global ~/.cursorrules fix
 # End-to-end sandbox tests for the full global install/uninstall cycle,
 # verifying ~/.cursorrules, domain skills, idempotency, and isolation.
 
@@ -18,7 +18,7 @@ fail() { printf '  \033[31mFAIL\033[0m  %s\n' "$1"; FAIL=$((FAIL+1)); }
 
 make_sandbox() { mktemp -d "${TMPDIR:-/tmp}/eut-global-cr.XXXXXX"; }
 
-# ── E1: global install writes ~/.cursorrules ─────────────────────────────────
+# -- E1: global install writes ~/.cursorrules ---------------------------------
 echo ""
 echo "=== E1: Global install writes ~/.cursorrules ==="
 
@@ -44,13 +44,13 @@ if grep -q '\.cursor/skills\|cursor/skills' "$CR"; then
   pass "E1d skills location referenced in ~/.cursorrules"
 else fail "E1d skills location referenced in ~/.cursorrules"; fi
 
-if grep -q 'Run Reflection\|运行反思' "$CR"; then
+if grep -q 'Run Reflection\|Run Reflection' "$CR"; then
   pass "E1e reflection trigger instruction present in ~/.cursorrules"
 else fail "E1e reflection trigger instruction present in ~/.cursorrules"; fi
 
-# ── E2: global install without domain — 9 skills ─────────────────────────────
+# -- E2: global install without domain - 9 skills -----------------------------
 echo ""
-echo "=== E2: Global install — skill count ==="
+echo "=== E2: Global install - skill count ==="
 
 skill_count=$(find "$SB/.cursor/skills" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
 expected_base=$(find \
@@ -71,7 +71,7 @@ for domain_skill in bugzilla-debug bugzilla-rest-api customi-lab custom-skill-2 
 done
 
 
-# ── E4: idempotency ───────────────────────────────────────────────────────────
+# -- E4: idempotency -----------------------------------------------------------
 echo ""
 echo "=== E4: Idempotency ==="
 
@@ -84,7 +84,7 @@ if [[ "$block_count" -eq 1 ]]; then
   pass "E4a exactly 1 block after 2 global installs"
 else fail "E4a expected 1 block, got $block_count"; fi
 
-# ── E5: uninstall removes block + preserves other content ────────────────────
+# -- E5: uninstall removes block + preserves other content --------------------
 echo ""
 echo "=== E5: Global uninstall ==="
 
@@ -106,7 +106,7 @@ if [[ ! -d "$SB/.cursor/skills/tdd-team" ]]; then
   pass "E5c skill dirs removed by global uninstall"
 else fail "E5c skill dirs removed by global uninstall"; fi
 
-# ── E6: project install does NOT touch ~/.cursorrules ─────────────────────────
+# -- E6: project install does NOT touch ~/.cursorrules -------------------------
 echo ""
 echo "=== E6: Project install isolation ==="
 
@@ -128,7 +128,7 @@ if grep -q '>>>>> cursor-ai-suite >>>>>' "$PROJ6/.cursorrules" 2>/dev/null; then
   pass "E6c project .cursorrules contains AI Suite block"
 else fail "E6c project .cursorrules contains AI Suite block"; fi
 
-# ── E7: dry-run global install produces no files ──────────────────────────────
+# -- E7: dry-run global install produces no files ------------------------------
 echo ""
 echo "=== E7: Dry-run global install ==="
 
@@ -141,7 +141,7 @@ if [[ ! -f "$SB7/.cursorrules" ]]; then
   pass "E7a dry-run does NOT create ~/.cursorrules"
 else fail "E7a dry-run does NOT create ~/.cursorrules"; fi
 
-# ── E8: Full acceptance test regression ───────────────────────────────────────
+# -- E8: Full acceptance test regression ---------------------------------------
 echo ""
 echo "=== E8: Acceptance test regression ==="
 
@@ -150,10 +150,10 @@ if echo "$acc_out" | grep -qE "[0-9]+ passed.*0 FAILED|0 failures"; then
   pass "E8 acceptance tests all pass"
 else
   final_line=$(echo "$acc_out" | tail -3)
-  fail "E8 acceptance tests — some failures: $final_line"
+  fail "E8 acceptance tests - some failures: $final_line"
 fi
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 echo ""
 TOTAL=$((PASS+FAIL))
 printf '=== %d passed, %d FAILED out of %d ===\n' "$PASS" "$FAIL" "$TOTAL"

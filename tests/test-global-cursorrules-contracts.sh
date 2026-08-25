@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-global-cursorrules-contracts.sh — Phase 2 RED contract tests
+# test-global-cursorrules-contracts.sh - Phase 2 RED contract tests
 # Verifies cursor/adapter.sh satisfies the global-cursorrules contracts.
 
 set -euo pipefail
@@ -17,10 +17,10 @@ fail() { printf '  \033[31mFAIL\033[0m  %s\n' "$1"; FAIL=$((FAIL+1)); }
 check_contains() {
   local label="$1"; local pattern="$2"
   if grep -qE -- "$pattern" "$ADAPTER"; then pass "$label"
-  else fail "$label — pattern not found: $pattern"; fi
+  else fail "$label - pattern not found: $pattern"; fi
 }
 
-# ── C1: Static source contracts ───────────────────────────────────────────────
+# -- C1: Static source contracts -----------------------------------------------
 echo ""
 echo "=== C1: Static source contracts ==="
 
@@ -45,7 +45,7 @@ check_contains "C1f agent_install_global calls _append_cursorrules_global_block"
 check_contains "C1g agent_uninstall_global calls _remove_cursorrules_block on HOME/.cursorrules" \
   '_remove_cursorrules_block.*HOME|HOME.*cursorrules.*_remove|_remove_cursorrules_block.*cursorrules'
 
-# ── C2: Functional sandbox tests ─────────────────────────────────────────────
+# -- C2: Functional sandbox tests ---------------------------------------------
 echo ""
 echo "=== C2: Functional sandbox tests ==="
 
@@ -86,7 +86,7 @@ else
   fail "C2d skills location referenced in ~/.cursorrules"
 fi
 
-# C2e: idempotency — run again, count block starts
+# C2e: idempotency - run again, count block starts
 (
   export HOME="$SANDBOX"
   # shellcheck source=/dev/null
@@ -150,7 +150,7 @@ else
 fi
 
 
-# C2j: without domain — only core+cursor skills (and all domains by default)
+# C2j: without domain - only core+cursor skills (and all domains by default)
 SANDBOX3=$(mktemp -d "${TMPDIR:-/tmp}/global-cr-contracts3.XXXXXX")
 trap 'rm -rf "$SANDBOX3"' EXIT
 (

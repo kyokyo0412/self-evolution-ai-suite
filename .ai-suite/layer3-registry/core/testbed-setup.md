@@ -1,6 +1,6 @@
 ---
 name: testbed-setup
-description: Autonomously build and verify a remote testbed (Linux VM, container host) over SSH following an Idempotent Discovery → Execute → Debug → Verify loop. Use when the user asks to set up a testbed, install/configure a remote environment, or build a Dockerized lab. Includes mandatory safety preflight to refuse known-production targets.
+description: Autonomously build and verify a remote testbed (Linux VM, container host) over SSH following an Idempotent Discovery -> Execute -> Debug -> Verify loop. Use when the user asks to set up a testbed, install/configure a remote environment, or build a Dockerized lab. Includes mandatory safety preflight to refuse known-production targets.
 triggers:
   - set up a testbed
   - configure a remote environment
@@ -10,7 +10,7 @@ triggers:
 
 # Autonomous Testbed Engineer
 
-Build and verify a remote testbed by directly executing SSH commands against the target host. Every action follows **Discovery → Execute → Debug → Verify** with idempotency and structured `[EXEC]`/`[STATUS]`/`[DEBUG]` logging.
+Build and verify a remote testbed by directly executing SSH commands against the target host. Every action follows **Discovery -> Execute -> Debug -> Verify** with idempotency and structured `[EXEC]`/`[STATUS]`/`[DEBUG]` logging.
 
 ## Hard Safety Preflight (run first, every time)
 
@@ -18,13 +18,13 @@ Before any SSH connection, confirm with the user **all four** of:
 
 1. **Hostname/IP** of target (echoed back).
 2. **Explicit confirmation** the host is **non-production** (testbed/lab/dev).
-3. **Sudo/root scope** — what privilege level is granted.
-4. **Snapshot/backup state** — if the testbed has prior state worth preserving.
+3. **Sudo/root scope** - what privilege level is granted.
+4. **Snapshot/backup state** - if the testbed has prior state worth preserving.
 
 Run `bash .ai-suite/layer4-evolutionary/validation/testbed-setup-preflight.sh <host>` (provided with this skill) to:
 - Reject hostnames matching `*prod*`, `*production*`, `*-pr-*`, or any user-provided blocklist.
 - Probe reachability without state change.
-- Capture the existing `uname -a`, `lsb_release -a`, mounted filesystems, listening sockets — saved to a timestamped baseline file for rollback.
+- Capture the existing `uname -a`, `lsb_release -a`, mounted filesystems, listening sockets - saved to a timestamped baseline file for rollback.
 
 **Refuse to proceed** if the user has not confirmed all four items, or if `preflight.sh` returns non-zero. Ask the user to override explicitly if they insist.
 
@@ -53,7 +53,7 @@ For every task in the user's setup list:
    - Prefer idempotent forms (`apt-get install -y --no-upgrade`, `systemctl enable --now`, `[ -d X ] || mkdir -p X`).
 
 3. **Active Debugging**
-   - On non-zero exit, **do not ask permission** to fix — analyze:
+   - On non-zero exit, **do not ask permission** to fix - analyze:
      - `stderr` from the failed command
      - `/var/log/syslog`, `dmesg`, `journalctl -xe`, `/var/log/messages`
      - Service-specific logs (e.g., `/var/log/nginx/error.log`).
@@ -61,7 +61,7 @@ For every task in the user's setup list:
    - Apply corrective action and re-run.
 
 4. **Verification**
-   - After config: run a functional test — `systemctl is-active <svc>`, `curl -sf http://host/health`, `docker ps -a`, etc.
+   - After config: run a functional test - `systemctl is-active <svc>`, `curl -sf http://host/health`, `docker ps -a`, etc.
    - Capture exit code + a snippet of output as evidence.
 
 ## Logging Format (mandatory)
@@ -78,19 +78,19 @@ End each phase with a **block summary**: how many EXEC, how many FAIL, how many 
 
 ## Final Handover
 
-1. **Validation Report** — `systemctl status` (or equivalent) of every service brought up, plus health probes.
-2. **Change Summary** — packages installed, files modified (with diff), service states changed, kernel params adjusted.
-3. **Rollback Recipe** — exact commands to undo the changes (from the baseline file in `testbed-state/`).
-4. **Confirmation** — testbed is ready for use.
+1. **Validation Report** - `systemctl status` (or equivalent) of every service brought up, plus health probes.
+2. **Change Summary** - packages installed, files modified (with diff), service states changed, kernel params adjusted.
+3. **Rollback Recipe** - exact commands to undo the changes (from the baseline file in `testbed-state/`).
+4. **Confirmation** - testbed is ready for use.
 
 ## Negative Constraints (Must NOT)
 
-- ❌ Do not connect to a host until the safety preflight has explicit user confirmation.
-- ❌ Do not run `rm -rf /` patterns, `dd if=/dev/zero of=/dev/sdX`, `mkfs.*`, `:(){:|:&};:`, `chmod -R 777 /`, or any `iptables -F` on a production-looking host.
-- ❌ Do not install packages from untrusted PPAs or third-party `.vib` files without the user pinning a hash or path.
-- ❌ Do not stash credentials in shell history (use env vars or stdin piping; export `HISTFILE=/dev/null` for the session).
-- ❌ Do not modify firewall, kernel modules, or networking on a multi-tenant host without the user explicitly listing it as in-scope.
-- ❌ Do not retry a failing command more than 3 times without a debug step in between.
+- [X] Do not connect to a host until the safety preflight has explicit user confirmation.
+- [X] Do not run `rm -rf /` patterns, `dd if=/dev/zero of=/dev/sdX`, `mkfs.*`, `:(){:|:&};:`, `chmod -R 777 /`, or any `iptables -F` on a production-looking host.
+- [X] Do not install packages from untrusted PPAs or third-party `.vib` files without the user pinning a hash or path.
+- [X] Do not stash credentials in shell history (use env vars or stdin piping; export `HISTFILE=/dev/null` for the session).
+- [X] Do not modify firewall, kernel modules, or networking on a multi-tenant host without the user explicitly listing it as in-scope.
+- [X] Do not retry a failing command more than 3 times without a debug step in between.
 
 ## Verification
 

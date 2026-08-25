@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# test-evolve-collect-eut.sh — Phase 4 EUT for the evolve-collect skill.
+# test-evolve-collect-eut.sh - Phase 4 EUT for the evolve-collect skill.
 #
 # Tests:
-#   E1  Trigger phrase coverage — all 12 frontmatter triggers present
-#   E2  Validate-suite gate — full validator pass
+#   E1  Trigger phrase coverage - all 12 frontmatter triggers present
+#   E2  Validate-suite gate - full validator pass
 #   E3  Command examples in skill body are syntactically valid bash
 #   E4  Safety: no git commit/push commands appear in the skill body instructions
 #   E5  All Gherkin scenarios are addressed by the skill
@@ -28,18 +28,18 @@ fail() { FAIL=$((FAIL+1)); printf '  %sFAIL%s  %s\n' "$(_red)" "$(_off)" "$*" >&
 skill_has() {
   local label="$1" needle="$2"
   if grep -qF -- "$needle" "$SKILL" 2>/dev/null; then pass "$label"
-  else fail "$label — not found: $needle"; fi
+  else fail "$label - not found: $needle"; fi
 }
 skill_has_pat() {
   local label="$1" pat="$2"
   if grep -qE -- "$pat" "$SKILL" 2>/dev/null; then pass "$label"
-  else fail "$label — pattern not matched: $pat"; fi
+  else fail "$label - pattern not matched: $pat"; fi
 }
 
 echo "=== Phase 4 EUT: evolve-collect skill ==="
 echo ""
 
-# ── E1: All 12 frontmatter trigger phrases present in skill ──────────────────
+# -- E1: All 12 frontmatter trigger phrases present in skill ------------------
 echo "--- E1: trigger phrase coverage ---"
 triggers=(
   "collect evolution"
@@ -59,7 +59,7 @@ for t in "${triggers[@]}"; do
   skill_has "E1: trigger '$t'" "$t"
 done
 
-# ── E2: Full validate-suite.sh pass ──────────────────────────────────────────
+# -- E2: Full validate-suite.sh pass ------------------------------------------
 echo ""
 echo "--- E2: validate-suite gate ---"
 if bash "$VALIDATOR" "$SKILL" >/dev/null 2>&1; then
@@ -69,7 +69,7 @@ else
   bash "$VALIDATOR" "$SKILL" 2>&1 | while IFS= read -r line; do printf '    %s\n' "$line"; done >&2
 fi
 
-# ── E3: Command examples in skill are syntactically valid bash ───────────────
+# -- E3: Command examples in skill are syntactically valid bash ---------------
 echo ""
 echo "--- E3: command examples are valid bash ---"
 # Extract all bash code fences from the skill and test each with bash -n
@@ -107,7 +107,7 @@ if [[ "$bad_blocks" -eq 0 ]]; then
   pass "E3: all $block_num bash code block(s) pass bash -n"
 fi
 
-# ── E4: Safety — no bare git commit/push in the prescriptive body ─────────────
+# -- E4: Safety - no bare git commit/push in the prescriptive body -------------
 echo ""
 echo "--- E4: no auto-commit instructions ---"
 # The skill DISCUSSES git commands (to show them to the user) but must not
@@ -124,7 +124,7 @@ else
   fail "E4b: found $run_commit_count 'run/execute git commit' directive(s)"
 fi
 
-# ── E5: Gherkin scenario keywords all addressed ───────────────────────────────
+# -- E5: Gherkin scenario keywords all addressed -------------------------------
 echo ""
 echo "--- E5: Gherkin scenario coverage ---"
 skill_has_pat "E5a: collect from single host covered" "(--host.*USER@HOST|--host.*alice)"
@@ -139,13 +139,13 @@ skill_has_pat "E5d: --remote-path scenario covered" "--remote-path"
 skill_has_pat "E5e: push scenario covered" "ai-suite evolve push"
 skill_has_pat "E5f: ask-for-host scenario covered" "(ask|provide.*host|HOST.*format)"
 
-# ── E6: Both sub-commands referenced ─────────────────────────────────────────
+# -- E6: Both sub-commands referenced -----------------------------------------
 echo ""
 echo "--- E6: collect and push sub-commands ---"
 skill_has "E6a: collect sub-command present" "ai-suite evolve collect"
 skill_has "E6b: push sub-command present" "ai-suite evolve push"
 
-# ── E7: All four flags referenced ────────────────────────────────────────────
+# -- E7: All four flags referenced --------------------------------------------
 echo ""
 echo "--- E7: all flags documented ---"
 skill_has "E7a: --host flag referenced" "--host"
@@ -153,7 +153,7 @@ skill_has "E7b: --remote-path flag referenced" "--remote-path"
 skill_has "E7c: --remote-scope flag referenced" "--remote-scope"
 skill_has "E7d: --dry-run flag referenced" "--dry-run"
 
-# ── E8: Integration — ai-suite evolve is present and invocable ───────────────
+# -- E8: Integration - ai-suite evolve is present and invocable ---------------
 echo ""
 echo "--- E8: ai-suite evolve integration ---"
 if [[ -x "$EVOLVE" ]]; then
@@ -174,7 +174,7 @@ else
   fail "E8c: ai-suite evolve --help does not mention 'push'"
 fi
 
-# ── E9: Idempotency — validator passes twice consecutively ───────────────────
+# -- E9: Idempotency - validator passes twice consecutively -------------------
 echo ""
 echo "--- E9: idempotency ---"
 if bash "$VALIDATOR" "$SKILL" >/dev/null 2>&1 && \
@@ -184,7 +184,7 @@ else
   fail "E9: validator result differs between runs"
 fi
 
-# ── E10: Trigger table in body consistent with frontmatter triggers ───────────
+# -- E10: Trigger table in body consistent with frontmatter triggers -----------
 echo ""
 echo "--- E10: frontmatter vs body trigger consistency ---"
 # Every frontmatter trigger should appear somewhere in the body too
@@ -213,11 +213,11 @@ if [[ "$e10_fail" -eq 0 ]]; then
   pass "E10: all ${#frontmatter_triggers[@]} frontmatter triggers appear in skill body"
 fi
 
-# ── Summary ───────────────────────────────────────────────────────────────────
+# -- Summary -------------------------------------------------------------------
 printf '\n'
 total=$((PASS+FAIL))
 if [[ "$FAIL" -eq 0 ]]; then
-  printf '\033[32m[EUT] %d/%d passed — PHASE 4 GATE: PASSED\033[0m\n' "$PASS" "$total"
+  printf '\033[32m[EUT] %d/%d passed - PHASE 4 GATE: PASSED\033[0m\n' "$PASS" "$total"
   exit 0
 else
   printf '\033[31m[EUT] %d passed, %d FAILED / %d total\033[0m\n' "$PASS" "$FAIL" "$total" >&2

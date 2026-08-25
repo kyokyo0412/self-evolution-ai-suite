@@ -62,10 +62,10 @@ specific, actionable feedback on quality, security, and best practices.
 The description is **critical** - the AI uses it to decide when to delegate.
 
 ```yaml
-# ❌ Too vague
+# [X] Too vague
 description: Helps with code
 
-# ✅ Specific and actionable
+# [OK] Specific and actionable
 description: Expert code review specialist. Proactively reviews code for quality, security, and maintainability. Use immediately after writing or modifying code.
 ```
 

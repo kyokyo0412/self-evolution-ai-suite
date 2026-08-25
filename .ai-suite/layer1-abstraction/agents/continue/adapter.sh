@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# .ai-suite/layer1-abstraction/agents/continue/adapter.sh — VS Code Continue adapter for ai-suite.
+# .ai-suite/layer1-abstraction/agents/continue/adapter.sh - VS Code Continue adapter for ai-suite.
 #
 # Implements the standard adapter interface.
 

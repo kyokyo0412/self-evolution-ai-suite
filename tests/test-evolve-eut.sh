@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# test-evolve-eut.sh — End-to-end / functional tests for ai-suite evolve.
+# test-evolve-eut.sh - End-to-end / functional tests for ai-suite evolve.
 #
 # All tests run in an isolated sandbox (fake HOME + fake project).
 # No real SSH connections are made; SSH/rsync calls are shimmed.
 # Run from the workspace root:  bash tests/test-evolve-eut.sh
 
 # SC2030/SC2031 disabled file-wide: every `export HOME=...` below is inside a
-# subshell `( ... )` intentionally — we want HOME scoped to that subshell only.
+# subshell `( ... )` intentionally - we want HOME scoped to that subshell only.
 # shellcheck disable=SC2030,SC2031
 
 set -uo pipefail
@@ -14,10 +14,10 @@ set -uo pipefail
 SUITE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPT="$SUITE_ROOT/ai-suite"
 
-# ── Sandbox setup ─────────────────────────────────────────────────────────────
+# -- Sandbox setup -------------------------------------------------------------
 SANDBOX_HOME="$(mktemp -d "${TMPDIR:-/tmp}/evolve-eut-home.XXXXXX")"
 SANDBOX_PROJ="$(mktemp -d "${TMPDIR:-/tmp}/evolve-eut-proj.XXXXXX")"
-# SC2329: cleanup is called by trap — shellcheck false positive
+# SC2329: cleanup is called by trap - shellcheck false positive
 # shellcheck disable=SC2329
 cleanup() { rm -rf "$SANDBOX_HOME" "$SANDBOX_PROJ"; }
 trap cleanup EXIT
@@ -27,7 +27,7 @@ trap cleanup EXIT
 cp -R "$SUITE_ROOT/.ai-suite" "$SANDBOX_PROJ/"
 cp    "$SUITE_ROOT/ai-suite" "$SANDBOX_PROJ/"
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# -- Helpers -------------------------------------------------------------------
 PASS=0; FAIL=0
 _red() { printf '\033[31m'; }; _grn() { printf '\033[32m'; }
 _off() { printf '\033[0m'; }
@@ -38,16 +38,16 @@ assert_file_not_exists(){
   if [[ ! -f "$2" ]] && [[ ! -d "$2" ]]; then
     pass "$1"
   else
-    fail "$1 — path should not exist: $2"
+    fail "$1 - path should not exist: $2"
   fi
 }
 assert_contains() {
   local label="$1" needle="$2" file="$3"
   if grep -qF -- "$needle" "$file" 2>/dev/null; then pass "$label"
-  else fail "$label — '$needle' not in $file"; fi
+  else fail "$label - '$needle' not in $file"; fi
 }
 
-# ── Shim directory for ssh / rsync ───────────────────────────────────────────
+# -- Shim directory for ssh / rsync -------------------------------------------
 SHIM_DIR="$SANDBOX_HOME/shims"
 mkdir -p "$SHIM_DIR"
 SHIM_LOG="$SANDBOX_HOME/shim.log"
@@ -86,7 +86,7 @@ if [[ $nlen -ge 2 ]]; then
   src="${nargs[$nlen-2]}"
   dest="${nargs[$nlen-1]}"
   dest="${dest%/}"
-  # Remote pull: source has HOST:PATH — copy from REMOTE_SIM_ROOT/.ai-suite
+  # Remote pull: source has HOST:PATH - copy from REMOTE_SIM_ROOT/.ai-suite
   if [[ "$src" == *:* ]] && [[ -d "${REMOTE_SIM_ROOT:-}/.ai-suite" ]]; then
     cp -R "${REMOTE_SIM_ROOT}/.ai-suite/." "$dest/" 2>/dev/null || true
   fi
@@ -113,7 +113,7 @@ echo "  sandbox project : $SANDBOX_PROJ"
 echo "  remote sim      : $REMOTE_SIM"
 echo ""
 
-# ── T1: collect --dry-run never modifies local files ────────────────────────
+# -- T1: collect --dry-run never modifies local files ------------------------
 echo "--- T1: dry-run collect ---"
 local_skill_count_before=$(find "$SANDBOX_PROJ/.ai-suite/skills" -type f | wc -l | tr -d ' ')
 (
@@ -123,13 +123,13 @@ local_skill_count_before=$(find "$SANDBOX_PROJ/.ai-suite/skills" -type f | wc -l
 ) >/dev/null 2>&1 || true
 local_skill_count_after=$(find "$SANDBOX_PROJ/.ai-suite/skills" -type f | wc -l | tr -d ' ')
 if [[ "$local_skill_count_before" -eq "$local_skill_count_after" ]]; then
-  pass "T1: dry-run collect — no files modified"
+  pass "T1: dry-run collect - no files modified"
 else
-  fail "T1: dry-run collect — file count changed ($local_skill_count_before → $local_skill_count_after)"
+  fail "T1: dry-run collect - file count changed ($local_skill_count_before -> $local_skill_count_after)"
 fi
 pass "T1b: no evolution report dir created in dry-run"
 
-# ── T2: collect with no remote changes → no report, exit 0 ──────────────────
+# -- T2: collect with no remote changes -> no report, exit 0 ------------------
 echo ""
 echo "--- T2: collect, no changes ---"
 : > "$SHIM_LOG"
@@ -148,7 +148,7 @@ else
   pass "T2b: 'No changes detected' message printed"
 fi
 
-# ── T3: collect after reflection (one changed skill on remote) ───────────────
+# -- T3: collect after reflection (one changed skill on remote) ---------------
 echo ""
 echo "--- T3: collect one changed skill ---"
 echo "# reflection improvement: added example trigger" >> "$REMOTE_SIM/skills/tdd-team.md"
@@ -192,7 +192,7 @@ else
   fail "T3f: no git commit command found in output"
 fi
 
-# ── T4: idempotency — collect twice when remote unchanged ───────────────────
+# -- T4: idempotency - collect twice when remote unchanged -------------------
 echo ""
 echo "--- T4: idempotency (collect twice, no further changes) ---"
 report_count_before=$(find "$evolutions_dir" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
@@ -205,10 +205,10 @@ report_count_after=$(find "$evolutions_dir" -name "*.md" 2>/dev/null | wc -l | t
 if [[ "$report_count_after" -eq "$report_count_before" ]]; then
   pass "T4: second collect with no further changes produces no new report"
 else
-  fail "T4: second collect added reports ($report_count_before → $report_count_after) unexpectedly"
+  fail "T4: second collect added reports ($report_count_before -> $report_count_after) unexpectedly"
 fi
 
-# ── T5: collect new file from remote (added by reflection) ──────────────────
+# -- T5: collect new file from remote (added by reflection) ------------------
 echo ""
 echo "--- T5: collect new skill added by reflection ---"
 cat > "$REMOTE_SIM/skills/new-reflection-skill.md" <<'EOF'
@@ -233,7 +233,7 @@ else
   fail "T5a: new remote skill was not collected into local .ai-suite/"
 fi
 
-# ── T6: push --dry-run prints plan, no actual SSH ────────────────────────────
+# -- T6: push --dry-run prints plan, no actual SSH ----------------------------
 echo ""
 echo "--- T6: push --dry-run ---"
 : > "$SHIM_LOG"
@@ -256,7 +256,7 @@ else
   fail "T6b: push --dry-run output missing DRY marker"
 fi
 
-# ── T7: path with spaces ─────────────────────────────────────────────────────
+# -- T7: path with spaces -----------------------------------------------------
 echo ""
 echo "--- T7: project path with spaces ---"
 space_proj="$(mktemp -d "${TMPDIR:-/tmp}/evolve space test.XXXXXX")"
@@ -275,7 +275,7 @@ else
   fail "T7: script failed (exit $space_exit) with path containing spaces"
 fi
 
-# ── T8: $HOME is NOT expanded locally for remote destination ─────────────────
+# -- T8: $HOME is NOT expanded locally for remote destination -----------------
 echo ""
 echo "--- T8: verify \$HOME literal passed to SSH/rsync ---"
 t8_out="${SANDBOX_HOME}/t8.out"
@@ -292,7 +292,7 @@ else
   pass "T8: local \$HOME not in remote destination (literal \$HOME preserved for remote)"
 fi
 
-# ── T9: multiple --host flags ─────────────────────────────────────────────────
+# -- T9: multiple --host flags -------------------------------------------------
 echo ""
 echo "--- T9: multiple --host flags (dry-run) ---"
 multi_out="${SANDBOX_HOME}/t9.out"
@@ -311,7 +311,7 @@ else
   fail "T9: not all hosts appeared in multi-host dry-run output"
 fi
 
-# ── T10: frontmatter validation warning on bad skill; collect still succeeds ──
+# -- T10: frontmatter validation warning on bad skill; collect still succeeds --
 echo ""
 echo "--- T10: frontmatter validation warning after collecting bad skill ---"
 cat > "$REMOTE_SIM/skills/bad-skill.md" <<'EOF'
@@ -335,11 +335,11 @@ else
   fail "T10a: bad skill was not collected at all"
 fi
 
-# ── Summary ───────────────────────────────────────────────────────────────────
+# -- Summary -------------------------------------------------------------------
 printf '\n'
 total=$((PASS+FAIL))
 if [[ "$FAIL" -eq 0 ]]; then
-  printf '\033[32m[EUT] %d/%d passed — PHASE 4 GATE: PASSED\033[0m\n' "$PASS" "$total"
+  printf '\033[32m[EUT] %d/%d passed - PHASE 4 GATE: PASSED\033[0m\n' "$PASS" "$total"
   exit 0
 else
   printf '\033[31m[EUT] %d passed, %d FAILED / %d total\033[0m\n' "$PASS" "$FAIL" "$total" >&2

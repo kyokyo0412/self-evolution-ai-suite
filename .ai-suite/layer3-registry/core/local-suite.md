@@ -1,6 +1,6 @@
 ---
 name: local-suite
-description: Manage the local lifecycle of ai-suite — install and remove on the local machine. Use when the user asks to install ai-suite locally, enable ai-suite globally, remove ai-suite locally, or manage the local ai-suite installation.
+description: Manage the local lifecycle of ai-suite - install and remove on the local machine. Use when the user asks to install ai-suite locally, enable ai-suite globally, remove ai-suite locally, or manage the local ai-suite installation.
 triggers:
   - enable ai suite
   - install ai suite
@@ -14,7 +14,7 @@ triggers:
   - collect local
 ---
 
-# Local Suite — AI-Prompted Local Lifecycle Manager
+# Local Suite - AI-Prompted Local Lifecycle Manager
 
 Manage ai-suite on the local machine using natural language. Covers local project and global scope operations.
 
@@ -100,4 +100,4 @@ After running, if changes were collected, you MUST write an Evolution Report man
 4. Confirm success or report the error to the user.
 
 ## Negative Constraints (Must NOT)
-- �M-^]M-^L Do not modify files outside the `.ai-suite` directory unless explicitly requested.
+- [X] Do not modify files outside the `.ai-suite` directory unless explicitly requested.

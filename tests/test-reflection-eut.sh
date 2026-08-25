@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-reflection-eut.sh — Phase 4 EUT for enhanced reflection-protocol.md
+# test-reflection-eut.sh - Phase 4 EUT for enhanced reflection-protocol.md
 #
 # Tests the full reflection cycle end-to-end in a sandbox:
 #   E1.  Protocol is loaded and passes validate-suite.sh (no-arg form)
@@ -29,15 +29,15 @@ fail() { printf '  \033[31mFAIL\033[0m  %s\n' "$1"; FAIL=$((FAIL+1)); }
 check_contains() {
   local label="$1"; local pattern="$2"
   if grep -qE -- "$pattern" "$PROTO"; then pass "$label"
-  else fail "$label — pattern not found: $pattern"; fi
+  else fail "$label - pattern not found: $pattern"; fi
 }
 check_not_contains() {
   local label="$1"; local pattern="$2"
-  if grep -qE -- "$pattern" "$PROTO"; then fail "$label — forbidden token: $pattern"
+  if grep -qE -- "$pattern" "$PROTO"; then fail "$label - forbidden token: $pattern"
   else pass "$label"; fi
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 echo ""
 echo "=== E1: Protocol file exists and validate-suite passes ==="
 
@@ -80,11 +80,11 @@ check_contains "E2j only highest-severity drives selection" \
 echo ""
 echo "=== E3: Generality Gate (3 Questions) ==="
 
-check_contains "E3a Q1 all-agents→core" \
+check_contains "E3a Q1 all-agents->core" \
   "[Aa]ll.*agent.*core|core/.*all.*agent"
-check_contains "E3b Q2 agent-specific→agents/name" \
+check_contains "E3b Q2 agent-specific->agents/name" \
   "agents/<"
-check_contains "E3c Q3 domain-specific→domains/name" \
+check_contains "E3c Q3 domain-specific->domains/name" \
   "domains/<"
 check_contains "E3d gate result must be stated" \
   "[Gg]ate result"
@@ -275,7 +275,7 @@ echo "=== E10: Backward-Compatible Triggers ==="
 check_contains "E10a Run Reflection trigger"       "Run Reflection"
 check_contains "E10b Reflect on the last task"     "Reflect on the last task"
 check_contains "E10c Improve the suite"            "Improve the suite"
-check_contains "E10d Chinese trigger 运行反思"     "运行反思"
+check_contains "E10d Chinese trigger Run Reflection"     "Run Reflection"
 
 echo ""
 echo "=== E11: ai-suite evolve validate call uses no-arg form ==="
@@ -302,10 +302,10 @@ if echo "$acc_out" | grep -qE "[0-9]+ passed.*0 FAILED|0 failures"; then
 else
   # Show final line for context
   final_line=$(echo "$acc_out" | tail -3)
-  fail "E12 acceptance tests — some failures: $final_line"
+  fail "E12 acceptance tests - some failures: $final_line"
 fi
 
-# ─────────────────────────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------------
 echo ""
 TOTAL=$((PASS+FAIL))
 printf '=== %d passed, %d FAILED out of %d ===\n' "$PASS" "$FAIL" "$TOTAL"

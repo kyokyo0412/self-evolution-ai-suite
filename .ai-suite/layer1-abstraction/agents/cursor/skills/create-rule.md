@@ -125,12 +125,12 @@ alwaysApply: false
 # Error Handling
 
 \`\`\`typescript
-// ❌ BAD
+// [X] BAD
 try {
   await fetchData();
 } catch (e) {}
 
-// ✅ GOOD
+// [OK] GOOD
 try {
   await fetchData();
 } catch (e) {

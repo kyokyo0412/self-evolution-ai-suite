@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# _portable.sh — Cross-platform shell helpers for ai-suite scripts.
+# _portable.sh - Cross-platform shell helpers for ai-suite scripts.
 #
 # Sourced by ai-suite enable and ai-suite disable. Safe to source twice.
 # Targets:
@@ -44,7 +44,7 @@ if [[ -z "${CURSOR_SUITE_PORTABLE_LOADED:-}" ]]; then
 
   # -- ensure_trailing_newline <file> ---------------------------------------
   # `$(tail -c1 "$f")` strips a trailing newline if present, so a non-empty
-  # result means the last byte is NOT a newline — append one.
+  # result means the last byte is NOT a newline - append one.
   ensure_trailing_newline() {
     local f="$1"
     [[ -s "$f" ]] || return 0

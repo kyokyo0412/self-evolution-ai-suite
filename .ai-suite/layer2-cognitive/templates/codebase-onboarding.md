@@ -15,7 +15,7 @@ Analyze the codebase and provide a comprehensive, well-structured architectural 
 - What are the primary languages, frameworks, and core dependencies?
 
 ## 2. Core Modules & Directory Structure
-- List the 3–5 most critical directories or modules.
+- List the 3-5 most critical directories or modules.
 - Explain the single responsibility of each module and how they interact.
 
 ## 3. Execution Flow & Entry Points

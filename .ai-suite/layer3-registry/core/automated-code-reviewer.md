@@ -28,6 +28,6 @@ triggers:
 
 ## Negative Constraints (Must NOT)
 
-- ❌ Do not make unprompted changes to the code; only provide a review report unless explicitly asked to fix the issues.
-- ❌ Do not focus on trivial formatting issues (like spacing or indentation) unless they violate a strict project convention.
-- ❌ Do not hallucinate vulnerabilities; ensure any flagged security issue is grounded in the actual code provided.
+- [X] Do not make unprompted changes to the code; only provide a review report unless explicitly asked to fix the issues.
+- [X] Do not focus on trivial formatting issues (like spacing or indentation) unless they violate a strict project convention.
+- [X] Do not hallucinate vulnerabilities; ensure any flagged security issue is grounded in the actual code provided.

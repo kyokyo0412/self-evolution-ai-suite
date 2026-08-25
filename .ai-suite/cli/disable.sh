@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ai-suite disable — Cleanly deactivate the .ai-suite/ multi-agent framework.
+# ai-suite disable - Cleanly deactivate the .ai-suite/ multi-agent framework.
 #
 # Symmetric to ai-suite enable.
 #
@@ -101,7 +101,7 @@ _strip_hook_from() {
   local rc_file="$1"
   [[ -f "$rc_file" ]] || return 0
   if ! grep -qF "$HOOK_MARK_START" "$rc_file" 2>/dev/null; then
-    log "no hook found in $rc_file — skipping"; return 0
+    log "no hook found in $rc_file - skipping"; return 0
   fi
   [[ "$AI_SUITE_DRY_RUN" == "1" ]] && { printf '[dry-run] would strip hook from %s\n' "$rc_file"; return 0; }
   local tmp
@@ -187,7 +187,7 @@ do_remote_scope() {
 }
 
 # -- Dispatch -----------------------------------------------------------------
-[[ "$AI_SUITE_DRY_RUN" == "1" ]] && log "** dry-run mode — no changes will be written **"
+[[ "$AI_SUITE_DRY_RUN" == "1" ]] && log "** dry-run mode - no changes will be written **"
 
 if [[ "$SCOPE" == "remote" ]]; then
   do_remote_scope
