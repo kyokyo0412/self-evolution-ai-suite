@@ -52,3 +52,9 @@ The AI suite is a tool for self evolution. It can push itself to different hosts
 - **Self Evolution Priority**: The self evolution is the highest priority core function, NEVER forget or break it.
 - **No Duplicates**: Avoid creating duplicate capabilities. If capabilities are duplicate, integrate them to make the target agent structure the same as your own.
 - **No Unintended Modifications**: Do not modify files outside the target agent's configuration directory.
+
+## Negative Constraints (Must NOT)
+- ‚M-^]M-^L Do not create duplicate capabilities.
+- ‚M-^]M-^L Do not modify files outside the target agent's configuration directory.
+- ‚M-^]M-^L Do not proceed with the integration if the remote fetch fails silently.
+- ‚M-^]M-^L Do not omit boundary validation when analyzing semantic overlap (if confidence is low, gracefully abort or prompt for clarification).

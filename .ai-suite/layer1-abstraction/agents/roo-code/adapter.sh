@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # .ai-suite/layer1-abstraction/agents/roo-code/adapter.sh — VS Code Roo Code adapter for ai-suite.
 #
 # Implements the standard adapter interface.

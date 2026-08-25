@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # run-acceptance-tests.sh — Production-readiness acceptance suite.
 #
 # Runs every enable/disable variant in a sandbox HOME so the real ~/.cursor/,
@@ -131,8 +132,10 @@ section "test 0: portable helpers"
 # Test 1 — validate-suite.sh against shipped skills
 # ============================================================================
 section "test 1: validator on shipped skills"
+set +e
 output="$(bash "$PROJECT_ROOT/.ai-suite/layer4-evolutionary/validation/validate-suite.sh" "$PROJECT_ROOT/.ai-suite/layer3-registry/core" 2>&1)"
 exit_code=$?
+set -e
 assert_eq "$exit_code" "0" "validator exits 0 on shipped skills"
 if grep -q "11 .* PASS\|checks passed, 0 failed" <<< "$output"; then
   pass "validator reports passing summary"
@@ -286,8 +289,10 @@ HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" disable --scope project --projec
 reset_sandbox
 mkdir -p "$FAKE_PROJECT/.cursorrules"
 printf 'unexpected\n' > "$FAKE_PROJECT/.cursorrules/junk"
+set +e
 out="$(HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$FAKE_PROJECT" 2>&1)"
 exit_code=$?
+set -e
 [[ "$exit_code" -ne 0 ]] \
   && pass "non-empty .cursorrules dir causes non-zero exit" \
   || fail "non-empty .cursorrules dir DID NOT fail (exit=$exit_code, out=$out)"
@@ -300,8 +305,10 @@ rm -rf "$FAKE_HOME" "$SANDBOX/proj with space"
 mkdir -p "$FAKE_HOME" "$SANDBOX/proj with space"
 git -C "$SANDBOX/proj with space" init -q
 
+set +e
 HOME="$FAKE_HOME" bash "$PROJECT_ROOT/ai-suite" enable --scope project --project "$SANDBOX/proj with space" >/dev/null 2>&1
 exit_code=$?
+set -e
 assert_eq "$exit_code" "0" "enable with path containing spaces exit=0"
 assert_file        "$SANDBOX/proj with space/.cursorrules"  "spaces path: .cursorrules created"
 assert_file        "$SANDBOX/proj with space/.cursor/rules/cursor-suite-production-safety.mdc" \

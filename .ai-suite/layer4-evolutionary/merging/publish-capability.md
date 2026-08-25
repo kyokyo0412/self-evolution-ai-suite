@@ -40,3 +40,8 @@ The AI suite Agent can publish its capabilities to an AI suite publish package. 
 
 - **Self Evolution Priority**: The self evolution is the highest priority core function, NEVER forget or break it.
 - **No Unintended Modifications**: Do not modify the source capabilities during publishing.
+
+## Negative Constraints (Must NOT)
+- ‚M-^]M-^L Do not modify the source capabilities during publishing.
+- ‚M-^]M-^L Do not publish any domains (`layer3-registry/domains`) to avoid copyright or data leaks.
+- ‚M-^]M-^L Do not leave temporary directories behind if the archiving process fails.

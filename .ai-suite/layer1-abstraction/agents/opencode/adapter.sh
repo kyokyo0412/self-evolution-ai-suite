@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # .ai-suite/layer1-abstraction/agents/opencode/adapter.sh — OpenCode adapter for ai-suite.
 #
 # Implements the standard adapter interface:

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # memory.sh — AI Suite Memory System
 
 # Determine suite root

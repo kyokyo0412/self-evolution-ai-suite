@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 set -e
 
 REFLECTION_PROTOCOL=".ai-suite/layer4-evolutionary/reflection/reflection-protocol.md"

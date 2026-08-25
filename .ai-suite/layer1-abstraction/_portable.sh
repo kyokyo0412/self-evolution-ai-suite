@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # _portable.sh — Cross-platform shell helpers for ai-suite scripts.
 #
 # Sourced by ai-suite enable and ai-suite disable. Safe to source twice.

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 set -e
 
 RULE_FILE=".ai-suite/layer1-abstraction/agents/cursor/rules/interactive-workflow.md"

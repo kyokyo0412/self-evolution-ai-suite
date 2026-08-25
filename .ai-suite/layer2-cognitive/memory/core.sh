@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 # core.sh — Shared bash library for ai-suite scripts.
 
 if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
