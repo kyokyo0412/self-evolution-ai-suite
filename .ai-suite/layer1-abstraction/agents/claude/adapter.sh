@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# .ai-suite/layer1-abstraction/agents/claude/adapter.sh - Claude Code adapter for ai-suite.
+# .ai-suite/layer1-abstraction/agents/claude/adapter.sh -- Claude Code adapter for ai-suite.
 #
 # Sourced by ai-suite enable and ai-suite disable.
 # Implements the standard adapter interface:

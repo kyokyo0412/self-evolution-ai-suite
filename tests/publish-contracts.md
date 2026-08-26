@@ -1,5 +1,5 @@
 # Architecture Contract: ai-suite publish
-# Phase 2 artifact - defines interface for packaging ai-suite
+# Phase 2 artifact -- defines interface for packaging ai-suite
 
 ## Module Boundary
 

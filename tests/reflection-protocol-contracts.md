@@ -1,24 +1,24 @@
 # Architecture Contract: enhanced reflection-protocol.md
-# Phase 2 artifact - structural and behavioral contracts.
+# Phase 2 artifact -- structural and behavioral contracts.
 # Verified by test-reflection-contracts.sh.
 
 ## File Location
   L1. Path: .ai-suite/layer4-evolutionary/reflection/reflection-protocol.md  (unchanged)
-  L2. Not a skill file - no YAML frontmatter required
+  L2. Not a skill file -- no YAML frontmatter required
   L3. The file is the source of truth for ALL AI agents; must contain no
       agent-specific APIs (no .cursorrules, no ~/.cursor/)
 
 ## Structural Sections (all required, in order)
 
-  S1.  Trigger block        - lists all recognised command strings
-  S2.  ABSOLUTE PRECONDITIONS - mode-switch acknowledgement, refusal rule
-  S3.  Step 1: 5-Category Analysis - named categories, severity tagging
-  S4.  Step 2: Identify target - generality gate (3 questions), tier decision
-  S5.  Step 3: Edit - file-editing rules, frontmatter preservation
-  S6.  Step 4: Evolution report - write to layer4-evolutionary/reflection/evolutions/REFLECTION-*.md
-  S7.  Step 5: Closing summary - format, what/why/tier, git commands
-  S8.  NON-NEGOTIABLES - one-per-call, no auto-commit, etc.
-  S9.  DIAGNOSTIC HEURISTICS - symptom -> fix table
+  S1.  Trigger block        -- lists all recognised command strings
+  S2.  ABSOLUTE PRECONDITIONS -- mode-switch acknowledgement, refusal rule
+  S3.  Step 1: 5-Category Analysis -- named categories, severity tagging
+  S4.  Step 2: Identify target -- generality gate (3 questions), tier decision
+  S5.  Step 3: Edit -- file-editing rules, frontmatter preservation
+  S6.  Step 4: Evolution report -- write to layer4-evolutionary/reflection/evolutions/REFLECTION-*.md
+  S7.  Step 5: Closing summary -- format, what/why/tier, git commands
+  S8.  NON-NEGOTIABLES -- one-per-call, no auto-commit, etc.
+  S9.  DIAGNOSTIC HEURISTICS -- symptom -> fix table
 
 ## 5-Category Analysis Contract (Step 1)
 
@@ -46,7 +46,7 @@
   G3. New file creation MUST include tier justification in the closing summary
   G4. Core files must not contain Cursor-specific tokens or domain system names
 
-## Evolution Report Contract (Step 4 - new step)
+## Evolution Report Contract (Step 4 -- new step)
 
   R1. File path: .ai-suite/layer4-evolutionary/reflection/evolutions/REFLECTION-<timestamp>.md
   R2. Required sections in the report:
@@ -66,8 +66,8 @@
   CS2. Must contain: "Nature of the change:"
   CS3. Must contain: "Why it improves future runs:"
   CS4. Must contain: "Friction it would have prevented:"
-  CS5. Must contain: "Tier:" (new - states which tier was chosen)
-  CS6. Must contain: "Evolution report:"  (new - lists report path)
+  CS5. Must contain: "Tier:" (new -- states which tier was chosen)
+  CS6. Must contain: "Evolution report:"  (new -- lists report path)
   CS7. Must contain the git diff instruction
   CS8. Must contain "NOT auto-commit" or equivalent
 

@@ -70,7 +70,7 @@ export type DAGLayoutRank = {
 export type DAGLayoutResult = {
     nodes: DAGLayoutNode[];
     edges: DAGLayoutEdge[];
-    /** Bounding box per rank - useful for drawing layer bands. */
+    /** Bounding box per rank -- useful for drawing layer bands. */
     ranks: DAGLayoutRank[];
     /** The direction used for this layout. */
     direction: "vertical" | "horizontal";

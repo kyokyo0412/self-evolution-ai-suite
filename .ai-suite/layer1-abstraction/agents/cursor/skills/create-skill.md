@@ -51,12 +51,12 @@ Skills are stored as directories containing a `SKILL.md` file:
 
 ```
 skill-name/
-|-- SKILL.md              # Required - main instructions
-|-- reference.md          # Optional - detailed documentation
-|-- examples.md           # Optional - usage examples
-+-- scripts/              # Optional - utility scripts
-    |-- validate.py
-    +-- helper.sh
+|---- SKILL.md              # Required - main instructions
+|---- reference.md          # Optional - detailed documentation
+|---- examples.md           # Optional - usage examples
+\---- scripts/              # Optional - utility scripts
+    |---- validate.py
+    \---- helper.sh
 ```
 
 ### Storage Locations
@@ -434,9 +434,9 @@ Here's a complete example of a well-structured skill:
 **Directory structure:**
 ```
 code-review/
-|-- SKILL.md
-|-- STANDARDS.md
-+-- examples.md
+|---- SKILL.md
+|---- STANDARDS.md
+\---- examples.md
 ```
 
 **SKILL.md:**
@@ -469,9 +469,9 @@ When reviewing code:
 ## Providing Feedback
 
 Format feedback as:
-- **Critical**: Must fix before merge
-- **Suggestion**: Consider improving
-- **Nice to have**: Optional enhancement
+- [RED] **Critical**: Must fix before merge
+- [YELLOW] **Suggestion**: Consider improving
+- [GREEN] **Nice to have**: Optional enhancement
 
 ## Additional Resources
 

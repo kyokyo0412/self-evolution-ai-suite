@@ -9,7 +9,7 @@ triggers:
 
 # Bazel -> Debian Dependency Analyzer
 
-Translate Bazel-declared dependencies into a precise apt package tree. Distinguish runtime vs build-time. Cite real Debian/Ubuntu package names - never invent.
+Translate Bazel-declared dependencies into a precise apt package tree. Distinguish runtime vs build-time. Cite real Debian/Ubuntu package names -- never invent.
 
 ## Inputs the User Will Provide
 
@@ -24,7 +24,7 @@ If any are missing, ask.
 1. **Enumerate Bazel deps**
    - Read the target's `deps`, `data`, `srcs`, and transitive `cc_library` / `go_library` deps with Grep.
    - For external repos referenced (e.g., `@com_github_grpc_grpc//...`, `@boringssl//...`, `@openssl//...`), check `WORKSPACE`/`MODULE.bazel` for `http_archive`/`git_repository`/`bzlmod` records.
-   - Detect `pkg_deb`, `pkg_tar`, `pkg_zip`, `tar_pkg` rules - these are the .deb staging rules; record their `data`, `version`, `description`, `depends`, `preinst`/`postinst` attributes.
+   - Detect `pkg_deb`, `pkg_tar`, `pkg_zip`, `tar_pkg` rules -- these are the .deb staging rules; record their `data`, `version`, `description`, `depends`, `preinst`/`postinst` attributes.
 
 2. **Classify each dependency**
    - **Statically linked** (default for many `cc_library` with `linkstatic = 1`) -> no runtime apt dep, but build-time `-dev` package required on the build host.
@@ -50,12 +50,12 @@ If any are missing, ask.
 
 ## Debian Package Dependency Tree
 <target-deb-name>
-|-- <runtime-pkg-1>
-|   |-- <transitive-1>
-|   +-- <transitive-2>
-|-- <runtime-pkg-2>
-|   +-- libc6
-+-- libc6
+|---- <runtime-pkg-1>
+|   |---- <transitive-1>
+|   \---- <transitive-2>
+|---- <runtime-pkg-2>
+|   \---- libc6
+\---- libc6
 
 ## Validation / Apt Commands
 sudo apt-get update
@@ -78,9 +78,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 - [X] Do not invent package names. If unsure, name the closest known package and flag it: `# UNVERIFIED: <pkg>`.
 - [X] Do not list a `-dev` package as a runtime requirement.
 - [X] Do not mix Ubuntu release-specific SO version names (e.g., `libssl1.1` and `libssl3`) without explicitly noting the target release.
-- [X] Do not omit `libc6` from the tree leaves - it is the canonical root and proves you analyzed transitive deps.
+- [X] Do not omit `libc6` from the tree leaves -- it is the canonical root and proves you analyzed transitive deps.
 - [X] Do not propose `apt-get install` without `apt-get update` first.
-- [X] Do not propose `apt-get upgrade` or `dist-upgrade` - those are out of scope and may break production.
+- [X] Do not propose `apt-get upgrade` or `dist-upgrade` -- those are out of scope and may break production.
 
 ## Verification
 
@@ -93,4 +93,4 @@ docker run --rm -it ubuntu:22.04 bash -c \
 
 ...and see all packages resolve with no `E: Unable to locate` errors.
 
-If `apt-cache madison <pkg>` returns nothing, the mapping is wrong - revise.
+If `apt-cache madison <pkg>` returns nothing, the mapping is wrong -- revise.

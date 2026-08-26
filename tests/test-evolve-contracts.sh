@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-evolve-contracts.sh - Phase 2 contract tests.
+# test-evolve-contracts.sh -- Phase 2 contract tests.
 # Verifies the interface contracts in evolve-contracts.md against ai-suite evolve.
 # Runs in a temporary sandbox; never touches the real $HOME.
 # Usage: bash tests/test-evolve-contracts.sh
@@ -20,7 +20,7 @@ assert_exit() {
   if [[ "$actual" -eq "$expected" ]]; then
     pass "$label (exit $actual)"
   else
-    fail "$label - expected exit $expected, got $actual"
+    fail "$label -- expected exit $expected, got $actual"
   fi
 }
 assert_output_contains() {
@@ -30,7 +30,7 @@ assert_output_contains() {
   if printf '%s' "$out" | grep -qF -- "$needle"; then
     pass "$label"
   else
-    fail "$label - output did not contain: $needle"
+    fail "$label -- output did not contain: $needle"
   fi
 }
 

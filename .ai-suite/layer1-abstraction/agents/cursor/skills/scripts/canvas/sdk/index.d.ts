@@ -1,13 +1,13 @@
 /**
  * Public API for authoring `.canvas.tsx` files via `cursor/canvas`.
  *
- * Be creative with layout - use Grid, Row, cards, charts, tables, and raw SVG
+ * Be creative with layout -- use Grid, Row, cards, charts, tables, and raw SVG
  * in whatever combination serves the content. Read the canvas skill for full
  * design guidance. Key constraints:
  *
  * - Colors from `useHostTheme()` tokens. No hardcoded hex.
  * - No gradients, no box-shadows, no emojis as decoration.
- * - Don't wrap every section in Card - mix open sections with cards.
+ * - Don't wrap every section in Card -- mix open sections with cards.
  * - Run the pre-delivery self-check before returning code.
  */
 /** Shared category color palette used by `Swatch`, `UsageBar`, etc. */
@@ -53,7 +53,7 @@ export type { ButtonProps, CalloutProps, CalloutTone, CardBodyProps, CardHeaderP
 export { Button, Callout, Card, CardBody, CardHeader, Code, Divider, Grid, H1, H2, H3, Link, 
 /** Shallow-merge two style objects. Useful for combining tokens with overrides. */
 mergeStyle, Pill, Row, Spacer, Stack, Stat, Table, Text, } from "./ui-primitives.js";
-/** Usage bar - segmented progress meter with optional labels above. */
+/** Usage bar -- segmented progress meter with optional labels above. */
 export type { UsageBarProps, UsageBarSegment } from "./usage-bar.js";
 export { UsageBar } from "./usage-bar.js";
 //# sourceMappingURL=index.d.ts.map

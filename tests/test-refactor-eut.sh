@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-refactor-eut.sh - End-to-end sandbox tests for the .ai-suite/ refactoring.
+# test-refactor-eut.sh -- End-to-end sandbox tests for the .ai-suite/ refactoring.
 #
 # Tests the full enable/disable lifecycle for both Cursor and Claude agents,
 # domain pack loading, idempotency, and backward compatibility.

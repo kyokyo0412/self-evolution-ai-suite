@@ -21,7 +21,7 @@ for adapter in cursor claude opencode continue roo-code codex; do
     opencode) target_file=".opencode/instructions.md" ;;
     continue) target_file=".continue/prompts/ai-suite.prompt" ;;
     roo-code) target_file=".roorules" ;;
-    codex) target_file=".codexrules" ;;
+    codex) target_file="AGENTS.md" ;;
   esac
 
   # Subshell to isolate functions

@@ -8,16 +8,16 @@ triggers:
 ---
 # Create Automation (Interactive)
 
-Use this skill when the user explicitly wants to make, build, set up, or create a new **Cursor Automation** - for example "create a Cursor automation", "open the Automations editor with this draft", or "set up a scheduled Cursor agent".
+Use this skill when the user explicitly wants to make, build, set up, or create a new **Cursor Automation** -- for example "create a Cursor automation", "open the Automations editor with this draft", or "set up a scheduled Cursor agent".
 
 **Disambiguation.** "Automation" in a user workspace can mean many things (`.github/workflows`, CI pipelines, scheduled jobs, scripts, dbt, browser automation, shell scripts, workflow engines). Do **not** assume generic phrases like "automate this", "help me automate my deploys", or "make an automation" mean **Cursor Automation**. Route to the named surface when the user mentions one, use normal repo/product exploration when the context points elsewhere, or ask a short clarifying question when the target surface is ambiguous. Start this spine only when the user explicitly asks for Cursor Automations or confirms that Cursor Automations is the intended surface.
 
 ## Execution spine (every run)
 
 1. **Finish-path check.** First, check whether the in-app Automations editor handoff is available (see **Finish availability** below). If neither the Automations editor tool nor the resource opener is available, immediately say "Please use this skill in the Agents Window." and stop.
-2. **Capture intent + proactive integration discovery.** After the finish-path check passes, if the prompt is missing 2+ of {what kicks it off, what should happen, what outcome}, send one short plain-chat message asking for a 1-2 sentence description and wait. Skip when the prompt already names trigger + action + outcome. Proactively run discovery for any integration the user named or implied - `gh repo view` on cwd; Slack MCP channels; PagerDuty MCP services; Linear/Sentry MCP teams/projects. Use the results to skip questions later.
+2. **Capture intent + proactive integration discovery.** After the finish-path check passes, if the prompt is missing 2+ of {what kicks it off, what should happen, what outcome}, send one short plain-chat message asking for a 1-2 sentence description and wait. Skip when the prompt already names trigger + action + outcome. Proactively run discovery for any integration the user named or implied -- `gh repo view` on cwd; Slack MCP channels; PagerDuty MCP services; Linear/Sentry MCP teams/projects. Use the results to skip questions later.
 3. **Completeness gates.** Work through the trigger, tool, prompt, naming, and PCD checks below. Do not jump to a summary while required picker-backed fields are still unknown unless the user explicitly deferred them to the Automations editor.
-4. **One consolidated question.** Ask inline for whatever integration discovery couldn't resolve - trigger details, repo / channel / service when ambiguous, tools when not obvious. Default to plain-chat inline. Only escalate to `AskQuestion` for (a) the tools multi-select and (b) integration discovery candidate lists with 3+ matches.
+4. **One consolidated question.** Ask inline for whatever integration discovery couldn't resolve -- trigger details, repo / channel / service when ambiguous, tools when not obvious. Default to plain-chat inline. Only escalate to `AskQuestion` for (a) the tools multi-select and (b) integration discovery candidate lists with 3+ matches.
 5. **Draft table -> approval -> finish handoff.** Show a compact Markdown table (plain language, no YAML) recapping name / description, trigger, tools, instructions, resolved settings, and "to finish in editor". User approves, then ask whether they are ready for you to open the Automations editor so they can finish any deferred values there. When they say yes, use the finish path from the availability check.
 
 ---
@@ -32,7 +32,7 @@ Use this skill when the user explicitly wants to make, build, set up, or create 
 
 ---
 
-## PCD - Portal completeness & deferral
+## PCD -- Portal completeness & deferral
 
 Use these checks to keep the draft complete before opening the editor. Do not show the ids to the user.
 
@@ -66,18 +66,18 @@ An MCP server is eligible only when the current user's available MCP/tool catalo
 
 **Read the right field from the catalog.** Each agent-side catalog entry lives at `~/.cursor/mcps/<folder>/SERVER_METADATA.json` and carries two distinct values:
 
-- `serverIdentifier` - the scoped folder name the agent runtime uses (e.g. `dashboard-team-1-Linear`, `plugin-pagerduty-pagerduty-mcp`, `cursor-app-control`).
-- `serverName` - the plain name the user configured on cursor.com (e.g. `Linear`, `pagerduty-mcp`, `Databricks SQL`).
+- `serverIdentifier` -- the scoped folder name the agent runtime uses (e.g. `dashboard-team-1-Linear`, `plugin-pagerduty-pagerduty-mcp`, `cursor-app-control`).
+- `serverName` -- the plain name the user configured on cursor.com (e.g. `Linear`, `pagerduty-mcp`, `Databricks SQL`).
 
-Write `serverName` into `workflow.actions[].mcp.server.name` and any `@[MCP: ...]` prompt mentions. Never write `serverIdentifier` / the folder name, never invent or paraphrase a prefix (`team-...`, `user-...`, `<orgId>-...`), and never hand-strip prefixes from the folder name - many `serverName`s contain spaces (e.g. `Databricks SQL`, `statsig read only console`), so string-munging the identifier is fragile. The Automations editor matches on trim + lowercase, so casing does not matter, but pass the exact `serverName` from `SERVER_METADATA.json` anyway. When you have a useful URL, you may also pass `templateMcpHints: [{ name: <serverName>, url: <serverUrl> }]` so a URL match can rescue a name drift.
+Write `serverName` into `workflow.actions[].mcp.server.name` and any `@[MCP: ...]` prompt mentions. Never write `serverIdentifier` / the folder name, never invent or paraphrase a prefix (`team-...`, `user-...`, `<orgId>-...`), and never hand-strip prefixes from the folder name -- many `serverName`s contain spaces (e.g. `Databricks SQL`, `statsig read only console`), so string-munging the identifier is fragile. The Automations editor matches on trim + lowercase, so casing does not matter, but pass the exact `serverName` from `SERVER_METADATA.json` anyway. When you have a useful URL, you may also pass `templateMcpHints: [{ name: <serverName>, url: <serverUrl> }]` so a URL match can rescue a name drift.
 
-**Eligibility - dashboard-backed servers only.** Only dashboard-backed servers appear in the Automations editor's `GetAvailableMcpServers` response, which is what the editor uses to resolve a prefilled `mcp` action to a connected server. Their `serverIdentifier` always begins with one of these prefixes:
+**Eligibility -- dashboard-backed servers only.** Only dashboard-backed servers appear in the Automations editor's `GetAvailableMcpServers` response, which is what the editor uses to resolve a prefilled `mcp` action to a connected server. Their `serverIdentifier` always begins with one of these prefixes:
 
 - `dashboard-team-<teamId>-` (team-shared servers)
 - `dashboard-` (personal user-configured servers on cursor.com)
 - `plugin-<slug>-` (marketplace plugin servers)
 
-Everything else in the agent catalog - `cursor-ide-browser`, `cursor-app-control`, `extension-...`, project `mcp.json` servers, and other local servers - does NOT appear in the dashboard catalog. Treat those as ineligible for the `mcp` action: do not add them to `workflow.actions`, do not reference them in `@[MCP: ...]` prompt mentions, and do not assume they will resolve when the editor opens. Prefilling an ineligible server lands the row in the blocked "Set up MCP" state and prevents the user from saving.
+Everything else in the agent catalog -- `cursor-ide-browser`, `cursor-app-control`, `extension-...`, project `mcp.json` servers, and other local servers -- does NOT appear in the dashboard catalog. Treat those as ineligible for the `mcp` action: do not add them to `workflow.actions`, do not reference them in `@[MCP: ...]` prompt mentions, and do not assume they will resolve when the editor opens. Prefilling an ineligible server lands the row in the blocked "Set up MCP" state and prevents the user from saving.
 
 If one usable, dashboard-eligible catalog server clearly matches the user's requested integration, use it without asking the user to spell the server name. A name from the user prompt, a screenshot, a skill file, a workflow template, marketplace docs, or company convention is not proof.
 
@@ -87,16 +87,16 @@ If the catalog does not contain a usable, dashboard-eligible server, do not call
 
 **Why this exists.** The Automations editor can prompt for MCP OAuth, but that flow navigates away from the draft and the user loses in-progress changes. Authenticate MCPs here in chat **before** you add an `mcp` action, show the draft table, or open the editor.
 
-**When it applies.** Run this gate whenever you plan to add an `mcp` action or `@[MCP: ...]` prompt mention for a dashboard-eligible server - including after integration discovery for picker-backed values.
+**When it applies.** Run this gate whenever you plan to add an `mcp` action or `@[MCP: ...]` prompt mention for a dashboard-eligible server -- including after integration discovery for picker-backed values.
 
-**Detect unauthenticated servers** from the current session catalog (do not guess). `STATUS.md` is written for both auth and generic error states, so its mere existence is **not** an auth signal - read the file and check its content:
+**Detect unauthenticated servers** from the current session catalog (do not guess). `STATUS.md` is written for both auth and generic error states, so its mere existence is **not** an auth signal -- read the file and check its content:
 
 - `~/.cursor/mcps/<folder>/STATUS.md` exists **and** its content says the server needs authentication (e.g. "needs authentication" / instructs calling `mcp_auth`). A STATUS.md that only reports a generic error is **not** an auth signal.
 - `GetMcpTools` (or equivalent catalog inspection) reports `serverStatus: "needsAuth"` for that server's `serverIdentifier`.
 - The server's live tool list is only `mcp_auth` (no other usable tools yet).
 - Integration discovery against that server fails with an authentication / authorization error.
 
-A server that passes the existence gate but matches any auth signal above is **not authenticated** - treat it separately from "missing", "not set up", or generic error.
+A server that passes the existence gate but matches any auth signal above is **not authenticated** -- treat it separately from "missing", "not set up", or generic error.
 
 **Hard stop until authed.** If the target MCP is not authenticated:
 
@@ -113,28 +113,28 @@ A server that passes the existence gate but matches any auth signal above is **n
 
 ## Procedure
 
-### Stage 0 - Finish availability (must run before intent capture)
+### Stage 0 -- Finish availability (must run before intent capture)
 
-**Finish availability** (check once per run; this is the agent-internal decision - never quote tool names back to the user). Do not mention this check to the user. Do not say anything like "I'll first check whether the Automations editor handoff is available in this session." Do not inspect Cursor backend automation tools. Do not inspect Cursor backend automation tool descriptors to recover an old finish path.
+**Finish availability** (check once per run; this is the agent-internal decision -- never quote tool names back to the user). Do not mention this check to the user. Do not say anything like "I'll first check whether the Automations editor handoff is available in this session." Do not inspect Cursor backend automation tools. Do not inspect Cursor backend automation tool descriptors to recover an old finish path.
 
 | Bucket | Signal | Default finish |
 |--------|--------|----------------|
 | **Automations editor** | `cursor-app-control.open_automation` listed | Open the Automations editor with the reviewed draft |
-| **Agents Window required** | Neither `cursor-app-control.open_automation` nor `cursor-app-control.open_resource` listed | Stop immediately - say "Please use this skill in the Agents Window." |
+| **Agents Window required** | Neither `cursor-app-control.open_automation` nor `cursor-app-control.open_resource` listed | Stop immediately -- say "Please use this skill in the Agents Window." |
 
 The Automations editor path uses `open_automation` directly with the reviewed draft. Do not inspect or call backend automation finish tools, build or paste a browser prefill URL, call `open_resource`, or build a `cursor://` deeplink.
 
 If neither `cursor-app-control.open_automation` nor `cursor-app-control.open_resource` is available, do not continue the automation-drafting flow, do not generate a browser prefill URL, and do not ask follow-up questions. Immediately tell the user: "Please use this skill in the Agents Window."
 
-### Stage 1 - Capture intent (plain chat, no AskQuestion)
+### Stage 1 -- Capture intent (plain chat, no AskQuestion)
 
 Run this stage only after the finish availability check passes. If the user's prompt is thin, send one short plain-chat message and **wait**:
 
 > "Before we dive in, what do you want this automation to do? What kicks it off, what should happen, and what's the outcome? A sentence or two is plenty. Let me know if you want some examples of what you can build."
 
-Skip when the prompt already covers trigger + action + outcome, or the user said something similar to "walk me through it". The answer is freeform - never wrap this question in `AskQuestion`. Don't run repo discovery before Stage 1 fires or is deliberately skipped.
+Skip when the prompt already covers trigger + action + outcome, or the user said something similar to "walk me through it". The answer is freeform -- never wrap this question in `AskQuestion`. Don't run repo discovery before Stage 1 fires or is deliberately skipped.
 
-### Stage 2 - Authoring funnel
+### Stage 2 -- Authoring funnel
 
 Existing automation edits are not supported in this flow. Do not list, get, inspect, update, or search existing automations through backend automation tools. Do not search by automation name or description. If the user wants to change an existing automation, ask them to edit it directly in the Automations UI or create a new replacement automation. Do not claim changes were saved from chat.
 
@@ -142,7 +142,7 @@ Work in Automations UI order: trigger -> tools -> prompt -> name/description -> 
 
 #### Trigger
 
-Use the **Appendix - Trigger selection tables** to pick the trigger and follow-ups. Resolve picker-backed values via integration discovery before asking; ask only for fields not already answered. A cron trigger without a resolved schedule is invalid for direct save; webhook triggers always come back to the editor after save for URL / auth.
+Use the **Appendix -- Trigger selection tables** to pick the trigger and follow-ups. Resolve picker-backed values via integration discovery before asking; ask only for fields not already answered. A cron trigger without a resolved schedule is invalid for direct save; webhook triggers always come back to the editor after save for URL / auth.
 
 #### Scheduled times
 
@@ -180,7 +180,7 @@ Ask with structured multi-select when the tools are not obvious:
 | Manage check runs | `manageCheckRun` |
 | Use MCP server | `mcp` |
 
-When `slack` / `readSlack` is enabled, resolve the channel via Slack MCP discovery before drafting or document UI deferral. When `mcp` is enabled, run the MCP existence gate and MCP auth gate first; only exact, authenticated, usable catalog matches may be added to `workflow.actions`, and `mcp.server.name` MUST be the `serverName` value from the matched entry's `SERVER_METADATA.json` - never the folder / `serverIdentifier`. If a requested MCP is missing or not set up, do not prefill it - ask the user to set it up or defer setup/selection to the editor. If it exists but is not authenticated, stop per the MCP auth gate - do not prefill it and do not defer OAuth to the editor. When a non-`git` trigger pairs with `gitPr`, resolve repo + branch via scoped `gh` discovery before drafting or document UI deferral. Same bar as the trigger - integration discovery first, then either fill the YAML or note the deferral in the draft table.
+When `slack` / `readSlack` is enabled, resolve the channel via Slack MCP discovery before drafting or document UI deferral. When `mcp` is enabled, run the MCP existence gate and MCP auth gate first; only exact, authenticated, usable catalog matches may be added to `workflow.actions`, and `mcp.server.name` MUST be the `serverName` value from the matched entry's `SERVER_METADATA.json` -- never the folder / `serverIdentifier`. If a requested MCP is missing or not set up, do not prefill it -- ask the user to set it up or defer setup/selection to the editor. If it exists but is not authenticated, stop per the MCP auth gate -- do not prefill it and do not defer OAuth to the editor. When a non-`git` trigger pairs with `gitPr`, resolve repo + branch via scoped `gh` discovery before drafting or document UI deferral. Same bar as the trigger -- integration discovery first, then either fill the YAML or note the deferral in the draft table.
 
 #### Prompt + name
 
@@ -188,9 +188,9 @@ Ask "What should the agent do when [trigger]?" Default one tight paragraph; matc
 
 #### Fast-path
 
-If confidence is high and required fields are present, you may skip straight to the draft table. Do not use fast-path to skip Slack channel choices, Git repo/branch scope, non-`git` trigger + `gitPr` repo/branch, `mcp.server.name`, an unresolved schedule, or the MCP auth gate - fast-path never bypasses the **Hard stop until authed** rule, and the draft table cannot appear while a prefilled MCP is still unauthenticated. When uncertain, ask one focused question rather than replaying the full questionnaire.
+If confidence is high and required fields are present, you may skip straight to the draft table. Do not use fast-path to skip Slack channel choices, Git repo/branch scope, non-`git` trigger + `gitPr` repo/branch, `mcp.server.name`, an unresolved schedule, or the MCP auth gate -- fast-path never bypasses the **Hard stop until authed** rule, and the draft table cannot appear while a prefilled MCP is still unauthenticated. When uncertain, ask one focused question rather than replaying the full questionnaire.
 
-### Stage 3 - Draft table, validation, finish
+### Stage 3 -- Draft table, validation, finish
 
 Recap the draft as a compact Markdown table in plain language. Don't write a planning document, checklist, or "steps I'll take":
 
@@ -233,7 +233,7 @@ Before asking the user for a picker-backed value (repo, Slack channel / DM, GitH
 
 **Auth boundary.** Call integration list / search / read tools, `gh`, or `glab` when connected and authenticated. Do not use this path to list, get, inspect, create, update, finish, or prefill Cursor Automations.
 
-- **MCP integrations used for an `mcp` automation action** follow the **MCP auth gate** above - stop, explain, and authenticate in chat before prefilling. Inline `mcp_auth` is supported in the Agents Window when listed for that server.
+- **MCP integrations used for an `mcp` automation action** follow the **MCP auth gate** above -- stop, explain, and authenticate in chat before prefilling. Inline `mcp_auth` is supported in the Agents Window when listed for that server.
 - **Other integrations** (Slack channel discovery, PagerDuty services, `gh` / `glab`, etc.): if missing or unavailable, ask whether the user wants to set it up before continuing. If they say yes, guide setup and retry discovery after they confirm it is ready. If they say no, continue with the draft and say the user will need to finish that integration setup in the Automations editor afterwards. For these non-MCP-action integrations only, do not call `mcp_auth` without an explicit **Retry after setup** confirmation.
 
 #### GitHub / GitLab repo scope
@@ -251,17 +251,17 @@ Guardrails: do not run broad private repo inventory or unscoped account/org swee
 
 #### Slack
 
-Slack MCP discovery before channel question, every time `slackTrigger` / `slack` / `readSlack` is involved. **Specify now** means the agent runs discovery first - not "ask the user for IDs". 1 channel -> inline confirm; 2 -> inline either/or; 3+ -> `AskQuestion` over returned channels (+ **Pick in Automations UI**). **Do not prefill with empty channels after Specify now without discovery or continue-without.** If discovery is blocked -> **Retry after setup** / **Continue without MCP** / **Pick in Automations UI** inline.
+Slack MCP discovery before channel question, every time `slackTrigger` / `slack` / `readSlack` is involved. **Specify now** means the agent runs discovery first -- not "ask the user for IDs". 1 channel -> inline confirm; 2 -> inline either/or; 3+ -> `AskQuestion` over returned channels (+ **Pick in Automations UI**). **Do not prefill with empty channels after Specify now without discovery or continue-without.** If discovery is blocked -> **Retry after setup** / **Continue without MCP** / **Pick in Automations UI** inline.
 
-Slack `channel` accepts `C...` / `G...` / `D...` IDs only - never `U...` member IDs. For Slack replies, offer **respond in the triggering thread** separately from **send to a specific channel or DM**. Empty `{}` actions are valid when the user picks **Select channels** in the editor; record the deferral in the draft table.
+Slack `channel` accepts `C...` / `G...` / `D...` IDs only -- never `U...` member IDs. For Slack replies, offer **respond in the triggering thread** separately from **send to a specific channel or DM**. Empty `{}` actions are valid when the user picks **Select channels** in the editor; record the deferral in the draft table.
 
 #### PagerDuty / Linear / Sentry
 
-PagerDuty MCP list services before `serviceIds` scope: 1/2 inline; 3+ -> `AskQuestion` over services. **Optional `serviceIds`** - otherwise defer to UI. Linear teams / projects and Sentry projects follow the same pattern: discover when MCP is connected; otherwise defer to the editor.
+PagerDuty MCP list services before `serviceIds` scope: 1/2 inline; 3+ -> `AskQuestion` over services. **Optional `serviceIds`** -- otherwise defer to UI. Linear teams / projects and Sentry projects follow the same pattern: discover when MCP is connected; otherwise defer to the editor.
 
 ### YAML output shape (agent-internal)
 
-Wire format matches the reviewed Automations draft passed to `open_automation` as `prefillWorkflowData` - canonical proto JSON with full enum names (e.g. `GIT_PULL_REQUEST_ACTION_OPENED`). PR scope lives on `git.pullRequest` (`repos` / `orgs`); `workflow.gitConfig` holds `repo` + `branch` for non-`git` triggers that need a checkout. Use `ignoreDraftPrs`, not `ignoreDraftPr`. Slack channel / DM IDs: `C...` / `G...` / `D...`.
+Wire format matches the reviewed Automations draft passed to `open_automation` as `prefillWorkflowData` -- canonical proto JSON with full enum names (e.g. `GIT_PULL_REQUEST_ACTION_OPENED`). PR scope lives on `git.pullRequest` (`repos` / `orgs`); `workflow.gitConfig` holds `repo` + `branch` for non-`git` triggers that need a checkout. Use `ignoreDraftPrs`, not `ignoreDraftPr`. Slack channel / DM IDs: `C...` / `G...` / `D...`.
 
 Skeleton:
 
@@ -278,7 +278,7 @@ workflow:
   memoryEnabled: true
 ```
 
-Full pattern - non-`git` trigger + `gitPr` + scoped service:
+Full pattern -- non-`git` trigger + `gitPr` + scoped service:
 
 ```yaml
 name: "Incident response PR"
@@ -304,17 +304,17 @@ workflow:
   memoryEnabled: false
 ```
 
-Prompts use `|` block scalar (`>-` folding breaks bullets). Empty `{}` actions are valid when the field is UI-only. `mcp.server.name` is required when `mcp` is enabled, and the name must be the `serverName` field from the matched entry's `SERVER_METADATA.json` - not the folder / `serverIdentifier`. See the MCP existence gate for the eligibility filter and the no-prefix-invention rule.
+Prompts use `|` block scalar (`>-` folding breaks bullets). Empty `{}` actions are valid when the field is UI-only. `mcp.server.name` is required when `mcp` is enabled, and the name must be the `serverName` field from the matched entry's `SERVER_METADATA.json` -- not the folder / `serverIdentifier`. See the MCP existence gate for the eligibility filter and the no-prefix-invention rule.
 
 ### Validation check (agent-internal)
 
-After draft table approval: validate YAML vs checklist + proto (PR enums, `ignoreDraftPrs`, Slack ID prefixes, `gitConfig` presence when needed, `mcp.server.name` when `mcp` is enabled, MCP actions backed by authenticated usable catalog matches, and description text free of `__securitybot_metadata__` / `customInstruction` metadata markers). **Do not invent inline JSON-schema validators** or shell snippets for automation YAML - they drift from proto shape and can falsely fail valid drafts. If validation fails, explain the issue in plain language and ask what to change; do not paste the full YAML unless the user explicitly asked. **Do not use backend automation tools and do not shell out to repo-local scripts** - use `open_automation` for Automations editor handoff only.
+After draft table approval: validate YAML vs checklist + proto (PR enums, `ignoreDraftPrs`, Slack ID prefixes, `gitConfig` presence when needed, `mcp.server.name` when `mcp` is enabled, MCP actions backed by authenticated usable catalog matches, and description text free of `__securitybot_metadata__` / `customInstruction` metadata markers). **Do not invent inline JSON-schema validators** or shell snippets for automation YAML -- they drift from proto shape and can falsely fail valid drafts. If validation fails, explain the issue in plain language and ask what to change; do not paste the full YAML unless the user explicitly asked. **Do not use backend automation tools and do not shell out to repo-local scripts** -- use `open_automation` for Automations editor handoff only.
 
 ---
 
-## Appendix - Trigger selection tables
+## Appendix -- Trigger selection tables
 
-These labels are agent-only - never show ids to users. If a future structured picker is used, split rows before any option cap.
+These labels are agent-only -- never show ids to users. If a future structured picker is used, split rows before any option cap.
 
 ### Trigger category
 
@@ -332,7 +332,7 @@ These labels are agent-only - never show ids to users. If a future structured pi
 
 ### Specific event (per category)
 
-**`cron`** - Prompt: "Which schedule shape?"
+**`cron`** -- Prompt: "Which schedule shape?"
 
 | Option label | Option id | Notes |
 |--------------|-----------|-------|
@@ -341,7 +341,7 @@ These labels are agent-only - never show ids to users. If a future structured pi
 | Every week | `cron_every_week` | preset |
 | Custom cron expression | `cron_custom` | user supplies full cron |
 
-**`git`** - Prompt: "Which Git event?"
+**`git`** -- Prompt: "Which Git event?"
 
 | Option label | Option id | Maps to |
 |--------------|-----------|---------|
@@ -354,14 +354,14 @@ These labels are agent-only - never show ids to users. If a future structured pi
 | New push to branch | `git_push` | push |
 | Checks completed | `git_ci` | `ciCompleted` |
 
-**`slack`** - Prompt: "Which Slack trigger?"
+**`slack`** -- Prompt: "Which Slack trigger?"
 
 | Option label | Option id | YAML |
 |--------------|-----------|------|
 | New message in channel | `slack_message` | `slackTrigger` |
 | Channel created | `slack_channel_created` | `slackChannelCreated` |
 
-**`linear`** - Prompt: "Which Linear event?"
+**`linear`** -- Prompt: "Which Linear event?"
 
 | Option label | Option id | Proto JSON |
 |--------------|-----------|------------|
@@ -369,7 +369,7 @@ These labels are agent-only - never show ids to users. If a future structured pi
 | Issue status changed | `linear_status` | `linear.statusChanged` |
 | End of cycle | `linear_cycle` | `linear.endOfCycle` |
 
-**`pagerduty`** - Prompt: "Which PagerDuty incident event?"
+**`pagerduty`** -- Prompt: "Which PagerDuty incident event?"
 
 | Option label | Option id | Proto JSON |
 |--------------|-----------|------------|
@@ -378,9 +378,9 @@ These labels are agent-only - never show ids to users. If a future structured pi
 | Incident resolved | `pagerduty_resolved` | `incidentResolved: {}` |
 | Any incident event | `pagerduty_any` | `incidentAny: {}` |
 
-Optional `serviceIds`. Proto may include `incidentEscalated` - only if user asks.
+Optional `serviceIds`. Proto may include `incidentEscalated` -- only if user asks.
 
-**`sentry`** - Prompt: "Which Sentry issue event?"
+**`sentry`** -- Prompt: "Which Sentry issue event?"
 
 | Option label | Option id | Proto JSON |
 |--------------|-----------|------------|
@@ -393,7 +393,7 @@ Optional `serviceIds`. Proto may include `incidentEscalated` - only if user asks
 
 Optional `projectIds`.
 
-**`webhook`** - skip specific-event; `webhook: {}`; user gets URL/auth after save.
+**`webhook`** -- skip specific-event; `webhook: {}`; user gets URL/auth after save.
 
 ---
 

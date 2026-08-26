@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ai-suite publish - Package the ai-suite for distribution
+# ai-suite publish -- Package the ai-suite for distribution
 # This script creates a tarball of the ai-suite, excluding vendor-specific domain knowledge.
 
 set -euo pipefail

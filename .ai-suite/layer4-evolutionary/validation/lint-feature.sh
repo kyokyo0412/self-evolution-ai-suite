@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# lint-feature.sh - Phase 1 gate: validate that evolution.feature is syntactically
+# lint-feature.sh -- Phase 1 gate: validate that evolution.feature is syntactically
 # coherent enough to serve as executable specification.
 #
 # Checks:
@@ -68,7 +68,7 @@ placeholder_count=$(grep -cE '\[FILL\]|TODO|FIXME' "$FEATURE_FILE" || true)
 if [[ "$placeholder_count" -eq 0 ]]; then
   pass "no unfilled placeholder tokens"
 else
-  fail "found $placeholder_count unfilled placeholder(s) - fill them before implementation"
+  fail "found $placeholder_count unfilled placeholder(s) -- fill them before implementation"
 fi
 
 # Summary

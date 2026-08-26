@@ -1,6 +1,6 @@
 # Template: Engage the `codebase-deepdoc` Skill (Brief Form)
 
-**Purpose:** A short trigger brief for when you want to explicitly invoke the `codebase-deepdoc` skill on a specific scope (subdir, language layer, or whole repo). The full instruction set lives in `.cursor-suite/skills/codebase-deepdoc.md` - this template just sets the scope and any deviations.
+**Purpose:** A short trigger brief for when you want to explicitly invoke the `codebase-deepdoc` skill on a specific scope (subdir, language layer, or whole repo). The full instruction set lives in `.cursor-suite/skills/codebase-deepdoc.md` -- this template just sets the scope and any deviations.
 
 Paste this into Cursor (Agent Mode), fill the `[BRACKETS]`, and submit.
 

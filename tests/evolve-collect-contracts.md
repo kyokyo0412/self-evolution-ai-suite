@@ -1,5 +1,5 @@
 # Architecture Contract: .cursor-suite/skills/evolve-collect.md
-# Phase 2 artifact - defines frontmatter, section structure, and behaviour
+# Phase 2 artifact -- defines frontmatter, section structure, and behaviour
 # constraints for the new AI skill.
 # Contract tests in test-evolve-collect-contracts.sh verify these.
 
@@ -18,7 +18,7 @@
         - "push evolution"  (push sub-command is also handled by this skill)
   S6. Skill passes validate-suite.sh with 0 errors
 
-## Skill Body - Required Sections
+## Skill Body -- Required Sections
 
   B1. A "Workflow" or "Instructions" section explaining the collect -> review -> push loop
   B2. A section listing the supported trigger phrases (so the AI knows what activates it)

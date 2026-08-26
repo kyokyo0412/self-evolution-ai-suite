@@ -1,5 +1,5 @@
 /**
- * Colored category swatch - a small filled rounded box. Intended for inline
+ * Colored category swatch -- a small filled rounded box. Intended for inline
  * list/row decoration (category badges, the leading slot of
  * `CollapsibleSection`, etc.).
  *
@@ -23,7 +23,7 @@ export type SwatchProps = {
  *
  * @example
  * ```tsx
- * // Standalone - purple "tools" swatch
+ * // Standalone -- purple "tools" swatch
  * <Swatch color="purple" />
  *
  * // As the `leading` slot on a CollapsibleSection

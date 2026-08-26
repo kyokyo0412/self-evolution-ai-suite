@@ -1,5 +1,5 @@
 # Architecture Contract: ai-suite evolve
-# Phase 2 artifact - defines interface, module boundaries, and stub behaviours.
+# Phase 2 artifact -- defines interface, module boundaries, and stub behaviours.
 # Contract tests in test-evolve-contracts.sh will verify these against the real script.
 
 ## Module Boundary
@@ -24,7 +24,7 @@ ai-suite evolve MUST:
     C3. Changed files are determined by: rsync --dry-run --checksum from remote to a tmpdir,
         then comparing the tmpdir to local .cursor-suite/.
     C4. Only .cursor-suite/ subtree files are collected (not enable/disable scripts themselves,
-        which may have been customised remotely - caller decides to update those separately).
+        which may have been customised remotely -- caller decides to update those separately).
     C5. An evolution report is written to:
           .cursor-suite/layer4-evolutionary/reflection/evolutions/<YYYYMMDD-HHMMSS>-<sanitized-host>.md
         The report MUST contain:

@@ -1,4 +1,4 @@
-# Architecture Contract: cursor adapter - global-scope ~/.cursorrules fix
+# Architecture Contract: cursor adapter -- global-scope ~/.cursorrules fix
 # Phase 2 artifact. Verified by test-global-cursorrules-contracts.sh.
 
 ## Scope of change

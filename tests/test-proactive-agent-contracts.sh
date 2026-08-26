@@ -39,7 +39,7 @@ for adapter in cursor claude opencode continue roo-code codex; do
     opencode) out_file=".opencode/instructions.md" ;;
     continue) out_file=".continue/prompts/ai-suite.prompt" ;;
     roo-code) out_file=".roorules" ;;
-    codex) out_file=".codexrules" ;;
+    codex) out_file="AGENTS.md" ;;
   esac
 
   (

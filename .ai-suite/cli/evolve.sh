@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ai-suite evolve - Collect remote ai-suite evolutions into the local git
+# ai-suite evolve -- Collect remote ai-suite evolutions into the local git
 # repo, and push the updated suite back to remote SSH hosts.
 #
 # Sub-commands:
@@ -45,7 +45,7 @@ EXCLUDE_MEMORY=0
 # -- Argument parsing ----------------------------------------------------------
 usage() {
   cat <<'EOF'
-ai-suite evolve - sync ai-suite evolutions between remote hosts and local git
+ai-suite evolve -- sync ai-suite evolutions between remote hosts and local git
 
 USAGE
   ai-suite evolve collect [--local] [--host USER@HOST ...] [--remote-path PATH] [--dry-run]
@@ -187,7 +187,7 @@ do_collect() {
     if ! rsync "${rsync_opts[@]}" \
       -e "ssh -o BatchMode=yes -o ConnectTimeout=10" \
       "${HOST}:${remote_suite}/" "${tmpdir}/"; then
-      warn "rsync failed for $HOST - skipping"
+      warn "rsync failed for $HOST -- skipping"
       rm -rf "$tmpdir"; trap - EXIT
       continue
     fi
@@ -223,7 +223,7 @@ do_collect() {
     any_changed=true
     info "Changed files from $HOST:"
     for cf in "${changed_files[@]}"; do
-      info "  - $cf"
+      info "  * $cf"
     done
 
     # Process changed/new files (Semantic LLM Merging)
@@ -289,7 +289,7 @@ REPORT
   done # for HOST
 
   if [[ "$AI_SUITE_DRY_RUN" == "1" ]]; then
-    info "[DRY-RUN] complete - no files were modified."
+    info "[DRY-RUN] complete -- no files were modified."
     return 0
   fi
 
@@ -303,7 +303,7 @@ REPORT
   if [[ -x "$validator" ]]; then
     info "Running skill validator ..."
     if ! bash "$validator" 2>&1; then
-      warn "Skill validation reported issues - review before committing."
+      warn "Skill validation reported issues -- review before committing."
     fi
   fi
 
@@ -472,14 +472,14 @@ do_push() {
 
     # Rsync toggle scripts first
     if ! "${rsync_scripts[@]}"; then
-      warn "rsync scripts to $HOST failed - skipping host"
+      warn "rsync scripts to $HOST failed -- skipping host"
       failed_hosts+=("$HOST")
       continue
     fi
 
     # Rsync .ai-suite/
     if ! "${rsync_cmd[@]}"; then
-      warn "rsync .ai-suite/ to $HOST failed - skipping host"
+      warn "rsync .ai-suite/ to $HOST failed -- skipping host"
       failed_hosts+=("$HOST")
       continue
     fi
@@ -495,7 +495,7 @@ do_push() {
   done
 
   if [[ "$AI_SUITE_DRY_RUN" == "1" ]]; then
-    info "[DRY-RUN] complete - no hosts were modified."
+    info "[DRY-RUN] complete -- no hosts were modified."
     return 0
   fi
 

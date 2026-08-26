@@ -33,7 +33,7 @@ export declare const canvasPaletteDark: {
 /**
  * Light-mode palette derived from `packages/ui/src/tokens/themes/cursor-core/light.ts`.
  * Base color: #141414.  Same percentages as dark (regular light has no overrides
- * in CURSOR_SEMANTIC_OVERRIDES - only high-contrast does).
+ * in CURSOR_SEMANTIC_OVERRIDES -- only high-contrast does).
  */
 export declare const canvasPaletteLight: {
     readonly foreground: "#141414F0";
@@ -90,7 +90,7 @@ export interface CanvasPalette {
     readonly diffStripRemoved: string;
 }
 /**
- * Chart color palette - distilled from portal-website analytics charts.
+ * Chart color palette -- distilled from portal-website analytics charts.
  * 88% opacity (E0) softens vibrancy without dulling; palette maximizes
  * hue + luminosity spread for distinguishable multi-series charts.
  */
@@ -123,7 +123,7 @@ export declare const chartPalette: {
  * `text-{hue}-primary` semantic tokens); `gray` mirrors `text-tertiary`
  * (`mixTransparent base 54%`).
  *
- * The insertion order here is the canonical category order - primitives
+ * The insertion order here is the canonical category order -- primitives
  * that auto-assign colors (e.g. `UsageBar` segments without an explicit
  * `color`) cycle through these keys in order.
  */
@@ -167,7 +167,7 @@ export type CategoryPalette = Readonly<Record<Color, string>>;
  */
 export declare const usageColorSequence: readonly Color[];
 /**
- * Ordered array for automatic series coloring - alternates dark/light across
+ * Ordered array for automatic series coloring -- alternates dark/light across
  * distinct hue families for maximum perceptual separation.
  */
 export declare const chartColorSequence: readonly ["#1F8A65E8", "#70B0D8E0", "#5A6CC0F0", "#F0A040E0", "#C06028E0", "#E8C030E0", "#C85898E0", "#F0A088E0", "#7B64B8F0", "#7DCAB0E0", "#8888A8E0", "#2A9A8AE0"];

@@ -2,7 +2,7 @@
 # Functional context:
 #   cursor-suite is installed to remote SSH hosts via ai-suite enable.
 #   When Cursor runs "Run Reflection" on a remote host, it edits files inside
-#   the remote .cursor-suite/ installation.  Those improvements are siloed -
+#   the remote .cursor-suite/ installation.  Those improvements are siloed --
 #   they never flow back to the local git repo (the "mother").
 #   This feature closes that loop.
 

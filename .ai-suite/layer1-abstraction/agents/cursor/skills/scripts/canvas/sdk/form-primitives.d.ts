@@ -23,7 +23,7 @@ export type TextInputProps = {
  * Single-line text input (28px height). Use for names, titles, search
  * queries, and short text fields.
  *
- * `onChange` receives the **string value**, not a DOM event - this pairs
+ * `onChange` receives the **string value**, not a DOM event -- this pairs
  * directly with `useCanvasState` setters.
  *
  * @example
@@ -84,7 +84,7 @@ export type CheckboxProps = {
  *
  * @example
  * ```tsx
- * // Checkbox in a list - no label, parent handles layout
+ * // Checkbox in a list -- no label, parent handles layout
  * <Checkbox checked={item.done} onChange={(v) => toggleItem(item.id, v)} />
  * ```
  */
@@ -170,7 +170,7 @@ export type IconButtonProps = {
 };
 /**
  * Compact icon-only button for inline actions on list items (delete, edit,
- * expand, etc.). Accepts **any** `children` as the icon - use an inline SVG,
+ * expand, etc.). Accepts **any** `children` as the icon -- use an inline SVG,
  * an emoji, or a unicode character.
  *
  * Always provide `title` for accessibility (screen-reader label + tooltip).

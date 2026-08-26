@@ -43,7 +43,7 @@ done
 
 ## Dynamic Schedule
 
-The user wants the agent to self-pace. Decide what makes the next iteration worth running - a passage of time, or an observable event.
+The user wants the agent to self-pace. Decide what makes the next iteration worth running -- a passage of time, or an observable event.
 
 1. **Run the prompt now.**
 2. **If the next run is gated on an event** (a git ref advancing, a log line matching, a file changing, a CI check completing), arm a background watcher that emits the sentinel only when the event fires, with `notify_on_output` on `^AGENT_LOOP_WAKE_<purpose>`. Arm once; skip on later ticks if it's still running.
@@ -54,7 +54,7 @@ sleep <seconds>
 echo 'AGENT_LOOP_WAKE_<purpose> {"prompt":"<prompt>"}'
 ```
 
-   With a watcher armed, this is the **fallback heartbeat** - lean long so idle ticks aren't pure overhead. Without a watcher, this is the cadence - pick a delay based on when the result is worth checking again.
+   With a watcher armed, this is the **fallback heartbeat** -- lean long so idle ticks aren't pure overhead. Without a watcher, this is the cadence -- pick a delay based on when the result is worth checking again.
 
 4. **On wake**, read the latest payload, execute its `prompt`, then re-arm the next heartbeat (and re-arm the watcher only if it exited). If both an output wake and a completion notification arrive, act on the output and ignore the completion.
 5. **To stop**, kill any watcher PID and don't arm the next heartbeat.

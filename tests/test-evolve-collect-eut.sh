@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# test-evolve-collect-eut.sh - Phase 4 EUT for the evolve-collect skill.
+# test-evolve-collect-eut.sh -- Phase 4 EUT for the evolve-collect skill.
 #
 # Tests:
-#   E1  Trigger phrase coverage - all 12 frontmatter triggers present
-#   E2  Validate-suite gate - full validator pass
+#   E1  Trigger phrase coverage -- all 12 frontmatter triggers present
+#   E2  Validate-suite gate -- full validator pass
 #   E3  Command examples in skill body are syntactically valid bash
 #   E4  Safety: no git commit/push commands appear in the skill body instructions
 #   E5  All Gherkin scenarios are addressed by the skill
@@ -28,12 +28,12 @@ fail() { FAIL=$((FAIL+1)); printf '  %sFAIL%s  %s\n' "$(_red)" "$(_off)" "$*" >&
 skill_has() {
   local label="$1" needle="$2"
   if grep -qF -- "$needle" "$SKILL" 2>/dev/null; then pass "$label"
-  else fail "$label - not found: $needle"; fi
+  else fail "$label -- not found: $needle"; fi
 }
 skill_has_pat() {
   local label="$1" pat="$2"
   if grep -qE -- "$pat" "$SKILL" 2>/dev/null; then pass "$label"
-  else fail "$label - pattern not matched: $pat"; fi
+  else fail "$label -- pattern not matched: $pat"; fi
 }
 
 echo "=== Phase 4 EUT: evolve-collect skill ==="
@@ -107,7 +107,7 @@ if [[ "$bad_blocks" -eq 0 ]]; then
   pass "E3: all $block_num bash code block(s) pass bash -n"
 fi
 
-# -- E4: Safety - no bare git commit/push in the prescriptive body -------------
+# -- E4: Safety -- no bare git commit/push in the prescriptive body -------------
 echo ""
 echo "--- E4: no auto-commit instructions ---"
 # The skill DISCUSSES git commands (to show them to the user) but must not
@@ -153,7 +153,7 @@ skill_has "E7b: --remote-path flag referenced" "--remote-path"
 skill_has "E7c: --remote-scope flag referenced" "--remote-scope"
 skill_has "E7d: --dry-run flag referenced" "--dry-run"
 
-# -- E8: Integration - ai-suite evolve is present and invocable ---------------
+# -- E8: Integration -- ai-suite evolve is present and invocable ---------------
 echo ""
 echo "--- E8: ai-suite evolve integration ---"
 if [[ -x "$EVOLVE" ]]; then
@@ -174,7 +174,7 @@ else
   fail "E8c: ai-suite evolve --help does not mention 'push'"
 fi
 
-# -- E9: Idempotency - validator passes twice consecutively -------------------
+# -- E9: Idempotency -- validator passes twice consecutively -------------------
 echo ""
 echo "--- E9: idempotency ---"
 if bash "$VALIDATOR" "$SKILL" >/dev/null 2>&1 && \
@@ -217,7 +217,7 @@ fi
 printf '\n'
 total=$((PASS+FAIL))
 if [[ "$FAIL" -eq 0 ]]; then
-  printf '\033[32m[EUT] %d/%d passed - PHASE 4 GATE: PASSED\033[0m\n' "$PASS" "$total"
+  printf '\033[32m[EUT] %d/%d passed -- PHASE 4 GATE: PASSED\033[0m\n' "$PASS" "$total"
   exit 0
 else
   printf '\033[31m[EUT] %d passed, %d FAILED / %d total\033[0m\n' "$PASS" "$FAIL" "$total" >&2

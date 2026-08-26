@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-global-cursorrules-eut.sh - Phase 4 EUT: global ~/.cursorrules fix
+# test-global-cursorrules-eut.sh -- Phase 4 EUT: global ~/.cursorrules fix
 # End-to-end sandbox tests for the full global install/uninstall cycle,
 # verifying ~/.cursorrules, domain skills, idempotency, and isolation.
 
@@ -48,9 +48,9 @@ if grep -q 'Run Reflection\|Run Reflection' "$CR"; then
   pass "E1e reflection trigger instruction present in ~/.cursorrules"
 else fail "E1e reflection trigger instruction present in ~/.cursorrules"; fi
 
-# -- E2: global install without domain - 9 skills -----------------------------
+# -- E2: global install without domain -- 9 skills -----------------------------
 echo ""
-echo "=== E2: Global install - skill count ==="
+echo "=== E2: Global install -- skill count ==="
 
 skill_count=$(find "$SB/.cursor/skills" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l | tr -d ' ')
 expected_base=$(find \
@@ -64,7 +64,7 @@ if [[ "$skill_count" -eq "$expected_base" ]]; then
   pass "E2a without --domain: $skill_count/$expected_base skills"
 else fail "E2a without --domain: expected $expected_base, got $skill_count"; fi
 
-for domain_skill in bugzilla-debug bugzilla-rest-api customi-lab custom-skill-2 custom-skill-1 custom-policy-lab custom-qe-spark-fvt vmw-confluence; do
+for domain_skill in bugzilla-debug bugzilla-rest-api; do
   if [[ -d "$SB/.cursor/skills/$domain_skill" ]]; then
     pass "E2b domain skill present with flag: $domain_skill"
   else fail "E2b domain skill present with flag: $domain_skill"; fi
@@ -150,7 +150,7 @@ if echo "$acc_out" | grep -qE "[0-9]+ passed.*0 FAILED|0 failures"; then
   pass "E8 acceptance tests all pass"
 else
   final_line=$(echo "$acc_out" | tail -3)
-  fail "E8 acceptance tests - some failures: $final_line"
+  fail "E8 acceptance tests -- some failures: $final_line"
 fi
 
 # -----------------------------------------------------------------------------

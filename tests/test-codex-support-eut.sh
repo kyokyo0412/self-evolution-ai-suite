@@ -18,8 +18,8 @@ cd "$TEST_DIR"
 echo "Testing enable codex..."
 bash "$SUITE_DIR/ai-suite/ai-suite" enable --agent codex --scope project --project "$TEST_DIR"
 
-if [[ ! -f ".codexrules" ]]; then
-  echo "Error: .codexrules was not created."
+if [[ ! -f "AGENTS.md" ]]; then
+  echo "Error: AGENTS.md was not created."
   exit 1
 fi
 
@@ -28,8 +28,8 @@ if [[ ! -d ".codex/skills" ]]; then
   exit 1
 fi
 
-if ! grep -q "<!-- ai-suite:start -->" ".codexrules"; then
-  echo "Error: ai-suite block not found in .codexrules."
+if ! grep -q "<!-- ai-suite:start -->" "AGENTS.md"; then
+  echo "Error: ai-suite block not found in AGENTS.md."
   exit 1
 fi
 
@@ -37,8 +37,8 @@ fi
 echo "Testing disable codex..."
 bash "$SUITE_DIR/ai-suite/ai-suite" disable --agent codex --scope project --project "$TEST_DIR"
 
-if grep -q "<!-- ai-suite:start -->" ".codexrules"; then
-  echo "Error: ai-suite block was not removed from .codexrules."
+if grep -q "<!-- ai-suite:start -->" "AGENTS.md"; then
+  echo "Error: ai-suite block was not removed from AGENTS.md."
   exit 1
 fi
 

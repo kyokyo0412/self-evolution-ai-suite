@@ -34,7 +34,7 @@ fi
 
 # 3. Test ai-suite evolve runs ai-suite enable after collect
 echo "Testing ai-suite evolve..."
-if grep -q "Updating the local Augmented Agent" ai-suite evolve; then
+if grep -q "Updating the local Augmented Agent" .ai-suite/cli/evolve.sh; then
   pass "ai-suite evolve runs ai-suite enable after collect"
 else
   fail "ai-suite evolve does not run ai-suite enable after collect"

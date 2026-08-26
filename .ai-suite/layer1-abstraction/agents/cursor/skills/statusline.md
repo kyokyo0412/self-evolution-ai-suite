@@ -29,8 +29,8 @@ The `command` field supports full paths, `~` expansion, and shell-style argument
 
 | Field | Required | Default | Description |
 |-------|----------|---------|-------------|
-| `type` | yes | - | Must be `"command"` |
-| `command` | yes | - | Path to an executable or inline command. `~` is expanded. |
+| `type` | yes | -- | Must be `"command"` |
+| `command` | yes | -- | Path to an executable or inline command. `~` is expanded. |
 | `padding` | no | `0` | Horizontal inset (in characters) for the status line container. |
 | `updateIntervalMs` | no | `300` | Minimum interval between invocations. Clamped to >= 300ms. |
 | `timeoutMs` | no | `2000` | Maximum time the command may run before it is killed. |
@@ -111,16 +111,16 @@ The command receives a JSON object on stdin. The TypeScript interface is `Status
 
 ### Fields that may be absent
 
-- `session_name` - only present when a custom name has been set
-- `model.param_summary` - only present when model has non-default parameters
-- `model.max_mode` - only present when max mode is enabled
-- `vim` - only present when vim mode is enabled
-- `worktree` - only present when running in a worktree
+- `session_name` -- only present when a custom name has been set
+- `model.param_summary` -- only present when model has non-default parameters
+- `model.max_mode` -- only present when max mode is enabled
+- `vim` -- only present when vim mode is enabled
+- `worktree` -- only present when running in a worktree
 
 ### Fields that may be null
 
-- `context_window.current_usage` - null before the first API call
-- `context_window.used_percentage`, `context_window.remaining_percentage` - may be null early in the session
+- `context_window.current_usage` -- null before the first API call
+- `context_window.used_percentage`, `context_window.remaining_percentage` -- may be null early in the session
 
 ## Stdout / rendering
 
@@ -170,9 +170,9 @@ DIR=$(echo "$input" | jq -r '.workspace.current_dir')
 PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 
 BRANCH=""
-git rev-parse --git-dir > /dev/null 2>&1 && BRANCH=" | $(git branch --show-current 2>/dev/null)"
+git rev-parse --git-dir > /dev/null 2>&1 && BRANCH=" | [tree] $(git branch --show-current 2>/dev/null)"
 
-echo -e "\033[36m[$MODEL]\033[0m ${DIR##*/}$BRANCH"
+echo -e "\033[36m[$MODEL]\033[0m [dir] ${DIR##*/}$BRANCH"
 echo -e "ctx $PCT%"
 ```
 

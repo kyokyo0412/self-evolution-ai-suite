@@ -18,13 +18,13 @@ Before any SSH connection, confirm with the user **all four** of:
 
 1. **Hostname/IP** of target (echoed back).
 2. **Explicit confirmation** the host is **non-production** (testbed/lab/dev).
-3. **Sudo/root scope** - what privilege level is granted.
-4. **Snapshot/backup state** - if the testbed has prior state worth preserving.
+3. **Sudo/root scope** -- what privilege level is granted.
+4. **Snapshot/backup state** -- if the testbed has prior state worth preserving.
 
 Run `bash .ai-suite/layer4-evolutionary/validation/testbed-setup-preflight.sh <host>` (provided with this skill) to:
 - Reject hostnames matching `*prod*`, `*production*`, `*-pr-*`, or any user-provided blocklist.
 - Probe reachability without state change.
-- Capture the existing `uname -a`, `lsb_release -a`, mounted filesystems, listening sockets - saved to a timestamped baseline file for rollback.
+- Capture the existing `uname -a`, `lsb_release -a`, mounted filesystems, listening sockets -- saved to a timestamped baseline file for rollback.
 
 **Refuse to proceed** if the user has not confirmed all four items, or if `preflight.sh` returns non-zero. Ask the user to override explicitly if they insist.
 
@@ -53,7 +53,7 @@ For every task in the user's setup list:
    - Prefer idempotent forms (`apt-get install -y --no-upgrade`, `systemctl enable --now`, `[ -d X ] || mkdir -p X`).
 
 3. **Active Debugging**
-   - On non-zero exit, **do not ask permission** to fix - analyze:
+   - On non-zero exit, **do not ask permission** to fix -- analyze:
      - `stderr` from the failed command
      - `/var/log/syslog`, `dmesg`, `journalctl -xe`, `/var/log/messages`
      - Service-specific logs (e.g., `/var/log/nginx/error.log`).
@@ -61,7 +61,7 @@ For every task in the user's setup list:
    - Apply corrective action and re-run.
 
 4. **Verification**
-   - After config: run a functional test - `systemctl is-active <svc>`, `curl -sf http://host/health`, `docker ps -a`, etc.
+   - After config: run a functional test -- `systemctl is-active <svc>`, `curl -sf http://host/health`, `docker ps -a`, etc.
    - Capture exit code + a snippet of output as evidence.
 
 ## Logging Format (mandatory)
@@ -78,10 +78,10 @@ End each phase with a **block summary**: how many EXEC, how many FAIL, how many 
 
 ## Final Handover
 
-1. **Validation Report** - `systemctl status` (or equivalent) of every service brought up, plus health probes.
-2. **Change Summary** - packages installed, files modified (with diff), service states changed, kernel params adjusted.
-3. **Rollback Recipe** - exact commands to undo the changes (from the baseline file in `testbed-state/`).
-4. **Confirmation** - testbed is ready for use.
+1. **Validation Report** -- `systemctl status` (or equivalent) of every service brought up, plus health probes.
+2. **Change Summary** -- packages installed, files modified (with diff), service states changed, kernel params adjusted.
+3. **Rollback Recipe** -- exact commands to undo the changes (from the baseline file in `testbed-state/`).
+4. **Confirmation** -- testbed is ready for use.
 
 ## Negative Constraints (Must NOT)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ai-suite manage - Manage the ai-suite ecosystem, including domain registry.
+# ai-suite manage -- Manage the ai-suite ecosystem, including domain registry.
 #
 # Usage:
 #   ai-suite manage domain install <git-url> [--domain <name>]
@@ -26,7 +26,7 @@ export AI_SUITE_LOG_PREFIX="manage"
 
 usage() {
   cat <<'EOF'
-ai-suite manage - Manage the ai-suite ecosystem
+ai-suite manage -- Manage the ai-suite ecosystem
 
 USAGE
   ai-suite manage domain install <git-url> [--domain <name>]

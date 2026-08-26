@@ -41,7 +41,7 @@ for layer in "${LAYERS[@]}"; do
         echo "[X] Missing layer: $layer"
         failed=1
     else
-        echo "[OK] Found layer: $layer"
+        echo "M-^\M-^E Found layer: $layer"
     fi
 done
 
@@ -50,7 +50,7 @@ for contract in "${CONTRACTS[@]}"; do
         echo "[X] Missing contract file: $contract"
         failed=1
     else
-        echo "[OK] Found contract file: $contract"
+        echo "M-^\M-^E Found contract file: $contract"
     fi
 done
 
@@ -59,7 +59,7 @@ for forbidden in "${FORBIDDEN[@]}"; do
         echo "[X] Forbidden directory still exists: $forbidden"
         failed=1
     else
-        echo "[OK] Forbidden directory absent: $forbidden"
+        echo "M-^\M-^E Forbidden directory absent: $forbidden"
     fi
 done
 

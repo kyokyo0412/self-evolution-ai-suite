@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# test-evolve-eut.sh - End-to-end / functional tests for ai-suite evolve.
+# test-evolve-eut.sh -- End-to-end / functional tests for ai-suite evolve.
 #
 # All tests run in an isolated sandbox (fake HOME + fake project).
 # No real SSH connections are made; SSH/rsync calls are shimmed.
 # Run from the workspace root:  bash tests/test-evolve-eut.sh
 
 # SC2030/SC2031 disabled file-wide: every `export HOME=...` below is inside a
-# subshell `( ... )` intentionally - we want HOME scoped to that subshell only.
+# subshell `( ... )` intentionally -- we want HOME scoped to that subshell only.
 # shellcheck disable=SC2030,SC2031
 
 set -uo pipefail
@@ -17,7 +17,7 @@ SCRIPT="$SUITE_ROOT/ai-suite"
 # -- Sandbox setup -------------------------------------------------------------
 SANDBOX_HOME="$(mktemp -d "${TMPDIR:-/tmp}/evolve-eut-home.XXXXXX")"
 SANDBOX_PROJ="$(mktemp -d "${TMPDIR:-/tmp}/evolve-eut-proj.XXXXXX")"
-# SC2329: cleanup is called by trap - shellcheck false positive
+# SC2329: cleanup is called by trap -- shellcheck false positive
 # shellcheck disable=SC2329
 cleanup() { rm -rf "$SANDBOX_HOME" "$SANDBOX_PROJ"; }
 trap cleanup EXIT
@@ -38,13 +38,13 @@ assert_file_not_exists(){
   if [[ ! -f "$2" ]] && [[ ! -d "$2" ]]; then
     pass "$1"
   else
-    fail "$1 - path should not exist: $2"
+    fail "$1 -- path should not exist: $2"
   fi
 }
 assert_contains() {
   local label="$1" needle="$2" file="$3"
   if grep -qF -- "$needle" "$file" 2>/dev/null; then pass "$label"
-  else fail "$label - '$needle' not in $file"; fi
+  else fail "$label -- '$needle' not in $file"; fi
 }
 
 # -- Shim directory for ssh / rsync -------------------------------------------
@@ -86,7 +86,7 @@ if [[ $nlen -ge 2 ]]; then
   src="${nargs[$nlen-2]}"
   dest="${nargs[$nlen-1]}"
   dest="${dest%/}"
-  # Remote pull: source has HOST:PATH - copy from REMOTE_SIM_ROOT/.ai-suite
+  # Remote pull: source has HOST:PATH -- copy from REMOTE_SIM_ROOT/.ai-suite
   if [[ "$src" == *:* ]] && [[ -d "${REMOTE_SIM_ROOT:-}/.ai-suite" ]]; then
     cp -R "${REMOTE_SIM_ROOT}/.ai-suite/." "$dest/" 2>/dev/null || true
   fi
@@ -123,9 +123,9 @@ local_skill_count_before=$(find "$SANDBOX_PROJ/.ai-suite/skills" -type f | wc -l
 ) >/dev/null 2>&1 || true
 local_skill_count_after=$(find "$SANDBOX_PROJ/.ai-suite/skills" -type f | wc -l | tr -d ' ')
 if [[ "$local_skill_count_before" -eq "$local_skill_count_after" ]]; then
-  pass "T1: dry-run collect - no files modified"
+  pass "T1: dry-run collect -- no files modified"
 else
-  fail "T1: dry-run collect - file count changed ($local_skill_count_before -> $local_skill_count_after)"
+  fail "T1: dry-run collect -- file count changed ($local_skill_count_before -> $local_skill_count_after)"
 fi
 pass "T1b: no evolution report dir created in dry-run"
 
@@ -192,7 +192,7 @@ else
   fail "T3f: no git commit command found in output"
 fi
 
-# -- T4: idempotency - collect twice when remote unchanged -------------------
+# -- T4: idempotency -- collect twice when remote unchanged -------------------
 echo ""
 echo "--- T4: idempotency (collect twice, no further changes) ---"
 report_count_before=$(find "$evolutions_dir" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
@@ -339,7 +339,7 @@ fi
 printf '\n'
 total=$((PASS+FAIL))
 if [[ "$FAIL" -eq 0 ]]; then
-  printf '\033[32m[EUT] %d/%d passed - PHASE 4 GATE: PASSED\033[0m\n' "$PASS" "$total"
+  printf '\033[32m[EUT] %d/%d passed -- PHASE 4 GATE: PASSED\033[0m\n' "$PASS" "$total"
   exit 0
 else
   printf '\033[31m[EUT] %d passed, %d FAILED / %d total\033[0m\n' "$PASS" "$FAIL" "$total" >&2

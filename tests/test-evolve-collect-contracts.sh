@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-evolve-collect-contracts.sh - Phase 2 contract tests for
+# test-evolve-collect-contracts.sh -- Phase 2 contract tests for
 # .ai-suite/layer4-evolutionary/merging/evolve-collect.md
 #
 # Verifies the interface contracts in evolve-collect-contracts.md.
@@ -23,7 +23,7 @@ skill_contains() {
   if grep -qF -- "$needle" "$SKILL" 2>/dev/null; then
     pass "$label"
   else
-    fail "$label - skill does not contain: $needle"
+    fail "$label -- skill does not contain: $needle"
   fi
 }
 skill_contains_pattern() {
@@ -31,7 +31,7 @@ skill_contains_pattern() {
   if grep -qE -- "$pattern" "$SKILL" 2>/dev/null; then
     pass "$label"
   else
-    fail "$label - skill does not match pattern: $pattern"
+    fail "$label -- skill does not match pattern: $pattern"
   fi
 }
 
@@ -83,7 +83,7 @@ skill_contains_pattern "B1: has a Workflow or Instructions section" "^#+ *(Workf
 # -- B3: References ai-suite evolve in the body -------------------------------
 skill_contains "B3: references ai-suite evolve" "ai-suite evolve"
 
-# -- B4: Safety - no auto-commit constraint ------------------------------------
+# -- B4: Safety -- no auto-commit constraint ------------------------------------
 skill_contains_pattern "B4a: mentions 'auto-commit' or 'auto commit'" "auto.commit"
 skill_contains_pattern "B4b: mentions '--host is required' or 'ask for host'" "(ask|--host|HOST)"
 
@@ -105,7 +105,7 @@ if [[ -f "$SKILL" ]]; then
   if [[ "$line_count" -le 600 ]]; then
     pass "V3: skill body <= 600 lines (actual: $line_count)"
   else
-    fail "V3: skill is $line_count lines - exceeds 600-line limit"
+    fail "V3: skill is $line_count lines -- exceeds 600-line limit"
   fi
 fi
 

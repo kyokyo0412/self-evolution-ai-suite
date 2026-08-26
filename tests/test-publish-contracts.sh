@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-publish-contracts.sh - Phase 2 contract tests.
+# test-publish-contracts.sh -- Phase 2 contract tests.
 
 set -uo pipefail
 SUITE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

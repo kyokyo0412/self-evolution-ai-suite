@@ -1,7 +1,7 @@
 # Feature: AI-prompted remote ai-suite lifecycle management
 # Skill: remote-suite
 # The user can use natural language to manage ai-suite installations on
-# remote SSH hosts - no need to remember shell command syntax.
+# remote SSH hosts -- no need to remember shell command syntax.
 
 Feature: Intent recognition for remote operations
 

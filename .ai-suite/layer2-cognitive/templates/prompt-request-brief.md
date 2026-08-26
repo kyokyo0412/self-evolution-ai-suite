@@ -20,11 +20,11 @@ Choose one (or describe a hybrid):
 `[Insert specific deliverable here]`
 
 ## Core Objective
-`[Describe exactly what the artifact must achieve. Be concrete - e.g. "When a developer types /audit-net inside Cursor, it must inspect /proc/net/, identify open ports, cross-reference against /etc/services, and emit a JSON report."]`
+`[Describe exactly what the artifact must achieve. Be concrete -- e.g. "When a developer types /audit-net inside Cursor, it must inspect /proc/net/, identify open ports, cross-reference against /etc/services, and emit a JSON report."]`
 
 ## Specific Constraints
 - `[e.g. "Must prioritize memory safety"]`
-- `[e.g. "Only use bash and standard Linux utilities - no Python"]`
+- `[e.g. "Only use bash and standard Linux utilities -- no Python"]`
 - `[e.g. "JSON must adhere to OpenAI function-calling specs"]`
 - `[e.g. "MUST NOT run any destructive command without explicit user confirmation"]`
 

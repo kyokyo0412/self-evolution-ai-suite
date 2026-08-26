@@ -17,13 +17,13 @@ triggers:
 
 ## Environment Distinction (Critical)
 
-- **Local directory** - the host running Cursor. Used **only** for fetching credentials. No code changes happen here.
-- **Codebase (current workspace)** - the opened folder (possibly remote-SSH). All reading, edits, and test execution happen here.
+- **Local directory** -- the host running Cursor. Used **only** for fetching credentials. No code changes happen here.
+- **Codebase (current workspace)** -- the opened folder (possibly remote-SSH). All reading, edits, and test execution happen here.
 
 ## Inputs (user provides)
 
 - **Review URL:** `[INSERT REVIEW URL HERE]`
-- **Credential file (local, optional):** `/Users/dc005518/.ssh/log.txt` (`username\ntoken`) - used only if the URL is gated.
+- **Credential file (local, optional):** `/Users/dc005518/.ssh/log.txt` (`username\ntoken`) -- used only if the URL is gated.
 
 ## Execution Steps
 
@@ -39,16 +39,16 @@ triggers:
    - The original comment in the gitreview
    - How it was fixed (or why it was rejected as a false issue)
    - The comment generated to let user copy to reply to the gitreview thread (including detailed reason/analysis if it's a false issue).
-7. **Finalization - STOP BEFORE COMMIT.** Save every modified file and the markdown report. **Do NOT stage, commit, or push.**
+7. **Finalization -- STOP BEFORE COMMIT.** Save every modified file and the markdown report. **Do NOT stage, commit, or push.**
 8. **Summarize.** List files changed, comments addressed, and confirmation that all test suites are green. Provide the copy-paste git commands for the user to commit manually.
 
 ## Constraints
 
-- **No version-control operations.** `git add`, `git commit`, `git push`, `git reset`, branch creation - all forbidden.
+- **No version-control operations.** `git add`, `git commit`, `git push`, `git reset`, branch creation -- all forbidden.
 - **Code integrity.** Do NOT alter logic unrelated to the review comments.
 - **Self-evaluation.** After each fix: *"Does this exactly satisfy the reviewer without introducing new bugs across the wider project?"* The test suite is the source of truth.
 - **No fabricated reviewers.** Quote only comments that actually exist on the URL.
-- **No silent test deletion.** Do not delete a failing test to "make it pass" - fix the underlying code.
+- **No silent test deletion.** Do not delete a failing test to "make it pass" -- fix the underlying code.
 
 ## Negative Constraints (Must NOT)
 

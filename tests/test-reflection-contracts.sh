@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-reflection-contracts.sh - Phase 2 RED contract tests for enhanced reflection-protocol.md
+# test-reflection-contracts.sh -- Phase 2 RED contract tests for enhanced reflection-protocol.md
 # Verifies that reflection-protocol.md satisfies every contract in reflection-protocol-contracts.md
 
 set -euo pipefail
@@ -15,11 +15,11 @@ fail() { printf '  FAIL  %s\n' "$1"; FAIL=$((FAIL+1)); }
 check_contains() {
   local label="$1"; local pattern="$2"
   if grep -qE -- "$pattern" "$PROTO"; then pass "$label"
-  else fail "$label - pattern not found: $pattern"; fi
+  else fail "$label -- pattern not found: $pattern"; fi
 }
 check_not_contains() {
   local label="$1"; local pattern="$2"
-  if grep -qE -- "$pattern" "$PROTO"; then fail "$label - forbidden token found: $pattern"
+  if grep -qE -- "$pattern" "$PROTO"; then fail "$label -- forbidden token found: $pattern"
   else pass "$label"; fi
 }
 

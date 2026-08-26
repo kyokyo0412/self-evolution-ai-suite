@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# validate-suite.sh - Lint frontmatter of .ai-suite/ skill files.
+# validate-suite.sh -- Lint frontmatter of .ai-suite/ skill files.
 #
 # Scans all three skill tiers when called with no arguments:
 #   .ai-suite/layer3-registry/core/

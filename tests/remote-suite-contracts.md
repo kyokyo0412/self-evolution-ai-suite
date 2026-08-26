@@ -1,5 +1,5 @@
 # Architecture Contract: remote-suite skill
-# Phase 2 artifact - interface, intent-mapping, and safety contracts.
+# Phase 2 artifact -- interface, intent-mapping, and safety contracts.
 # Verified by test-remote-suite-contracts.sh.
 
 ## Placement
@@ -36,7 +36,7 @@
 ## Missing-Host Rule
 
   MH1. If no USER@HOST pattern detected, skill MUST ask the user
-       before running any command - it must NOT guess a host
+       before running any command -- it must NOT guess a host
   MH2. Question format: "Which remote host? (format: user@hostname)"
 
 ## Safety Rules

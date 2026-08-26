@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-remote-suite-contracts.sh - Phase 2 contract tests for remote-suite.md.
+# test-remote-suite-contracts.sh -- Phase 2 contract tests for remote-suite.md.
 # Run from workspace root: bash tests/test-remote-suite-contracts.sh
 
 set -uo pipefail
@@ -15,18 +15,18 @@ fail() { FAIL=$((FAIL+1)); printf '  %sFAIL%s  %s\n' "$(_red)" "$(_off)" "$*" >&
 file_contains() {
   local label="$1" needle="$2"
   if grep -qF -- "$needle" "$SKILL" 2>/dev/null; then pass "$label"
-  else fail "$label - skill does not contain: $needle"; fi
+  else fail "$label -- skill does not contain: $needle"; fi
 }
 file_matches() {
   local label="$1" pat="$2"
   if grep -qE -- "$pat" "$SKILL" 2>/dev/null; then pass "$label"
-  else fail "$label - skill does not match pattern: $pat"; fi
+  else fail "$label -- skill does not match pattern: $pat"; fi
 }
 # shellcheck disable=SC2329  # used for potential future negative checks
 file_not_matches() {
   local label="$1" pat="$2"
   if ! grep -qiE -- "$pat" "$SKILL" 2>/dev/null; then pass "$label"
-  else fail "$label - skill unexpectedly matches: $pat"; fi
+  else fail "$label -- skill unexpectedly matches: $pat"; fi
 }
 
 echo "=== Phase 2 Contract Tests: remote-suite.md ==="
@@ -59,7 +59,7 @@ file_contains "F3c: trigger check ai-suite status"    "check ai-suite"
 file_contains "F3d: trigger deploy ai-suite"          "deploy ai-suite"
 file_contains "F3e: trigger remote ai-suite"          "remote ai-suite"
 
-# -- I: Intent mapping - commands present in skill body -----------------------
+# -- I: Intent mapping -- commands present in skill body -----------------------
 echo ""
 echo "--- I: intent-to-command mapping ---"
 file_contains "I1a: ai-suite enable --scope remote" "ai-suite enable --scope remote"

@@ -1,5 +1,5 @@
 # Architecture Contract: .ai-suite/ refactored structure
-# Phase 2 artifact - defines the directory layout, adapter interface,
+# Phase 2 artifact -- defines the directory layout, adapter interface,
 # script flag contracts, and skill classification rules.
 # Contract tests in test-refactor-contracts.sh verify all of these.
 
@@ -7,10 +7,10 @@
 
   D1. Root suite dir: .ai-suite/  (NOT .cursor-suite/)
   D2. Flat skill directories replaced by three tiers:
-        .ai-suite/layer3-registry/core/           - agent-agnostic, domain-agnostic skills
-        .ai-suite/layer1-abstraction/agents/cursor/skills/  - Cursor-IDE-specific skills
-        .ai-suite/layer1-abstraction/agents/claude/         - Claude Code adapter (no skills, adapter only)
-        .ai-suite/layer3-registry/domains/custom_domain/skills/ - CustomDomain domain skills
+        .ai-suite/layer3-registry/core/           -- agent-agnostic, domain-agnostic skills
+        .ai-suite/layer1-abstraction/agents/cursor/skills/  -- Cursor-IDE-specific skills
+        .ai-suite/layer1-abstraction/agents/claude/         -- Claude Code adapter (no skills, adapter only)
+        .ai-suite/layer3-registry/domains/custom_domain/skills/ -- CustomDomain domain skills
   D3. Template directories follow the same tier split:
         .ai-suite/layer2-cognitive/templates/
         .ai-suite/layer3-registry/domains/custom_domain/templates/
@@ -21,7 +21,7 @@
 
   SC1. A skill belongs in core/ if its description and body contain ZERO
        references to: ".cursorrules", "Cursor", "cursorrules", "~/.cursor"
-       (case-insensitive exact tokens - incidental generic refs like
+       (case-insensitive exact tokens -- incidental generic refs like
        "cursor" in "cursor position" are not violations).
   SC2. A skill belongs in layer1-abstraction/agents/cursor/ if its description explicitly
        references Cursor-specific APIs (.cursorrules, Cursor skills,
@@ -33,12 +33,12 @@
 
 ## Core Skills (6 files)
 
-  CS1. tdd-team.md          - description must NOT contain "Custom" or "Bazel"
-  CS2. autonomous-team.md   - clean, no domain refs
-  CS3. codebase-deepdoc.md  - clean, no domain refs
-  CS4. ai-review-fix.md     - clean
-  CS5. ai-review-fix-manual.md - clean
-  CS6. evolve-collect.md    - must reference "ai-suite" not "cursor-suite"
+  CS1. tdd-team.md          -- description must NOT contain "Custom" or "Bazel"
+  CS2. autonomous-team.md   -- clean, no domain refs
+  CS3. codebase-deepdoc.md  -- clean, no domain refs
+  CS4. ai-review-fix.md     -- clean
+  CS5. ai-review-fix-manual.md -- clean
+  CS6. evolve-collect.md    -- must reference "ai-suite" not "cursor-suite"
 
 ## Agent Skills (2 files)
 
@@ -59,10 +59,10 @@
   A claude adapter is at .ai-suite/layer1-abstraction/agents/claude/adapter.sh
 
   Each adapter MUST define these shell functions (sourced by enable/disable):
-    agent_install_project SUITE_DIR PROJECT_DIR   - install for a project
-    agent_install_global  SUITE_DIR               - install globally
-    agent_uninstall_project PROJECT_DIR           - remove from project
-    agent_uninstall_global                        - remove globally
+    agent_install_project SUITE_DIR PROJECT_DIR   -- install for a project
+    agent_install_global  SUITE_DIR               -- install globally
+    agent_uninstall_project PROJECT_DIR           -- remove from project
+    agent_uninstall_global                        -- remove globally
 
 ## ai-suite enable Contract Additions
 

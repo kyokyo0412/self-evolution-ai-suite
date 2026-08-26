@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# .ai-suite/layer1-abstraction/agents/cursor/adapter.sh - Cursor IDE adapter for ai-suite.
+# .ai-suite/layer1-abstraction/agents/cursor/adapter.sh -- Cursor IDE adapter for ai-suite.
 #
 # Sourced by ai-suite enable and ai-suite disable.
 # Implements the standard adapter interface:
@@ -88,7 +88,7 @@ _append_cursorrules_block() {
   cat >> "$cursorrules" <<BLOCK
 
 $_CURSOR_BLOCK_START
-## AI Suite - always active
+## AI Suite -- always active
 
 Skills location: $core_skills_dir
 Meta / protocols: $meta_dir
@@ -102,7 +102,7 @@ $meta_dir/reflection-protocol.md
 
 Proactive Resolution:
 When you encounter an issue or are given a problem, you must proactively resolve it. Analyze the environment and the problem, devise a strategy, and attempt to implement it. If an initial attempt fails, explore alternative approaches from various angles. Engage in an iterative process of analysis, action, and experimentation until the problem is resolved, and report the details. These enhancements must not compromise existing mechanisms, such as the evolution system.
-Never-Give-Up Spirit: When explicitly instructed not to give up on a task, you must persist-exhausting all possible solutions and making repeated attempts-to complete the assigned task. The single most critical constraint during this persistent execution is the absolute prohibition against damaging the production environment. Otherwise, it should run as normal mode.
+Never-Give-Up Spirit: When explicitly instructed not to give up on a task, you must persist--exhausting all possible solutions and making repeated attempts--to complete the assigned task. The single most critical constraint during this persistent execution is the absolute prohibition against damaging the production environment. Otherwise, it should run as normal mode.
 
 Auto-Evolution Directive:
 If a task required more than 1 attempt, or involved complex design changes, you MUST automatically execute the Reflection Protocol ($meta_dir/reflection-protocol.md) at the end of the task, without waiting for the user to ask.
@@ -130,7 +130,7 @@ _append_cursorrules_global_block() {
   cat >> "$cursorrules" <<BLOCK
 
 $_CURSOR_BLOCK_START
-## AI Suite - always active (global install)
+## AI Suite -- always active (global install)
 
 Skills location: $skills_dest
 Meta / protocols: $meta_dir
@@ -144,7 +144,7 @@ $meta_dir/reflection-protocol.md
 
 Proactive Resolution:
 When you encounter an issue or are given a problem, you must proactively resolve it. Analyze the environment and the problem, devise a strategy, and attempt to implement it. If an initial attempt fails, explore alternative approaches from various angles. Engage in an iterative process of analysis, action, and experimentation until the problem is resolved, and report the details. These enhancements must not compromise existing mechanisms, such as the evolution system.
-Never-Give-Up Spirit: When explicitly instructed not to give up on a task, you must persist-exhausting all possible solutions and making repeated attempts-to complete the assigned task. The single most critical constraint during this persistent execution is the absolute prohibition against damaging the production environment. Otherwise, it should run as normal mode.
+Never-Give-Up Spirit: When explicitly instructed not to give up on a task, you must persist--exhausting all possible solutions and making repeated attempts--to complete the assigned task. The single most critical constraint during this persistent execution is the absolute prohibition against damaging the production environment. Otherwise, it should run as normal mode.
 
 Auto-Evolution Directive:
 If a task required more than 1 attempt, or involved complex design changes, you MUST automatically execute the Reflection Protocol ($meta_dir/reflection-protocol.md) at the end of the task, without waiting for the user to ask.

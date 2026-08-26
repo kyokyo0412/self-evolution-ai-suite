@@ -16,7 +16,7 @@ triggers:
   - fetch remote reflection
 ---
 
-# Evolve Collect - Remote Evolution Sync Skill
+# Evolve Collect -- Remote Evolution Sync Skill
 
 Orchestrate the full **collect -> review -> push** loop for ai-suite evolutions between remote SSH hosts and the local git repository.
 
@@ -36,7 +36,7 @@ Act as the evolution sync coordinator. When triggered, you:
 1. Parse the user's intent (collect vs push, host(s), optional path, dry-run flag).
 2. Run `ai-suite evolve` with the correct arguments.
 3. Present the evolution report or push confirmation to the user.
-4. Print copy-paste git commands and **stop** - never auto-commit.
+4. Print copy-paste git commands and **stop** -- never auto-commit.
 
 ---
 
@@ -57,7 +57,7 @@ This skill is active when the user's message contains any of:
 
 ## Instructions
 
-### Step 1 - Parse intent
+### Step 1 -- Parse intent
 
 Extract the following from the user's message:
 
@@ -68,7 +68,7 @@ Extract the following from the user's message:
 - **dry-run**: `true` if the message contains "preview", "dry", "what changed", or "show changes"
 - **remote-scope**: `project` if the user says "project scope" or "project install"; default is `global`
 
-### Step 2 - Build the command
+### Step 2 -- Build the command
 
 ```
 bash ai-suite evolve <sub-command> \
@@ -113,11 +113,11 @@ bash ai-suite evolve push \
   --remote-scope project
 ```
 
-### Step 3 - Run the command
+### Step 3 -- Run the command
 
 Execute the command in the terminal. Stream the output so the user can see progress.
 
-### Step 4 - Present results
+### Step 4 -- Present results
 
 **After `collect`:**
 
@@ -135,7 +135,7 @@ Execute the command in the terminal. Stream the output so the user can see progr
 
 ## Usage
 
-### Scope A - Remote user's global ai-suite (most common)
+### Scope A -- Remote user's global ai-suite (most common)
 
 The remote host has ai-suite installed under `$HOME/.ai-suite-deploy/` (the default). This is the global user scope: all projects on that host benefit.
 
@@ -149,7 +149,7 @@ User:  push the evolved suite to alice@dev.example.com
 Agent: bash ai-suite evolve push --host "alice@dev.example.com"
 ```
 
-### Scope B - Specific remote project
+### Scope B -- Specific remote project
 
 The user wants to target a single project directory on the remote, not the user-global install.
 
@@ -166,7 +166,7 @@ Agent: bash ai-suite evolve push \
          --remote-scope project
 ```
 
-### Scope C - Multiple hosts
+### Scope C -- Multiple hosts
 
 ```
 User:  sync reflection from alice@host1 and bob@host2
@@ -190,7 +190,7 @@ Agent: bash ai-suite evolve collect \
 
 - [X] Do not auto-commit or run `git push` automatically.
 - [X] Do not skip presenting the evolution report even if it is long.
-- [X] Do not invent a `--host` if the user did not supply one - ask first.
-- [X] Do not run `push` when the user asked for `collect`, or vice versa - resolve ambiguity by restating your interpretation before executing.
+- [X] Do not invent a `--host` if the user did not supply one -- ask first.
+- [X] Do not run `push` when the user asked for `collect`, or vice versa -- resolve ambiguity by restating your interpretation before executing.
 - [X] Do not use `--dry-run` silently; if you add it, say so explicitly.
 - [X] Do not proceed if `ai-suite evolve` is not found in the workspace root; tell the user to check their setup.

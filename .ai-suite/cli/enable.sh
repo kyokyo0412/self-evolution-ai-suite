@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ai-suite enable - Activate the .ai-suite/ multi-agent AI framework.
+# ai-suite enable -- Activate the .ai-suite/ multi-agent AI framework.
 #
 # Three install scopes:
 #
@@ -103,7 +103,7 @@ case "$SCOPE" in
 esac
 
 # -- Preflight ----------------------------------------------------------------
-[[ -d "$SUITE_DIR" ]] || die "missing $SUITE_DIR - is .ai-suite/ next to this script?" 2
+[[ -d "$SUITE_DIR" ]] || die "missing $SUITE_DIR -- is .ai-suite/ next to this script?" 2
 
 # -- Source adapters ----------------------------------------------------------
 _load_adapter() {
@@ -156,7 +156,7 @@ install_hook_in() {
   local shell_kind="$1" rc_file="$2"
   if [[ ! -f "$rc_file" ]]; then warn "$rc_file not found; creating it"; run touch "$rc_file"; fi
   if grep -Fq "$HOOK_MARK_START" "$rc_file" 2>/dev/null; then
-    log "auto-enable hook already in $rc_file - skipping"; return 0
+    log "auto-enable hook already in $rc_file -- skipping"; return 0
   fi
   [[ "$AI_SUITE_DRY_RUN" == "1" ]] && { printf '[dry-run] would append %s hook to %s\n' "$shell_kind" "$rc_file"; return 0; }
   local suite_root_literal="$SCRIPT_DIR"
@@ -326,7 +326,7 @@ do_remote_scope() {
 }
 
 # -- Dispatch -----------------------------------------------------------------
-[[ "$AI_SUITE_DRY_RUN" == "1" ]] && log "** dry-run mode - no changes will be written **"
+[[ "$AI_SUITE_DRY_RUN" == "1" ]] && log "** dry-run mode -- no changes will be written **"
 
 if [[ "$SCOPE" == "remote" ]]; then
   do_remote_scope

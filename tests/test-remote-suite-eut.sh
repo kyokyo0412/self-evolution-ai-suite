@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-remote-suite-eut.sh - EUT for remote-suite.md skill.
+# test-remote-suite-eut.sh -- EUT for remote-suite.md skill.
 # Verifies: intent mapping table, command examples, safety constraints,
 # multiple-host coverage, missing-host rule, and cross-skill consistency.
 #
@@ -173,7 +173,7 @@ else fail "E14b: expected >=27 checks, got $pass_count"; fi
 # -- Summary -------------------------------------------------------------------
 printf '\n'
 if [[ "$FAIL" -eq 0 ]]; then
-  printf '%s[EUT] %d/%d passed - PHASE 4 GATE: PASSED%s\n' \
+  printf '%s[EUT] %d/%d passed -- PHASE 4 GATE: PASSED%s\n' \
     "$(_grn)" "$PASS" "$TOTAL" "$(_off)"
   exit 0
 else

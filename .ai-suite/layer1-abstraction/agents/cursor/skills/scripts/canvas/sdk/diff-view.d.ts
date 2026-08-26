@@ -1,18 +1,18 @@
 /**
  * Low-level diff primitives for the canvas SDK.
  *
- * The canvas diff surface is intentionally minimal - two components that
+ * The canvas diff surface is intentionally minimal -- two components that
  * compose with the generic `Card` / `CardHeader` / `CardBody` / `Pill` /
  * `Text` primitives to build any diff layout an agent can imagine:
  *
- * - `DiffView` - a monospaced, syntax-highlighted unified diff renderer.
+ * - `DiffView` -- a monospaced, syntax-highlighted unified diff renderer.
  *   Drops into any container (a `Card`, a table cell, a bare layout,
  *   nothing at all). No card chrome, no header, no path display. Pass
  *   `path` to auto-detect the language for highlighting, or `language`
  *   to override.
  *
- * - `DiffStats` - the canonical `+N` green / `-N` red glyph pair. Use
- *   it anywhere a small "added/deleted" summary makes sense - in a
+ * - `DiffStats` -- the canonical `+N` green / `-N` red glyph pair. Use
+ *   it anywhere a small "added/deleted" summary makes sense -- in a
  *   `CardHeader`'s `trailing` slot, next to a filename in a file tree,
  *   inside a status row, etc.
  *
@@ -65,7 +65,7 @@ export type DiffViewProps = {
     /**
      * File path used to infer the syntax-highlighting language from the
      * extension (e.g. `"src/utils.ts"` -> `typescript`). The most ergonomic
-     * way to enable highlighting - pass the same path you show in the
+     * way to enable highlighting -- pass the same path you show in the
      * enclosing card header. Unknown extensions silently render as plain
      * text.
      *
@@ -98,7 +98,7 @@ export type DiffViewProps = {
  * backgrounds, line-number gutter, accent strip, and optional Shiki
  * syntax highlighting.
  *
- * `DiffView` does not provide any surrounding chrome - place it inside
+ * `DiffView` does not provide any surrounding chrome -- place it inside
  * a `Card` + `CardBody` (with `padding: 0`) when you want the standard
  * bordered "file diff" look, or drop it anywhere else if you want the
  * bare renderer.

@@ -7,7 +7,7 @@ triggers:
   - loop-work
 ---
 
-# Loop-Work Skill - Iterative Agentic Execution
+# Loop-Work Skill -- Iterative Agentic Execution
 
 Use this skill when the user requests to run a task for multiple iterations using a specific skill (e.g., `tdd-team`). This skill transforms the agent into an iterative orchestrator that embodies a **never-give-up spirit**.
 

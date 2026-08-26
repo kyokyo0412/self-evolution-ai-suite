@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-# core.sh - Shared bash library for ai-suite scripts.
+# core.sh -- Shared bash library for ai-suite scripts.
 
 if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
   AI_SUITE_CORE_LOADED=1
@@ -273,7 +273,7 @@ if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
   }
 
   AI_SUITE_PROACTIVE_RESOLUTION="When you encounter an issue or are given a problem, you must proactively resolve it. Analyze the environment and the problem, devise a strategy, and attempt to implement it. If an initial attempt fails, explore alternative approaches from various angles. Engage in an iterative process of analysis, action, and experimentation until the problem is resolved, and report the details. These enhancements must not compromise existing mechanisms, such as the evolution system.
-Never-Give-Up Spirit: When explicitly instructed not to give up on a task, you must persist-exhausting all possible solutions and making repeated attempts-to complete the assigned task. The single most critical constraint during this persistent execution is the absolute prohibition against damaging the production environment. Otherwise, it should run as normal mode."
+Never-Give-Up Spirit: When explicitly instructed not to give up on a task, you must persist--exhausting all possible solutions and making repeated attempts--to complete the assigned task. The single most critical constraint during this persistent execution is the absolute prohibition against damaging the production environment. Otherwise, it should run as normal mode."
 
   # -- File Block Management ---------------------------------------------------
   remove_block_from_file() {
@@ -330,7 +330,7 @@ HEADER
               | sed 's/Use when.*//' \
               | tr -d '"' \
               | sed 's/[[:space:]]*$//')
-      printf -- '- **%s** - %s\n' "$sname" "$sdesc"
+      printf -- '- **%s** -- %s\n' "$sname" "$sdesc"
     done < <(get_all_skill_files "$suite_dir" "$agent_name")
 
     cat <<FOOTER
@@ -373,6 +373,29 @@ FOOTER
       cat "$src"
       echo ""
     done
+
+    if [[ -d "$suite_dir/layer3-registry/domains" ]]; then
+      if [[ -n "${AI_SUITE_DOMAIN:-}" ]]; then
+        if [[ -d "$suite_dir/layer3-registry/domains/$AI_SUITE_DOMAIN/rules" ]]; then
+          for src in "$suite_dir/layer3-registry/domains/$AI_SUITE_DOMAIN/rules"/*; do
+            [[ -f "$src" ]] || continue
+            cat "$src"
+            echo ""
+          done
+        fi
+      else
+        for domain in "$suite_dir"/layer3-registry/domains/*; do
+          [[ -d "$domain" ]] || continue
+          if [[ -d "$domain/rules" ]]; then
+            for src in "$domain/rules"/*; do
+              [[ -f "$src" ]] || continue
+              cat "$src"
+              echo ""
+            done
+          fi
+        done
+      fi
+    fi
 
     if [[ -n "$end_marker" ]]; then
       printf '%s\n' "$end_marker"
