@@ -20,7 +20,7 @@ export PATH="$TEST_SUITE_DIR:$PATH"
 # Or better, we can run it with --dry-run and see if the flag is supported.
 # Wait, let's just test if the flag is added to the script.
 
-if ! grep -q "\-\-exclude-memory" ai-suite evolve; then
+if ! grep -q "\-\-exclude-memory" .ai-suite/cli/evolve.sh; then
     echo "Error: --exclude-memory flag not implemented in ai-suite evolve."
     exit 1
 fi

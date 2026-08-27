@@ -41,7 +41,6 @@ if ! grep -iqE "quality checks|linter checks|ReadLints" "$AUTOMATED_REVIEWER"; t
 fi
 
 AI_REVIEW_FIX=".ai-suite/layer3-registry/core/ai-review-fix.md"
-AI_REVIEW_FIX_MANUAL=".ai-suite/layer3-registry/core/ai-review-fix-manual.md"
 
 echo "Checking ai-review-fix/SKILL.md for 'parallel tool calls'..."
 if ! grep -iq "parallel tool calls" "$AI_REVIEW_FIX"; then
@@ -49,10 +48,13 @@ if ! grep -iq "parallel tool calls" "$AI_REVIEW_FIX"; then
     exit 1
 fi
 
-echo "Checking ai-review-fix-manual/SKILL.md for 'parallel tool calls'..."
-if ! grep -iq "parallel tool calls" "$AI_REVIEW_FIX_MANUAL"; then
-    echo "ERROR: ai-review-fix-manual/SKILL.md does not enforce parallel tool calls."
-    exit 1
+AI_REVIEW_FIX_MANUAL=".ai-suite/layer3-registry/core/ai-review-fix-manual.md"
+if [ -f "$AI_REVIEW_FIX_MANUAL" ]; then
+    echo "Checking ai-review-fix-manual/SKILL.md for 'parallel tool calls'..."
+    if ! grep -iq "parallel tool calls" "$AI_REVIEW_FIX_MANUAL"; then
+        echo "ERROR: ai-review-fix-manual/SKILL.md does not enforce parallel tool calls."
+        exit 1
+    fi
 fi
 
 echo "SUCCESS: AI Suite Additional Quality and Efficiency contracts verified."

@@ -1,7 +1,10 @@
 #!/bin/bash
 set -e
 
-CORE_SKILL=".ai-suite/layer2-cognitive/meta-compiler/ai-expert.md"
+CORE_SKILL=".ai-suite/layer2-cognitive/meta-compiler/prompt-compiler.md"
+if [ ! -f "$CORE_SKILL" ]; then
+  CORE_SKILL=".ai-suite/layer2-cognitive/meta-compiler/ai-expert.md"
+fi
 
 # Check if file exists
 if [ ! -f "$CORE_SKILL" ]; then
@@ -10,8 +13,8 @@ if [ ! -f "$CORE_SKILL" ]; then
 fi
 
 # Check frontmatter
-if ! grep -q "name: ai-expert" "$CORE_SKILL"; then
-  echo "Error: Missing name: ai-expert in $CORE_SKILL"
+if ! grep -qE "name: (ai-expert|prompt-compiler)" "$CORE_SKILL"; then
+  echo "Error: Missing name in $CORE_SKILL"
   exit 1
 fi
 

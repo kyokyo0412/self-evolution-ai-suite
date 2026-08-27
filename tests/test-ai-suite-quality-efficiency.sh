@@ -4,7 +4,10 @@ set -e
 echo "Running TDD Team and AI Expert Quality/Efficiency Tests..."
 
 TDD_TEAM=".ai-suite/layer3-registry/core/tdd-team.md"
-AI_EXPERT=".ai-suite/layer2-cognitive/meta-compiler/ai-expert.md"
+AI_EXPERT=".ai-suite/layer2-cognitive/meta-compiler/prompt-compiler.md"
+if [ ! -f "$AI_EXPERT" ]; then
+    AI_EXPERT=".ai-suite/layer2-cognitive/meta-compiler/ai-expert.md"
+fi
 
 if [ ! -f "$TDD_TEAM" ]; then
     echo "ERROR: $TDD_TEAM does not exist."

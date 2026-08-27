@@ -4,7 +4,7 @@ set -euo pipefail
 echo "Running Workflow Contracts tests..."
 
 # Check that script exists
-if [[ ! -x "ai-suite workflow" ]]; then
+if [[ ! -x "ai-suite" || ! -f ".ai-suite/cli/workflow.sh" ]]; then
     echo "FAIL: ai-suite workflow does not exist or is not executable"
     exit 1
 fi
@@ -28,13 +28,13 @@ if ! ./ai-suite workflow integrate --host user@test --remote-path /test --dry-ru
 fi
 
 echo "Testing 'enable' command interface..."
-if ! ./ai-suite workflow enable --agent cursor --scope project --dry-run >/dev/null; then
+if ! ./ai-suite workflow enable --agent cursor --scope global --dry-run >/dev/null; then
     echo "FAIL: enable command rejected"
     exit 1
 fi
 
 echo "Testing 'disable' command interface..."
-if ! ./ai-suite workflow disable --agent cursor --scope project --dry-run >/dev/null; then
+if ! ./ai-suite workflow disable --agent cursor --scope global --dry-run >/dev/null; then
     echo "FAIL: disable command rejected"
     exit 1
 fi

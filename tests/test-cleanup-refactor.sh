@@ -4,7 +4,7 @@ set -euo pipefail
 echo "Running cleanup and refactoring validation tests..."
 
 # Check if core scripts exist and are executable
-for script in ai-suite evolve ai-suite enable ai-suite disable ai-suite workflow; do
+for script in ai-suite .ai-suite/cli/evolve.sh .ai-suite/cli/enable.sh .ai-suite/cli/disable.sh .ai-suite/cli/workflow.sh; do
   if [[ ! -x "$script" ]]; then
     echo "FAIL: $script is missing or not executable"
     exit 1

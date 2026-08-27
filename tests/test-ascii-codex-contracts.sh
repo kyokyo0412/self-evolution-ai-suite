@@ -109,7 +109,7 @@ for root, dirs, files in os.walk('$SUITE_ROOT'):
     if '.git' in dirs:
         dirs.remove('.git')
     for f in files:
-        if f.endswith(('.pyc', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.pdf', '.bin')):
+        if f.endswith(('.pyc', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.pdf', '.bin', '.tar.gz', '.tgz', '.zip', '.gz', '.tar')):
             continue
         p = os.path.join(root, f)
         try:

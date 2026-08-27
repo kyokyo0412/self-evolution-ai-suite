@@ -44,7 +44,7 @@ echo "Integrate PASS."
 
 # Test Enable (dry-run)
 echo "Testing Enable..."
-OUTPUT=$(./ai-suite workflow enable --agent cursor --scope project --dry-run 2>&1)
+OUTPUT=$(./ai-suite workflow enable --agent cursor --scope project --project "$TMP_MOCK" --dry-run 2>&1)
 if ! echo "$OUTPUT" | grep -q "enable_suite"; then
     echo "FAIL: Enable did not seem to delegate to ai-suite enable"
     echo "$OUTPUT"
@@ -54,7 +54,7 @@ echo "Enable PASS."
 
 # Test Disable (dry-run)
 echo "Testing Disable..."
-OUTPUT=$(./ai-suite workflow disable --agent cursor --scope project --dry-run 2>&1)
+OUTPUT=$(./ai-suite workflow disable --agent cursor --scope project --project "$TMP_MOCK" --dry-run 2>&1)
 if ! echo "$OUTPUT" | grep -q "disable_suite"; then
     echo "FAIL: Disable did not seem to delegate to ai-suite disable"
     echo "$OUTPUT"

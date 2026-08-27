@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SUITE_DIR="$(cd "$SCRIPT_DIR/../.ai-suite" && pwd)"
-SKILL_FILE="$SUITE_DIR/layer2-cognitive/meta-compiler/prompt-enhancer.md"
+SKILL_FILE="$SUITE_DIR/layer2-cognitive/meta-compiler/prompt-compiler.md"
 
 echo "Running prompt-enhancer EUT tests..."
 

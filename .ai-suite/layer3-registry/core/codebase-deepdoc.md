@@ -30,6 +30,7 @@ Reader outcomes (the docs must enable each):
 4. **Actionable.** Every document names extension points + anti-patterns.
 5. **Markdown only.** Use headings, tables, Mermaid for dependency / data-flow / sequence / component / state / ER diagrams.
 6. **One-shot.** Do not stop or wait for "continue". If you must cut, cut prose, not technical content.
+7. **Maximize parallel tool calls.** Execute independent discovery, file reads, and inspections concurrently to maximize efficiency.
 
 ## Output Tree (mandatory)
 

@@ -90,13 +90,39 @@ if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
     done
   }
 
+  _strip_rule_frontmatter() {
+    local file="$1"
+    [[ -f "$file" ]] || return 0
+    local in_frontmatter=false
+    local line_num=0
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      line_num=$((line_num + 1))
+      if [[ "$line_num" -eq 1 && "$line" == "---"* ]]; then
+        in_frontmatter=true
+        continue
+      fi
+      if $in_frontmatter; then
+        if [[ "$line" == "---"* ]]; then
+          in_frontmatter=false
+        fi
+        continue
+      fi
+      printf '%s\n' "$line"
+    done < "$file"
+  }
+
   _mirror_rules() {
     local suite_dir="$1"
     local rules_dest="$2"
     local agent_name="${3:-}"
     local count=0
 
-    local rule_dirs=( "layer3-registry/rules" "layer4-evolutionary/rules" "layer2-cognitive/rules" )
+    # Codex uses .codex/rules for Starlark execution rules; markdown rules must not be mirrored there
+    if [[ "$agent_name" == "codex" ]]; then
+      return 0
+    fi
+
+    local rule_dirs=( "layer3-registry/rules" "layer4-evolutionary/rules" "layer2-cognitive/rules" "layer3-registry/directives" "layer3-registry/safety" )
     if [[ -n "$agent_name" ]]; then
       rule_dirs+=( "layer1-abstraction/agents/$agent_name/rules" )
     fi
@@ -120,12 +146,49 @@ if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
       [[ -d "$dir" ]] || continue
       for f in "$dir"/*; do
         [[ -f "$f" ]] || continue
-        cp "$f" "$rules_dest/"
+        if [[ "$agent_name" != "cursor" ]]; then
+          local rname
+          rname=$(basename "$f" | sed -E 's/\.(md|mdc)$//')
+          _strip_rule_frontmatter "$f" > "$rules_dest/${rname}.md"
+        else
+          cp "$f" "$rules_dest/"
+        fi
         count=$((count+1))
       done
     done
 
     printf '[ai-suite] mirrored %d rule(s) to %s\n' "$count" "$rules_dest"
+  }
+
+  _mirror_directives() {
+    local suite_dir="$1"
+    local dest="$2"
+    local agent_name="${3:-}"
+    local count=0
+
+    local d_dirs=( "layer3-registry/directives" "layer3-registry/safety" )
+    if [[ -n "$agent_name" ]]; then
+      d_dirs+=( "layer1-abstraction/agents/$agent_name/directives" )
+    fi
+
+    mkdir -p "$dest"
+    for d_dir in "${d_dirs[@]}"; do
+      local dir="$suite_dir/$d_dir"
+      [[ -d "$dir" ]] || continue
+      for f in "$dir"/*; do
+        [[ -f "$f" ]] || continue
+        if [[ "$agent_name" != "cursor" ]]; then
+          local rname
+          rname=$(basename "$f" | sed -E 's/\.(md|mdc)$//')
+          _strip_rule_frontmatter "$f" > "$dest/${rname}.md"
+        else
+          cp "$f" "$dest/"
+        fi
+        count=$((count+1))
+      done
+    done
+
+    printf '[ai-suite] mirrored %d directive(s) to %s\n' "$count" "$dest"
   }
 
   _mirror_templates() {
@@ -195,7 +258,25 @@ if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
       count=$((count+1))
     done
 
-    printf '[ai-suite] mirrored scripts to %s\n' "$dest"
+    # Also mirror cognitive memory and core scripts
+    if [[ -f "$suite_dir/layer2-cognitive/memory/memory.sh" ]]; then
+      cp "$suite_dir/layer2-cognitive/memory/memory.sh" "$dest/" 2>/dev/null || true
+      count=$((count+1))
+    fi
+    if [[ -f "$suite_dir/layer2-cognitive/memory/core.sh" ]]; then
+      cp "$suite_dir/layer2-cognitive/memory/core.sh" "$dest/" 2>/dev/null || true
+      count=$((count+1))
+    fi
+
+    # Also mirror root scripts if present
+    local root_dir="$(cd "$suite_dir/.." && pwd)"
+    for f in "$root_dir"/*.sh; do
+      [[ -f "$f" ]] || continue
+      cp "$f" "$dest/" 2>/dev/null || true
+      count=$((count+1))
+    done
+
+    printf '[ai-suite] mirrored %d script(s) to %s\n' "$count" "$dest"
   }
 
   _mirror_skills() {
@@ -218,36 +299,57 @@ if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
         mkdir -p "$skills_dest/$name/templates"
         cp -r "$skill_dir_path/templates/$name"/* "$skills_dest/$name/templates/" 2>/dev/null || true
       fi
-      if [[ -d "$skill_dir_path/rules/$name" ]]; then
-        mkdir -p "$skills_dest/$name/rules"
-        cp -r "$skill_dir_path/rules/$name"/* "$skills_dest/$name/rules/" 2>/dev/null || true
-      fi
       count=$((count+1))
     done < <(get_all_skill_files "$suite_dir" "$agent_name")
 
     printf '[ai-suite] mirrored %d skill(s) to %s\n' "$count" "$skills_dest"
   }
 
-  
-  _remove_rules() {
-    local rules_dest="$1"
-    local suite_dir="$2"
-    # We don't remove the whole directory because user might have their own rules
-    # But we can remove the ones we mirrored.
-    if [[ -d "$rules_dest" && -d "$suite_dir" ]]; then
-      # Find all rules that might have been copied from anywhere in the suite and remove them
-      find "$suite_dir" -name "*.mdc" -type f -exec basename {} \; 2>/dev/null | while read rule_file; do
-        rm -f "$rules_dest/$rule_file"
-      done
-      # specific removals
-      rm -f "$rules_dest"/interactive-workflow.md 2>/dev/null || true
-    fi
-  }
-
   _remove_skills() {
     local skills_dest="$1"
     if [[ -d "$skills_dest" ]]; then
       rm -rf "$skills_dest"
+    fi
+  }
+
+  _remove_rules() {
+    local rules_dest="$1"
+    local suite_dir="${2:-}"
+    if [[ -d "$rules_dest" ]]; then
+      if [[ "$rules_dest" == */.claude/rules* || "$rules_dest" == */.opencode/rules* || "$rules_dest" == */.continue/rules* || "$rules_dest" == */.roo/rules* ]]; then
+        rm -rf "$rules_dest"
+      elif [[ -n "$suite_dir" && -d "$suite_dir" ]]; then
+        find "$suite_dir" \( -name "*.mdc" -o -name "*.md" \) -type f -exec basename {} \; 2>/dev/null | while read -r rule_file; do
+          rm -f "$rules_dest/$rule_file"
+        done
+        rm -f "$rules_dest"/interactive-workflow.md "$rules_dest"/cursor-suite-*.mdc 2>/dev/null || true
+        if [[ -d "$rules_dest" ]] && [[ -z "$(ls -A "$rules_dest" 2>/dev/null)" ]]; then
+          rmdir "$rules_dest" 2>/dev/null || true
+        fi
+      else
+        rm -rf "$rules_dest"
+      fi
+    fi
+  }
+
+  _remove_directives() {
+    local dest="$1"
+    if [[ -d "$dest" ]]; then
+      rm -rf "$dest"
+    fi
+  }
+
+  _remove_templates() {
+    local dest="$1"
+    if [[ -d "$dest" ]]; then
+      rm -rf "$dest"
+    fi
+  }
+
+  _remove_scripts() {
+    local dest="$1"
+    if [[ -d "$dest" ]]; then
+      rm -rf "$dest"
     fi
   }
 
@@ -363,23 +465,45 @@ If you learn new facts or complete a task, update the memory using the bash func
 Refer to $skills_dir/<skill-name>/SKILL.md for full instructions.
 FOOTER
 
+    cat <<DIRECTIVES_HEADER
+
+## AI Suite Directives & Rules
+
+DIRECTIVES_HEADER
+
     for src in "$suite_dir/layer3-registry/directives/"*.md; do
       [[ -f "$src" ]] || continue
-      cat "$src"
+      _strip_rule_frontmatter "$src"
       echo ""
     done
     for src in "$suite_dir/layer3-registry/safety/"*.md; do
       [[ -f "$src" ]] || continue
-      cat "$src"
+      _strip_rule_frontmatter "$src"
       echo ""
     done
+    for r_dir in "layer3-registry/rules" "layer4-evolutionary/rules" "layer2-cognitive/rules"; do
+      if [[ -d "$suite_dir/$r_dir" ]]; then
+        for src in "$suite_dir/$r_dir"/*; do
+          [[ -f "$src" ]] || continue
+          _strip_rule_frontmatter "$src"
+          echo ""
+        done
+      fi
+    done
+    if [[ -n "$agent_name" && -d "$suite_dir/layer1-abstraction/agents/$agent_name/rules" ]]; then
+      for src in "$suite_dir/layer1-abstraction/agents/$agent_name/rules"/*; do
+        [[ -f "$src" ]] || continue
+        _strip_rule_frontmatter "$src"
+        echo ""
+      done
+    fi
 
     if [[ -d "$suite_dir/layer3-registry/domains" ]]; then
       if [[ -n "${AI_SUITE_DOMAIN:-}" ]]; then
         if [[ -d "$suite_dir/layer3-registry/domains/$AI_SUITE_DOMAIN/rules" ]]; then
           for src in "$suite_dir/layer3-registry/domains/$AI_SUITE_DOMAIN/rules"/*; do
             [[ -f "$src" ]] || continue
-            cat "$src"
+            _strip_rule_frontmatter "$src"
             echo ""
           done
         fi
@@ -389,7 +513,7 @@ FOOTER
           if [[ -d "$domain/rules" ]]; then
             for src in "$domain/rules"/*; do
               [[ -f "$src" ]] || continue
-              cat "$src"
+              _strip_rule_frontmatter "$src"
               echo ""
             done
           fi

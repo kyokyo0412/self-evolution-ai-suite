@@ -44,6 +44,7 @@ triggers:
 
 ## Constraints
 
+- **Efficiency & Quality:** Maximize parallel tool calls for concurrent reads, searches, and test executions. Run ReadLints / quality checks after making code changes.
 - **No version-control operations.** `git add`, `git commit`, `git push`, `git reset`, branch creation -- all forbidden.
 - **Code integrity.** Do NOT alter logic unrelated to the review comments.
 - **Self-evaluation.** After each fix: *"Does this exactly satisfy the reviewer without introducing new bugs across the wider project?"* The test suite is the source of truth.

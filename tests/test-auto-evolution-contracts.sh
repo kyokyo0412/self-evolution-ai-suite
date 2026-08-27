@@ -33,14 +33,24 @@ agent_install_project "$OLDPWD/.ai-suite" "$TEST_WS"
 assert_contains "CLAUDE.md" "Auto-Evolution Directive"
 
 echo "Testing Roo-Code adapter..."
-source "$OLDPWD/.ai-suite/layer1-abstraction/agents/roo-code/adapter.sh"
-source "$OLDPWD/.ai-suite/layer1-abstraction/agents/codex/adapter.sh"
-agent_install_project "$OLDPWD/.ai-suite" "$TEST_WS"
-assert_contains ".roorules" "Auto-Evolution Directive"
+(
+  source "$OLDPWD/.ai-suite/layer1-abstraction/agents/roo-code/adapter.sh"
+  agent_install_project "$OLDPWD/.ai-suite" "$TEST_WS"
+  assert_contains ".roorules" "Auto-Evolution Directive"
+)
+
+echo "Testing Codex adapter..."
+(
+  source "$OLDPWD/.ai-suite/layer1-abstraction/agents/codex/adapter.sh"
+  agent_install_project "$OLDPWD/.ai-suite" "$TEST_WS"
+  assert_contains "AGENTS.md" "Auto-Evolution Directive"
+)
 
 echo "Testing OpenCode adapter..."
-source "$OLDPWD/.ai-suite/layer1-abstraction/agents/opencode/adapter.sh"
-agent_install_project "$OLDPWD/.ai-suite" "$TEST_WS"
-assert_contains "CLAUDE.md" "Auto-Evolution Directive"
+(
+  source "$OLDPWD/.ai-suite/layer1-abstraction/agents/opencode/adapter.sh"
+  agent_install_project "$OLDPWD/.ai-suite" "$TEST_WS"
+  assert_contains ".opencode/instructions.md" "Auto-Evolution Directive"
+)
 
 echo "PASS: Auto-Evolution contracts validated."

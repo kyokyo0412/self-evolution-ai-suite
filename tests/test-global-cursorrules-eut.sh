@@ -64,7 +64,7 @@ if [[ "$skill_count" -eq "$expected_base" ]]; then
   pass "E2a without --domain: $skill_count/$expected_base skills"
 else fail "E2a without --domain: expected $expected_base, got $skill_count"; fi
 
-for domain_skill in bugzilla-debug bugzilla-rest-api; do
+for domain_skill in bugzilla-debug bugzilla-rest-api esxi-lab nsx-cibot nsx-log-rca nsx-policy-lab nsx-qe-spark-fvt vmw-confluence vmware-testbed; do
   if [[ -d "$SB/.cursor/skills/$domain_skill" ]]; then
     pass "E2b domain skill present with flag: $domain_skill"
   else fail "E2b domain skill present with flag: $domain_skill"; fi

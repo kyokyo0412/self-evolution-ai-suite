@@ -30,6 +30,8 @@ Use `tdd-team` instead when correctness is paramount and stage isolation matters
 3. **Circuit breaker.** If the same step fails 3x in a row, pause and ask the user.
 4. **Closure criteria.** Every `[x]`, every test passes, terminal-verified.
 5. **Production safety.** Never run destructive commands on remote/production hosts without explicit user confirmation.
+6. **Dynamic To-Do List Tracking.** Continuously maintain a dynamic To-Do list of tasks. When you found any issues or requirements change, immediately update the To-Do list with the new tasks and continue running the new To-Do list until all items are 100% completed.
+7. **Efficiency & Quality.** Maximize parallel tool calls for concurrent operations and enforce ReadLints or linter checks after code changes.
 
 ## Execution Protocol
 

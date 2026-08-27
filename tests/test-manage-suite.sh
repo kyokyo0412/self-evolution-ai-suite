@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SUITE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-MANAGE="$SUITE_ROOT/ai-suite manage"
+AISUITE="$SUITE_ROOT/ai-suite"
 
 echo "Running Phase 4 Domain Registry Test..."
 
@@ -32,7 +32,7 @@ git commit -m "initial commit"
 cd "$SUITE_ROOT"
 
 # Run ai-suite manage against the dummy repo
-"$MANAGE" domain install "file://$DUMMY_REPO" --domain test_domain
+"$AISUITE" manage domain install "file://$DUMMY_REPO" --domain test_domain
 
 # Check if the domain was installed
 if [[ ! -f "$SUITE_ROOT/.ai-suite/layer3-registry/domains/test_domain/skills/dummy.md" ]]; then

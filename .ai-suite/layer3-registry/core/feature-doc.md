@@ -40,6 +40,8 @@ Perform these phases sequentially. You must write the document exhausted, do not
 Write the final output doc to `aigen_doc/<feature-name>.md`. Ensure the directory exists.
 
 ## Constraints and Rules
+- Maximize parallel tool calls whenever independent tasks can be run concurrently to optimize performance.
+- Use ReadLints or quality checks when analyzing and writing code modifications.
 - Always enforce deep code-tracing across ALL layers. The code or document read and analysis must be incredibly detailed and cover all the details.
 - Output doc to aigen_doc/ directory.
 - As detailed as possible. Ensure the output layout is well-structured and highly readable.
@@ -63,12 +65,12 @@ The output document MUST strictly follow this Markdown structure:
 - **Question:** The user's original question.
 - **Answer:** The direct, detailed answer to the question based on the code analysis.
 
-## 2. Architecture & Design Mapping
+## 2. Architecture & Design Mapping (Architecture and Design)
 - **Architectural Context:** How the answer mapped into the architecture, design.
 - **Design Key Points:** Critical design decisions and architectural guidelines necessary for future enhancement.
 - **Design Trade-offs:** Relevant architectural decisions and patterns used.
 
-## 3. Module & Code Mapping
+## 3. Module & Code Mapping (Implementation Map)
 - **Component Breakdown:** How the answer mapped into the modules and codes.
 - **Full Code Trace Chain:** A step-by-step, sequential mapping of the execution flow traversing across the relevant components and files.
 - **Detailed Behaviors & Implementation:** Deep dive into the precise logic, conditions, data transformations, and state mutations within the analyzed functions.

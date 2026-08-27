@@ -3,7 +3,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SUITE_DIR="$(cd "$SCRIPT_DIR/../.ai-suite" && pwd)"
-SKILL_FILE="$SUITE_DIR/layer2-cognitive/meta-compiler/prompt-enhancer.md"
+SKILL_FILE="$SUITE_DIR/layer2-cognitive/meta-compiler/prompt-compiler.md"
 
 echo "Running prompt-enhancer architecture contract tests..."
 fails=0
@@ -32,7 +32,7 @@ assert_grep() {
 assert_exists "$SKILL_FILE"
 
 if [[ -f "$SKILL_FILE" ]]; then
-  assert_grep "^name: prompt-enhancer" "$SKILL_FILE" "Has name: prompt-enhancer in frontmatter"
+  assert_grep "^name: (prompt-enhancer|prompt-compiler)" "$SKILL_FILE" "Has valid compiler/enhancer name in frontmatter"
   assert_grep "^description: " "$SKILL_FILE" "Has description in frontmatter"
   assert_grep "^triggers:" "$SKILL_FILE" "Has triggers array in frontmatter"
   assert_grep "- enhance prompt" "$SKILL_FILE" "Has 'enhance prompt' trigger"

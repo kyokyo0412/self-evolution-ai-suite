@@ -25,6 +25,7 @@ triggers:
    - Spotting deviations from standard coding practices.
 4. **Actionable Feedback:** Provide actionable feedback and suggest specific code improvements.
 5. **Structured Report:** Return a structured review report to the user detailing your findings.
+6. **Efficiency & Quality Checks:** Maximize parallel tool calls when gathering context and inspecting multiple files concurrently. Run quality checks, linter checks, or ReadLints to confirm syntax and quality standards.
 
 ## Negative Constraints (Must NOT)
 

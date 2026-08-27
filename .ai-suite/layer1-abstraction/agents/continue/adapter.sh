@@ -51,6 +51,12 @@ agent_uninstall_project() {
   rm -f "$project_dir/.continue/prompts/ai-suite.prompt"
   _remove_skills "$target_dir/skills"
   _remove_meta "$target_dir/meta"
+  if [[ -d "$project_dir/.continue/prompts" ]] && [[ -z "$(ls -A "$project_dir/.continue/prompts" 2>/dev/null)" ]]; then
+    rmdir "$project_dir/.continue/prompts" 2>/dev/null || true
+  fi
+  if [[ -d "$target_dir" ]] && [[ -z "$(ls -A "$target_dir" 2>/dev/null)" ]]; then
+    rmdir "$target_dir" 2>/dev/null || true
+  fi
 }
 
 agent_uninstall_global() {
@@ -58,4 +64,10 @@ agent_uninstall_global() {
   rm -f "$HOME/.continue/prompts/ai-suite.prompt"
   _remove_skills "$target_dir/skills"
   _remove_meta "$target_dir/meta"
+  if [[ -d "$HOME/.continue/prompts" ]] && [[ -z "$(ls -A "$HOME/.continue/prompts" 2>/dev/null)" ]]; then
+    rmdir "$HOME/.continue/prompts" 2>/dev/null || true
+  fi
+  if [[ -d "$target_dir" ]] && [[ -z "$(ls -A "$target_dir" 2>/dev/null)" ]]; then
+    rmdir "$target_dir" 2>/dev/null || true
+  fi
 }

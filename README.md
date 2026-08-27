@@ -37,6 +37,7 @@ AI Suite is a structured set of skills, templates, and meta-protocols that makes
 ## Features
 
 - **Memory System**: Agents maintain a persistent, layered index of project context, a chronological log of tasks, an important memory for long sessions, and a timeline memory. This memory is isolated per agent and split into project-specific memory (indexes, layers, timeline, important) and global history (tasks), preventing context flushing in long sessions. The memory system is auto-initialized when the suite is installed, and can be temporarily masked or excluded during evolution. The AI suite explicitly instructs agents to review and update this memory during tasks.
+- **Enhanced TDD Team & Top-Tier Industry Professional Roles**: The `tdd-team` skill operates as a fully autonomous seven-role distinguished engineering team composed of top-tier, industry-leading professionals (Staff/Principal PM & Product Strategist, Distinguished AI Expert & Cognitive Architect, Fellow/Principal Engineer & Chief Reviewer with absolute veto authority, Senior Principal Distributed Systems Architect, Senior Principal SDET / Chaos Gatekeeper, Staff Systems Developer, and Senior Staff Technical Writer & Knowledge Architect). It enforces deep architectural reviews (scalability, concurrency, parallel processing, failure blast radius, graceful degradation) and mandatory 7-dimension line-level code reviews (boundary & off-by-one handling, deterministic error handling, string/stream injection safety, resource/memory safety, concurrency/race safety, algorithmic complexity, prompt alignment).
 - **Enhanced Early Product Design**: The TDD process includes a robust Phase 1 that explicitly mandates simulated PM discussion to debate tradeoffs and multiple iterations to thoroughly review legacy features before generating executable specifications.
 - **Multi-Agent Support**: Works seamlessly with Cursor, Claude Code, OpenCode, VS Code Continue, Roo Code, and Codex.
 - **Proactive Resolution & Never-Give-Up Spirit**: AI Suite Agents operate in a continuous loop of proactive execution. If an issue is encountered, they autonomously explore alternative approaches, analyze, and iterate until the problem is solved. When explicitly instructed not to give up, they will persist--exhausting all possible solutions--while strictly adhering to the prohibition against damaging the production environment. Otherwise, it should run as normal mode.
@@ -86,6 +87,8 @@ AI Suite is a structured set of skills, templates, and meta-protocols that makes
 ./ai-suite enable --agent roo-code --scope project
 ./ai-suite enable --agent codex --scope project
 ```
+
+For Codex, `ai-suite enable --agent codex` (or `--scope global`) writes full directives, code-quality standards, nuclear safety, production safety guardrails, and memory hooks into `AGENTS.md`, and mirrors all framework skills, meta-protocols, templates/prompts, scripts, rules, and directives into `.codex/` (or `~/.codex/`). When installed from a published package, all proprietary vendor domains are guaranteed to be 100% absent.
 
 ### Remote install
 

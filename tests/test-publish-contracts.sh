@@ -3,7 +3,8 @@
 
 set -uo pipefail
 SUITE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-SCRIPT="$SUITE_ROOT/ai-suite publish"
+SCRIPT="$SUITE_ROOT/ai-suite"
+PUBLISH_CLI="$SUITE_ROOT/.ai-suite/cli/publish.sh"
 
 PASS=0; FAIL=0
 _red() { printf '\033[31m'; }; _grn() { printf '\033[32m'; }; _off() { printf '\033[0m'; }
@@ -13,10 +14,10 @@ fail() { FAIL=$((FAIL+1)); printf '  %sFAIL%s  %s\n' "$(_red)" "$(_off)" "$*" >&
 echo "=== Phase 2 Contract Tests: ai-suite publish ==="
 
 # Check if script exists
-if [[ -f "$SCRIPT" ]]; then
+if [[ -x "$SCRIPT" && -f "$PUBLISH_CLI" ]]; then
   pass "M1: ai-suite publish exists"
 else
-  fail "M1: ai-suite publish not found at $SCRIPT"
+  fail "M1: ai-suite publish not found at $SCRIPT or $PUBLISH_CLI"
   # We still want the tests to be red
   # but without exiting so we see the fail count
 fi

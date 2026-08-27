@@ -3,6 +3,7 @@ name: prompt-compiler
 description: Acts as the AI Expert, Prompt Architect, and Meta-Cognitive Layer. Translates ambiguous tasks into hyper-structured, execution-ready prompts using a Context Aggregator and a Meta-Prompt Compiler. Use when the user asks to compile a prompt, analyze requirements, optimize prompts, or review AI-suite enhancements.
 triggers:
   - compile prompt
+  - enhance prompt
   - meta-cognitive
   - optimize prompt
   - AI-Easy-Understand
@@ -36,7 +37,7 @@ AI models process structured instructions, clear boundaries, and explicit input/
 - **Project Structure:** [Insert High-Level Architectural Summary Here]
 - **Relevant Code Snippets:** [Insert Code/Interfaces Here]
 - **Original Human Task:** "[Insert User Task Description Here]"
-- **Vulnerabilities Identified:** [Analysis of vague requirements or missing context]
+- **Vulnerabilities Identified**: [Analysis of vague requirements or missing context]
 
 #### YOUR OBJECTIVE:
 Analyze the codebase and the human task. Identify potential edge cases, hidden dependencies, and architectural patterns in the project. Then, output an optimized execution prompt enclosed in a `---START EXECUTABLE PROMPT---` block.
@@ -45,13 +46,13 @@ The optimized prompt you generate MUST include:
 1. **Role & Context:** A precise persona definition and the exact files the agent needs to touch.
 2. **Objective:** Clear and concise goal.
 3. **Chain-of-Thought (CoT) Plan:** Step-by-step logical execution phases.
-4. **Strict Constraints:** Coding standards found in the current codebase, error handling rules, and things *not* to do. Include efficiency constraints (e.g., use parallel tools) and quality constraints (e.g., linter checks).
+4. **Strict Constraints:** Coding standards found in the current codebase, error handling rules, and things *not* to do. Include efficiency constraints (e.g., maximize parallel tool calls) and quality constraints (e.g., quality checks, linter checks, ReadLints).
 5. **Expected Output Format:** Explicit instructions on how the agent should present its code changes or file creations.
 
 ## Step 3: Execution and Review
 
 - **Presentation**: Present the compiled prompt (`---START EXECUTABLE PROMPT---` block) back to the user. Explain your prompt engineering rationale.
-- **Review**: If reviewing an AI-suite enhancement instead of compiling a prompt, verify that the change improves the agent's working capabilities and explicitly state your findings.
+- **Review**: Use when the user asks to review ai-suite enhancements or review the AI-suite when it is enhanced. Verify that the change improves the agent's working capabilities and explicitly state your findings.
 - **Default Action**: Default to presenting the prompt only. Execute the prompt ONLY if explicitly instructed to do so by the user.
 
 ## Negative Constraints

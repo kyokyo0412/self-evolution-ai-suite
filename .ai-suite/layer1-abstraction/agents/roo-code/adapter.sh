@@ -42,6 +42,9 @@ agent_uninstall_project() {
   remove_block_from_file "$project_dir/.roorules" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END"
   _remove_skills "$target_dir/skills"
   _remove_meta "$target_dir/meta"
+  if [[ -d "$target_dir" ]] && [[ -z "$(ls -A "$target_dir" 2>/dev/null)" ]]; then
+    rmdir "$target_dir" 2>/dev/null || true
+  fi
 }
 
 agent_uninstall_global() {
@@ -49,4 +52,7 @@ agent_uninstall_global() {
   remove_block_from_file "$dest_dir/.roorules" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END"
   _remove_skills "$dest_dir/skills"
   _remove_meta "$dest_dir/meta"
+  if [[ -d "$dest_dir" ]] && [[ -z "$(ls -A "$dest_dir" 2>/dev/null)" ]]; then
+    rmdir "$dest_dir" 2>/dev/null || true
+  fi
 }

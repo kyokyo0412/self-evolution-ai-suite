@@ -20,7 +20,7 @@ else
 fi
 
 # Test 3: ai-suite evolve collect --local should exist
-if ! grep -q "COLLECT_LOCAL" ai-suite evolve; then
+if ! grep -q "COLLECT_LOCAL" .ai-suite/cli/evolve.sh; then
     echo "FAIL: ai-suite evolve does not have collect_local functionality."
     exit 1
 else

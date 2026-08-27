@@ -147,17 +147,17 @@ do_integrate() {
 
 do_enable() {
   info "Workflow: Enable"
-  exec "$SCRIPT_DIR/enable.sh" "$@"
+  exec "$SUITE_DIR/cli/enable.sh" "$@"
 }
 
 do_disable() {
   info "Workflow: Disable"
-  exec "$SCRIPT_DIR/disable.sh" "$@"
+  exec "$SUITE_DIR/cli/disable.sh" "$@"
 }
 
 do_publish() {
   info "Workflow: Publish"
-  exec "$SCRIPT_DIR/publish.sh" "$@"
+  exec "$SUITE_DIR/cli/publish.sh" "$@"
 }
 
 do_develop() {
