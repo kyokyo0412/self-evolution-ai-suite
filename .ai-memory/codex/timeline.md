@@ -1,0 +1,1 @@
+[2026-09-01 20:18:49] Task: enable ai-suite globally for codex (local + sunlinux). Result: BLOCKED by exec sandbox (no ~/.codex writes, no ssh egress). Existing local deployment verified intact-but-stale; user-run commands provided. Reflection evolution: local-suite sandbox-fallback section + acceptance test (REFLECTION-20260901T121750Z.md).

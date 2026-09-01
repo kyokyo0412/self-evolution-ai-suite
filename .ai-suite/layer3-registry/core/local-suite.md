@@ -92,12 +92,47 @@ if ! $any_changed; then echo "No local evolutions found."; fi
 
 After running, if changes were collected, you MUST write an Evolution Report manually summarizing the diffs, and output copy-paste git commands.
 
+### 4. Restricted Execution Environment (Sandbox) Fallback
+
+Some agent runtimes execute commands inside a sandbox that only allows writes
+to the workspace and temp dirs and blocks outbound network (e.g. Codex CLI
+with a `workspace-write` sandbox, approval mode `never`). If
+`ai-suite enable` / `ai-suite disable` fails with any of these signatures,
+the execution environment is sandboxed -- do NOT keep retrying the command:
+
+- `cp: ...: Operation not permitted` or `mkdir: ...: Operation not permitted`
+  when writing to home-level targets (`~/.codex/`, `~/.cursor/`, ...)
+- `ssh: connect to host <host> port 22: Operation not permitted`
+- Harness rejections such as `Rejected(... commands are not permitted)`
+
+When blocked, follow this fallback instead:
+
+1. **Stop mutating.** A partially-run install may have only partially
+   mirrored files. Do not run further install/uninstall commands from the
+   sandboxed shell.
+2. **Verify the existing deployment (read-only).** Check that the agent
+   target dir (e.g. `~/.codex/skills/` and `~/.codex/AGENTS.md` for codex)
+   still exists, then byte-compare each deployed skill file against the repo
+   source and diff the mirror dirs. Identify which skills are missing or
+   stale relative to the current repo.
+3. **Confirm no damage.** Confirm the sentinel block
+   (`<!-- ai-suite:start -->` ... `<!-- ai-suite:end -->`) in the agent's
+   context file is intact and that foreign entries (e.g.
+   `~/.codex/skills/.system`) were not removed.
+4. **Hand off exact commands.** Give the user the precise command(s) to run
+   in a regular (unsandboxed) terminal, e.g.
+   `bash ai-suite enable --scope global --agent codex`.
+5. **Report the delta.** State clearly: what is already installed, what is
+   stale or missing relative to the current repo, and which command closes
+   the gap.
+
 ## Step-by-Step Execution
 
 1. Identify the operation (install/enable vs remove/disable) and scope (project vs global).
 2. Check if `ai-suite enable` or `ai-suite disable` exist in the workspace. If they do not exist, report an error.
 3. Run the appropriate command and stream output to the user.
 4. Confirm success or report the error to the user.
+5. If the command is blocked by a sandbox (Section 4 signatures), run the Section 4 fallback and hand the user exact commands for an unsandboxed terminal.
 
 ## Negative Constraints (Must NOT)
 - [X] Do not modify files outside the `.ai-suite` directory unless explicitly requested.
