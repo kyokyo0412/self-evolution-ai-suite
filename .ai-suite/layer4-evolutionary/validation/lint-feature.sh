@@ -35,7 +35,7 @@ else
 fi
 
 # 2. Scenario blocks
-scenario_count=$(grep -c '^\s*Scenario:' "$FEATURE_FILE" || true)
+scenario_count=$(grep -cE '^[[:space:]]*Scenario:' "$FEATURE_FILE" || true)
 if [[ "$scenario_count" -ge 1 ]]; then
   pass "found $scenario_count Scenario: block(s)"
 else
@@ -45,13 +45,13 @@ fi
 # 3. Each scenario has at least one When + one Then
 # Parse scenario blocks with awk.
 bad_scenarios=$(awk '
-  /^\s*Scenario:/ { 
+  /^[ \t]*Scenario:/ { 
     if (in_scenario && !has_when) print "Scenario at line " sc_line " has no When step"
     if (in_scenario && !has_then) print "Scenario at line " sc_line " has no Then step"
     in_scenario=1; has_when=0; has_then=0; sc_line=NR; sc_name=$0
   }
-  in_scenario && /^\s+When / { has_when=1 }
-  in_scenario && /^\s+Then / { has_then=1 }
+  in_scenario && /^[ \t]+When / { has_when=1 }
+  in_scenario && /^[ \t]+Then / { has_then=1 }
   END {
     if (in_scenario && !has_when) print "Scenario at line " sc_line " has no When step"
     if (in_scenario && !has_then) print "Scenario at line " sc_line " has no Then step"

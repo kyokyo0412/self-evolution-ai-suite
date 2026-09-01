@@ -121,7 +121,7 @@ do_evolve() {
 
 do_absorb() {
   if [[ "$DRY_RUN" == 1 ]]; then
-    info "[DRY-RUN] Would instruct AI agent to perform semantic absorption"
+    info "[DRY-RUN] Would instruct AI agent to execute absorb-capability"
     return 0
   fi
   
@@ -134,7 +134,7 @@ do_absorb() {
 
 do_integrate() {
   if [[ "$DRY_RUN" == 1 ]]; then
-    info "[DRY-RUN] Would instruct AI agent to perform semantic integration"
+    info "[DRY-RUN] Would instruct AI agent to execute integrate-capability"
     return 0
   fi
   

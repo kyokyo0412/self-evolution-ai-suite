@@ -5,6 +5,7 @@ Feature: AI Suite Memory System
 
   Scenario: Memory isolation and structure
     Given the AI suite is initialized
+    When an agent accesses memory storage
     Then the memory system should store files isolated from the project codes
     And the memory should be isolated between different AI suite agents (e.g., cursor, claude)
 

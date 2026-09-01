@@ -26,6 +26,8 @@ agent_install_project() {
   
   _mirror_skills "$suite_dir" "$target_dir/skills" "continue"
   _mirror_meta "$suite_dir" "$target_dir/meta"
+  _mirror_templates "$suite_dir" "$target_dir/templates" "continue"
+  _mirror_scripts "$suite_dir" "$target_dir/scripts" "continue"
 
   _continue_content "$suite_dir" "$target_dir" > "$file"
   printf '[continue-adapter] wrote prompt to %s\n' "$file"
@@ -40,6 +42,8 @@ agent_install_global() {
 
   _mirror_skills "$suite_dir" "$target_dir/skills" "continue"
   _mirror_meta "$suite_dir" "$target_dir/meta"
+  _mirror_templates "$suite_dir" "$target_dir/templates" "continue"
+  _mirror_scripts "$suite_dir" "$target_dir/scripts" "continue"
 
   _continue_content "$suite_dir" "$target_dir" > "$file"
   printf '[continue-adapter] wrote prompt to %s\n' "$file"
@@ -51,6 +55,8 @@ agent_uninstall_project() {
   rm -f "$project_dir/.continue/prompts/ai-suite.prompt"
   _remove_skills "$target_dir/skills"
   _remove_meta "$target_dir/meta"
+  _remove_templates "$target_dir/templates"
+  _remove_scripts "$target_dir/scripts"
   if [[ -d "$project_dir/.continue/prompts" ]] && [[ -z "$(ls -A "$project_dir/.continue/prompts" 2>/dev/null)" ]]; then
     rmdir "$project_dir/.continue/prompts" 2>/dev/null || true
   fi
@@ -64,6 +70,8 @@ agent_uninstall_global() {
   rm -f "$HOME/.continue/prompts/ai-suite.prompt"
   _remove_skills "$target_dir/skills"
   _remove_meta "$target_dir/meta"
+  _remove_templates "$target_dir/templates"
+  _remove_scripts "$target_dir/scripts"
   if [[ -d "$HOME/.continue/prompts" ]] && [[ -z "$(ls -A "$HOME/.continue/prompts" 2>/dev/null)" ]]; then
     rmdir "$HOME/.continue/prompts" 2>/dev/null || true
   fi

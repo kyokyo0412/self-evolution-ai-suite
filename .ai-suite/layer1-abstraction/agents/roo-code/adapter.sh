@@ -16,6 +16,8 @@ agent_install_project() {
 
   _mirror_skills "$suite_dir" "$target_dir/skills" "roo-code"
   _mirror_meta "$suite_dir" "$target_dir/meta"
+  _mirror_templates "$suite_dir" "$target_dir/templates" "roo-code"
+  _mirror_scripts "$suite_dir" "$target_dir/scripts" "roo-code"
 
   generate_markdown_block "$suite_dir" "$target_dir" "roo-code" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END" >> "$file"
   printf '[roo-code-adapter] wrote ai-suite block to %s\n' "$file"
@@ -31,6 +33,8 @@ agent_install_global() {
 
   _mirror_skills "$suite_dir" "$dest_dir/skills" "roo-code"
   _mirror_meta "$suite_dir" "$dest_dir/meta"
+  _mirror_templates "$suite_dir" "$dest_dir/templates" "roo-code"
+  _mirror_scripts "$suite_dir" "$dest_dir/scripts" "roo-code"
 
   generate_markdown_block "$suite_dir" "$dest_dir" "roo-code" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END" >> "$file"
   printf '[roo-code-adapter] wrote ai-suite block to %s\n' "$file"
@@ -42,6 +46,8 @@ agent_uninstall_project() {
   remove_block_from_file "$project_dir/.roorules" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END"
   _remove_skills "$target_dir/skills"
   _remove_meta "$target_dir/meta"
+  _remove_templates "$target_dir/templates"
+  _remove_scripts "$target_dir/scripts"
   if [[ -d "$target_dir" ]] && [[ -z "$(ls -A "$target_dir" 2>/dev/null)" ]]; then
     rmdir "$target_dir" 2>/dev/null || true
   fi
@@ -52,6 +58,8 @@ agent_uninstall_global() {
   remove_block_from_file "$dest_dir/.roorules" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END"
   _remove_skills "$dest_dir/skills"
   _remove_meta "$dest_dir/meta"
+  _remove_templates "$dest_dir/templates"
+  _remove_scripts "$dest_dir/scripts"
   if [[ -d "$dest_dir" ]] && [[ -z "$(ls -A "$dest_dir" 2>/dev/null)" ]]; then
     rmdir "$dest_dir" 2>/dev/null || true
   fi

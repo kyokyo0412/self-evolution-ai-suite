@@ -5,26 +5,31 @@ Feature: Core Operational Rules for AI Suite Agent
 
   Scenario: Deep Comprehension and VLLM-Based Reasoning
     Given the core agent directives are defined
+    When the directives are reviewed
     Then the directives must contain rules for "Deep Comprehension"
     And the directives must mandate "VLLM-Based Reasoning" or "Chain of Thought" before execution
 
   Scenario: Autonomous Resilience (Do Not Disturb)
     Given the core agent directives are defined
+    When the resilience rules are reviewed
     Then the directives must enforce "Autonomous Resilience"
     And the rules must state not to stall or prompt the user for input when encountering an obstacle
     And the rules must state to try alternative strategies autonomously
 
   Scenario: Continuous Self-Evolution
     Given the core agent directives or workflow rules are defined
+    When the evolution rules are reviewed
     Then the rules must require "Self-Evolution"
     And the agent must adapt and refine its prompt/skill suite based on task outcomes and feedback
 
   Scenario: Safety & Non-Destruction
     Given the production safety guardrails are defined
+    When the guardrails are reviewed
     Then the guardrails must strictly forbid destructive actions in production environments
     And the guardrails must explicitly state "Never run `git commit`, `git push`, or modifying deployment environments without explicit permission"
 
   Scenario: User Visibility
     Given the step action visibility directives are defined
+    When the visibility directives are reviewed
     Then the directives must mandate "User Visibility"
     And every plan, decision, architectural design, and implementation step must be logged and readable by the user

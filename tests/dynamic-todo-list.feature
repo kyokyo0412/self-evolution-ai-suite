@@ -5,12 +5,14 @@ Feature: Dynamic Todo-List Support in Development Processes
 
   Scenario: tdd-team.md includes dynamic todo-list instructions
     Given the file ".ai-suite/layer3-registry/core/tdd-team.md" exists
+    When the instructions in tdd-team.md are examined
     Then the file should contain instructions for dynamic todo-list updates
     And it should specify that if issues are found, the todo-list should be updated
     And it should specify that the process will continue running the new todo-list
 
   Scenario: autonomous-team.md includes dynamic todo-list instructions
     Given the file ".ai-suite/layer3-registry/core/autonomous-team.md" exists
+    When the instructions in autonomous-team.md are examined
     Then the file should contain instructions for dynamic todo-list updates
     And it should specify that if issues are found, the todo-list should be updated
     And it should specify that the process will continue running the new todo-list

@@ -5,6 +5,7 @@ Feature: Enhanced TDD Team Review, Senior Roles, Robustness, and Line-Level Code
 
   Scenario: Senior and Expert Team Roster
     Given the tdd-team skill is defined
+    When the Team Roster is inspected
     Then the Team Roster must include senior and distinguished roles with deep expertise:
       | Role                                               | Expertise Scope                                                                                         |
       | Staff/Principal PM & Product Strategist            | Edge-case foresight, non-functional requirements, failure modeling, requirements disambiguation         |

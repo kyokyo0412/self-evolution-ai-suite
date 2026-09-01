@@ -23,6 +23,7 @@ Feature: New .ai-suite/ directory structure
     And .ai-suite/layer4-evolutionary/validation/ retains all meta scripts with updated paths
 
   Scenario: Core skills are agent-agnostic
+    When the core skills are inspected
     Then .ai-suite/layer3-registry/core/ contains tdd-team.md
     And .ai-suite/layer3-registry/core/ contains autonomous-team.md
     And .ai-suite/layer3-registry/core/ contains codebase-deepdoc.md
@@ -33,11 +34,13 @@ Feature: New .ai-suite/ directory structure
     And none of the core skills reference CustomDomain domain-specific systems
 
   Scenario: Cursor agent skills are isolated
+    When the cursor agent skills are inspected
     Then .ai-suite/layer1-abstraction/agents/cursor/skills/ contains ai-suite-architect.md
     And .ai-suite/layer1-abstraction/agents/cursor/skills/ contains prompt-developer.md
     And these skills may reference .cursorrules and Cursor-specific configuration
 
   Scenario: CustomDomain domain skills are isolated
+    When the custom domain skills are inspected
     Then .ai-suite/layer3-registry/domains/custom_domain/skills/ contains custom-skill-1.md
     And .ai-suite/layer3-registry/domains/custom_domain/skills/ contains testbed-setup.md
     And .ai-suite/layer3-registry/domains/custom_domain/skills/ contains unified-lb-testbed.md
@@ -45,6 +48,7 @@ Feature: New .ai-suite/ directory structure
     And .ai-suite/layer3-registry/domains/custom_domain/templates/ contains custom-daemon-dummy.md
 
   Scenario: Old .cursor-suite/ is removed
+    When the root directory is inspected
     Then .cursor-suite/ no longer exists at the workspace root
 
 Feature: Multi-agent enable/disable support
@@ -122,6 +126,7 @@ Feature: Backward compatibility and migration
 Feature: tdd-team description is domain-agnostic
 
   Scenario: tdd-team skill description mentions no CustomDomain
+    When the skill description is inspected
     Then .ai-suite/layer3-registry/core/tdd-team.md description does not contain "Custom"
     And it does not contain "Bazel" in the description (body may still reference it)
     And it works as a general TDD skill for any language or framework

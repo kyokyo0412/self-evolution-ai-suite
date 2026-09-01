@@ -26,6 +26,8 @@ agent_install_project() {
 
   _mirror_skills "$suite_dir" "$target_dir/skills" "claude"
   _mirror_meta "$suite_dir" "$target_dir/meta"
+  _mirror_templates "$suite_dir" "$target_dir/templates" "claude"
+  _mirror_scripts "$suite_dir" "$target_dir/scripts" "claude"
 
   # Append the block
   generate_markdown_block "$suite_dir" "$target_dir" "claude" "$_CLAUDE_SENTINEL_START" "$_CLAUDE_SENTINEL_END" >> "$claude_file"
@@ -42,6 +44,8 @@ agent_install_global() {
 
   _mirror_skills "$suite_dir" "$claude_dir/skills" "claude"
   _mirror_meta "$suite_dir" "$claude_dir/meta"
+  _mirror_templates "$suite_dir" "$claude_dir/templates" "claude"
+  _mirror_scripts "$suite_dir" "$claude_dir/scripts" "claude"
 
   generate_markdown_block "$suite_dir" "$claude_dir" "claude" "$_CLAUDE_SENTINEL_START" "$_CLAUDE_SENTINEL_END" >> "$claude_file"
   printf '[claude-adapter] wrote ai-suite block to %s\n' "$claude_file"
@@ -54,6 +58,8 @@ agent_uninstall_project() {
   remove_block_from_file "$claude_file" "$_CLAUDE_SENTINEL_START" "$_CLAUDE_SENTINEL_END"
   _remove_skills "$target_dir/skills"
   _remove_meta "$target_dir/meta"
+  _remove_templates "$target_dir/templates"
+  _remove_scripts "$target_dir/scripts"
   if [[ -d "$target_dir" ]] && [[ -z "$(ls -A "$target_dir" 2>/dev/null)" ]]; then
     rmdir "$target_dir" 2>/dev/null || true
   fi
@@ -65,6 +71,8 @@ agent_uninstall_global() {
   remove_block_from_file "$claude_file" "$_CLAUDE_SENTINEL_START" "$_CLAUDE_SENTINEL_END"
   _remove_skills "$claude_dir/skills"
   _remove_meta "$claude_dir/meta"
+  _remove_templates "$claude_dir/templates"
+  _remove_scripts "$claude_dir/scripts"
   if [[ -d "$claude_dir" ]] && [[ -z "$(ls -A "$claude_dir" 2>/dev/null)" ]]; then
     rmdir "$claude_dir" 2>/dev/null || true
   fi

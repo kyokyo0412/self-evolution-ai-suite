@@ -74,6 +74,28 @@ _deploy_registry_rules() {
       cat "$src"
     } > "$dst"
   done
+
+  # Deploy domain rules if present
+  if [[ -d "$suite_dir/layer3-registry/domains" ]]; then
+    if [[ -n "${AI_SUITE_DOMAIN:-}" ]]; then
+      if [[ -d "$suite_dir/layer3-registry/domains/$AI_SUITE_DOMAIN/rules" ]]; then
+        for src in "$suite_dir/layer3-registry/domains/$AI_SUITE_DOMAIN/rules"/*; do
+          [[ -f "$src" ]] || continue
+          cp "$src" "$rules_dir/"
+        done
+      fi
+    else
+      for domain in "$suite_dir"/layer3-registry/domains/*; do
+        [[ -d "$domain" ]] || continue
+        if [[ -d "$domain/rules" ]]; then
+          for src in "$domain/rules"/*; do
+            [[ -f "$src" ]] || continue
+            cp "$src" "$rules_dir/"
+          done
+        fi
+      done
+    fi
+  fi
 }
 
 _remove_registry_rules() {
@@ -196,7 +218,6 @@ agent_install_project() {
   _mirror_templates "$suite_dir" "$project_dir/.cursor/templates" "cursor"
   _mirror_scripts "$suite_dir" "$project_dir/.cursor/scripts" "cursor"
   _mirror_meta "$suite_dir" "$meta_dest"
-  _mirror_rules "$suite_dir" "$rules_dir" "cursor"
 
   # Auto-initialize memory system
   if [[ -f "$suite_dir/layer2-cognitive/memory/memory.sh" ]]; then
@@ -217,7 +238,6 @@ agent_install_global() {
   _mirror_templates "$suite_dir" "$HOME/.cursor/templates" "cursor"
   _mirror_scripts "$suite_dir" "$HOME/.cursor/scripts" "cursor"
   _mirror_meta "$suite_dir" "$meta_dest"
-  _mirror_rules "$suite_dir" "$HOME/.cursor/rules" "cursor"
 
   # Write global ~/.cursorrules block so the AI knows about the suite
   _append_cursorrules_global_block "$suite_dir"

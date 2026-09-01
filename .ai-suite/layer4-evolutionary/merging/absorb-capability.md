@@ -34,7 +34,7 @@ This skill is active when the user says:
 3. For remote absorb, extract the `USER@HOST` and `PATH` from the user's request and use your shell tool to fetch:
    `rsync -az -e "ssh -o BatchMode=yes -o ConnectTimeout=10" USER@HOST:PATH/ $SANDBOX/`
 4. For local absorb, use your shell tool to copy the local configuration files (including skills, rules, scripts, templates) to the sandbox:
-   `cp -r .cursor .cursorrules .cursor/rules .cursor/skills .cursor/templates .cursor/scripts .continue .claude CLAUDE.md .opencode .roorules $SANDBOX/ 2>/dev/null || true 2>/dev/null || true`
+   `cp -r .cursor .cursorrules .cursor/rules .cursor/skills .cursor/templates .cursor/scripts .continue .claude CLAUDE.md .opencode .roorules .codex AGENTS.md $SANDBOX/ 2>/dev/null || true`
 
 ### Phase B: Robust Semantic Mapping & Deep Learning
 1. Use your `Glob`, `Read`, and `SemanticSearch` tools on the sandbox directory and your own capabilities (e.g., `~/.cursor/skills/`, `~/.cursor/rules/`, `~/.cursor/templates/`, `~/.cursor/scripts/`).

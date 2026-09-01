@@ -66,7 +66,7 @@ OPTIONS
   --remote-path PATH    Remote install directory.
                         Default: \$HOME/.ai-suite-deploy  (resolved on remote)
   --remote-scope SCOPE  Scope for ai-suite enable on remote. Default: global
-  --agent AGENT         cursor (default) | claude | opencode | continue | roo-code | all
+  --agent AGENT         cursor (default) | claude | opencode | continue | roo-code | codex | all
   --dry-run             Print what would happen; make no changes.
   --help                Show this help.
 
@@ -147,12 +147,91 @@ do_collect() {
   fi
 
 
-    if [[ "$COLLECT_LOCAL" == "1" ]]; then
+  if [[ "$COLLECT_LOCAL" == "1" ]]; then
     info "--- collecting from local global installations ---"
-    printf '\n%s=======================================================%s\n' "$(_grn)" "$(_off)"
-    printf '%sPlease prompt your AI agent to perform semantic LLM processing:%s\n' "$(_grn)" "$(_off)"
-    printf '  > "Please semantically merge the updated capabilities (skills, rules, templates, scripts) from ~/.cursor/skills/, ~/.cursor/rules/, ~/.cursor/templates/, and ~/.cursor/scripts/ into the local .ai-suite/ directory (checking both layer3-registry/core/ and layer1-abstraction/agents/cursor/skills/)."\n'
-    printf '%s=======================================================%s\n\n' "$(_grn)" "$(_off)"
+    local local_tmpdir
+    local_tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/evolve-collect-local.XXXXXX")
+    
+    mkdir -p "$local_tmpdir/layer1-abstraction/agents/cursor/skills"
+    mkdir -p "$local_tmpdir/layer1-abstraction/agents/claude/skills"
+    mkdir -p "$local_tmpdir/layer1-abstraction/agents/codex/skills"
+    
+    if [[ -d "$HOME/.cursor/skills" ]]; then
+      for s_dir in "$HOME/.cursor/skills"/*; do
+        if [[ -d "$s_dir" && -f "$s_dir/SKILL.md" ]]; then
+          local s_name; s_name=$(basename "$s_dir")
+          cp "$s_dir/SKILL.md" "$local_tmpdir/layer1-abstraction/agents/cursor/skills/${s_name}.md"
+        fi
+      done
+    fi
+    if [[ -d "$HOME/.claude/skills" ]]; then
+      for s_dir in "$HOME/.claude/skills"/*; do
+        if [[ -d "$s_dir" && -f "$s_dir/SKILL.md" ]]; then
+          local s_name; s_name=$(basename "$s_dir")
+          cp "$s_dir/SKILL.md" "$local_tmpdir/layer1-abstraction/agents/claude/skills/${s_name}.md"
+        fi
+      done
+    fi
+    if [[ -d "$HOME/.codex/skills" ]]; then
+      for s_dir in "$HOME/.codex/skills"/*; do
+        if [[ -d "$s_dir" && -f "$s_dir/SKILL.md" ]]; then
+          local s_name; s_name=$(basename "$s_dir")
+          cp "$s_dir/SKILL.md" "$local_tmpdir/layer1-abstraction/agents/codex/skills/${s_name}.md"
+        fi
+      done
+    fi
+
+    local local_changed_files=()
+    local local_diff_output=""
+    
+    while IFS= read -r -d '' f; do
+      local rel="${f#"$local_tmpdir"/}"
+      local src="$SUITE_DIR/$rel"
+      if [[ -f "$src" ]]; then
+        if ! cmp -s "$src" "$f"; then
+          local_changed_files+=("$rel")
+          local_diff_output+=$(diff -u "$src" "$f" || true)
+          local_diff_output+=$'\n'
+        fi
+      else
+        local_changed_files+=("$rel")
+        local_diff_output+=$(diff -u /dev/null "$f" || true)
+        local_diff_output+=$'\n'
+      fi
+    done < <(find "$local_tmpdir" -type f -print0)
+    
+    if [[ ${#local_changed_files[@]} -gt 0 ]]; then
+      info "Found ${#local_changed_files[@]} changed file(s) locally."
+      any_changed=true
+      
+      if [[ "$AI_SUITE_DRY_RUN" != "1" ]]; then
+        for rel in "${local_changed_files[@]}"; do
+          mkdir -p "$(dirname "$SUITE_DIR/$rel")"
+          cp "$local_tmpdir/$rel" "$SUITE_DIR/$rel"
+          all_staged_files+=(".ai-suite/$rel")
+        done
+        
+        local local_report="$SUITE_DIR/layer4-evolutionary/reflection/evolutions/evolution_report_local_${TIMESTAMP}.md"
+        mkdir -p "$(dirname "$local_report")"
+        {
+          echo "# Evolution Report: local"
+          echo "Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo ""
+          echo "## Changed Files"
+          for rel in "${local_changed_files[@]}"; do echo "- \`$rel\`"; done
+          echo ""
+          echo "## Diff"
+          echo '```diff'
+          printf '%s\n' "$local_diff_output"
+          echo '```'
+        } > "$local_report"
+        all_staged_files+=(".ai-suite/layer4-evolutionary/reflection/evolutions/$(basename "$local_report")")
+        info "Wrote report: $local_report"
+      fi
+    else
+      info "No changes detected from local global installations."
+    fi
+    rm -rf "$local_tmpdir"
   fi
 
   for HOST in "${HOSTS[@]:-}"; do
@@ -311,7 +390,7 @@ REPORT
   local enabler="$SUITE_ROOT/ai-suite"
   if [[ -x "$enabler" ]]; then
     info "Updating the local Augmented Agent with collected evolution ..."
-    bash "$enabler" enable --scope project >/dev/null 2>&1 || warn "Failed to update the Augmented Agent."
+    bash "$enabler" enable --scope global >/dev/null 2>&1 || warn "Failed to update the Augmented Agent."
   fi
 
   # Deduplicate staged files list (Bash 3.2 compat: no associative arrays)
@@ -325,7 +404,8 @@ REPORT
   done
 
   # Emit copy-paste git commands
-  local commit_hosts="${HOSTS[*]}"
+  local commit_hosts="${HOSTS[*]:-local}"
+  [[ -z "$commit_hosts" ]] && commit_hosts="local"
   printf '\n'
   printf '%s==============================================================%s\n' \
     "$(_grn)" "$(_off)"
@@ -353,82 +433,6 @@ do_push() {
 
   if [[ "$AI_SUITE_DRY_RUN" == "1" ]]; then
     info "[DRY-RUN] push to: ${HOSTS[*]}"
-  fi
-
-
-  if [[ "$COLLECT_LOCAL" == "1" ]]; then
-    info "--- collecting from local global installations ---"
-    local tmpdir
-    tmpdir=$(mktemp -d "${TMPDIR:-/tmp}/evolve-collect-local.XXXXXX")
-    
-    # Simulate a remote .ai-suite structure in tmpdir by copying from local global installations
-    mkdir -p "$tmpdir/layer1-abstraction/agents/cursor/skills"
-    mkdir -p "$tmpdir/layer1-abstraction/agents/claude/skills"
-    
-    if [[ -d "$HOME/.cursor/skills" ]]; then
-      cp -r "$HOME/.cursor/skills/"* "$tmpdir/layer1-abstraction/agents/cursor/skills/" 2>/dev/null || true
-    fi
-    if [[ -d "$HOME/.claude/skills" ]]; then
-      cp -r "$HOME/.claude/skills/"* "$tmpdir/layer1-abstraction/agents/claude/skills/" 2>/dev/null || true
-    fi
-    # Also copy core skills if they exist globally (usually they are mirrored to the agent skills)
-    
-    local changed_files=()
-    local diff_output=""
-    
-    while IFS= read -r -d '' f; do
-      local rel="${f#"$tmpdir"/}"
-      local src="$SUITE_DIR/$rel"
-      if [[ -f "$src" ]]; then
-        if ! cmp -s "$src" "$f"; then
-          changed_files+=("$rel")
-          diff_output+=$(diff -u "$src" "$f" || true)
-          diff_output+=$'
-'
-        fi
-      else
-        changed_files+=("$rel")
-        diff_output+=$(diff -u /dev/null "$f" || true)
-        diff_output+=$'
-'
-      fi
-    done < <(find "$tmpdir" -type f -print0)
-    
-    if [[ ${#changed_files[@]} -gt 0 ]]; then
-      info "Found ${#changed_files[@]} changed file(s) locally."
-      any_changed=true
-      
-      if [[ "$AI_SUITE_DRY_RUN" != "1" ]]; then
-        for rel in "${changed_files[@]}"; do
-          mkdir -p "$(dirname "$SUITE_DIR/$rel")"
-          cp "$tmpdir/$rel" "$SUITE_DIR/$rel"
-          all_staged_files+=(".ai-suite/$rel")
-        done
-      fi
-      
-      # Write a mini-report for local
-      local report_file="$SUITE_DIR/layer4-evolutionary/reflection/evolutions/evolution_report_local_$(date +%s).md"
-      if [[ "$AI_SUITE_DRY_RUN" != "1" ]]; then
-        mkdir -p "$(dirname "$report_file")"
-        {
-          echo "# Evolution Report: local"
-          echo "Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          echo ""
-          echo "## Changed Files"
-          for rel in "${changed_files[@]}"; do echo "- \`$rel\`"; done
-          echo ""
-          echo "## Diff"
-          echo '```diff'
-          printf '%s\n' "$diff_output"
-          echo '```'
-        } > "$report_file"
-        all_staged_files+=(".ai-suite/layer4-evolutionary/reflection/evolutions/$(basename "$report_file")")
-        info "Wrote report: $report_file"
-      fi
-    else
-      info "No changes found locally."
-    fi
-    rm -rf "$tmpdir"
   fi
 
   for HOST in "${HOSTS[@]:-}"; do
