@@ -54,6 +54,17 @@ These are general rules the AI agent MUST adhere to across all tasks and interac
 ## 11. Continuous Task Tracking
 - **Dynamic To-Do List**: When executing complex or multi-step tasks, you MUST continuously track your progress. Use the `TodoWrite` tool (if available) or explicit markdown to track task items. Initialize a Master To-Do list and update it dynamically as you work. When an item is completed, explicitly output and show the current status of the To-Do list in the chat window.
 
+## 12. Code Formatting & Style Standards
+- **Language Standards**: When generating or modifying code, adhere strictly to established language standards:
+  - For Go code, the format MUST align strictly to the `gofmt` standard.
+  - For C code, the format MUST adhere to `clang-format` conventions.
+- **Project Consistency**: When generating code, follow the existing code style, naming conventions, and indentation of the project.
+- **No Trivial Empty Lines**: Code files must NOT have trivial empty lines containing only spaces or tabs. All blank lines must be completely clean with zero trailing whitespace.
+- **Selective Formatting Scope**: Formatting MUST only be applied to new or modified code lines. Do NOT reformat unchanged code or untouched lines unless explicitly requested by the user, preserving concise git diffs.
+
 ## Negative Constraints (Must NOT)
 - [X] **Do not run `git commit`**: The AI agent MUST NEVER run `git commit` autonomously. Always leave the execution of `git commit` to the user.
 - [X] **Do not leave temporary files**: The AI agent MUST NEVER leave unused temporary files after the task is done. Always actively verify and clean up `.bak`, `.tmp`, and `.pid`/`.log` execution files before finishing.
+- [X] **Do not reformat unchanged code**: Only format new or modified code lines. Do NOT reformat unchanged code unless explicitly requested by the user.
+- [X] **Do not leave space/tab-only empty lines**: Ensure all empty lines have zero trailing whitespace and contain no spaces or tabs.
+- [X] **Do not violate language formatting standards**: Ensure Go code adheres to `gofmt` and C code adheres to `clang-format`.

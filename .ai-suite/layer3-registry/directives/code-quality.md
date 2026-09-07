@@ -9,3 +9,8 @@
 4. Defensive Programming: Never assume object properties exist; use explicit null checks/optional chaining. Never swallow errors silently in try/catch blocks.
 5. Professional Documentation: Output all audits, architectural reviews, and major refactor proposals in clean, structured Markdown, concluding with an actionable checkbox list.
 6. 1E-Class Security: ALL software produced by the AI suite MUST strictly adhere to the 1E-class security standards defined in `nuclear-safety.md`.
+7. Code Formatting & Style Standards:
+   - **Language Standards**: When generating or modifying Go code, format MUST align strictly to `gofmt` standards. When generating or modifying C code, format MUST follow `clang-format` conventions.
+   - **Project Style Harmony**: Follow the existing code style, naming conventions, and indentation patterns of the target project when generating or modifying code.
+   - **Clean Empty Lines**: Code files must NEVER contain trivial empty lines consisting only of spaces or tabs; all blank lines must be completely clean without trailing whitespace.
+   - **Selective Formatting Scope**: Only apply formatting to newly added or modified code lines. Do NOT reformat unchanged code or untouched lines unless explicitly requested by the user.

@@ -19,7 +19,7 @@ Use `tdd-team` instead when correctness is paramount and stage isolation matters
 
 - **PM** -- functional spec, Master To-Do list, requirement revisions.
 - **Architect** -- system design, tech-stack choices, design revisions on failure.
-- **Developer** -- implementation, terminal execution, debugging.
+- **Developer** -- implementation, terminal execution, debugging, and adhering to strict language formatting standards (`gofmt` for Go, `clang-format` for C, clean empty lines without spaces/tabs, formatting only new/modified lines).
 - **SDET / QA Lead** -- UT / IT / FT / EUT suites, pre-execution audit, final report.
 - **Technical Writer** -- final documentation suite.
 
@@ -52,8 +52,8 @@ Use `tdd-team` instead when correctness is paramount and stage isolation matters
 5. **Exit** -- when 100% of tests pass, QA Lead emits the **Detailed Test Report** (commands + terminal logs proving UT/IT/FT/EUT pass).
 
 ### Phase 3 -- Peer Polish
-- Developer refactors green code for SOLID + DRY.
-- Re-run the full suite to prove the refactor didn't break anything.
+- Developer refactors green code for SOLID + DRY and ensures strict adherence to language formatting standards (`gofmt` for Go, `clang-format` for C, no space/tab-only empty lines), applying formatting only to changed lines without touching unchanged code.
+- Run ReadLints or linter checks and re-run the full suite to prove the refactor didn't break anything.
 
 ### Phase 4 -- Final Verification & Documentation
 - PM audits the To-Do list -- close any `[ ]`.
@@ -78,6 +78,8 @@ Before Phase 1, confirm:
 - [X] Do not skip the pre-execution audit.
 - [X] Do not stop while any `[ ]` remains.
 - [X] Do not modify files outside the task scope.
+- [X] Do not reformat unchanged code unless explicitly requested by the user. Only apply formatting to new or modified code lines.
+- [X] Do not leave trivial empty lines containing only spaces or tabs.
 - [X] Do not run `rm -rf`, `git push --force`, or remote destructive commands without confirmation.
 
 ## Verification

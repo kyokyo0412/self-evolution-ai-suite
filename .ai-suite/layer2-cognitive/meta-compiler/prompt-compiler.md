@@ -46,7 +46,7 @@ The optimized prompt you generate MUST include:
 1. **Role & Context:** A precise persona definition and the exact files the agent needs to touch.
 2. **Objective:** Clear and concise goal.
 3. **Chain-of-Thought (CoT) Plan:** Step-by-step logical execution phases.
-4. **Strict Constraints:** Coding standards found in the current codebase, error handling rules, and things *not* to do. Include efficiency constraints (e.g., maximize parallel tool calls) and quality constraints (e.g., quality checks, linter checks, ReadLints).
+4. **Strict Constraints:** Coding standards found in the current codebase, error handling rules, and things *not* to do. Include efficiency constraints (e.g., maximize parallel tool calls), quality constraints (e.g., quality checks, linter checks, ReadLints), and code formatting standards (`gofmt` for Go, `clang-format` for C, clean blank lines without spaces/tabs, formatting only new/changed code lines without touching unchanged code).
 5. **Expected Output Format:** Explicit instructions on how the agent should present its code changes or file creations.
 
 ## Step 3: Execution and Review
