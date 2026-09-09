@@ -79,6 +79,13 @@ check_top_tier_role_contracts() {
     return 1
   fi
 
+  # 8. Dynamic SME & Domain Architect Role
+  echo "  Checking Principal SME & Domain Architect top-tier criteria..."
+  if ! grep -qi "Principal Subject Matter Expert (SME) & Domain Architect" "$file" || ! grep -qi "regulatory constraints\|compliance" "$file"; then
+    echo "  FAIL: Principal SME role does not specify top-tier regulatory and domain standards in $file"
+    return 1
+  fi
+
   echo "  PASS: All 7 top-tier industry role contracts verified for $file"
   return 0
 }

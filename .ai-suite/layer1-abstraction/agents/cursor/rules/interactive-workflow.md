@@ -28,8 +28,9 @@ You MUST use the `AskQuestion` tool:
 Once the user answers "Yes" in Step 0 (or when a new follow-up task is received in Step 3), the Interactive Wrapper enters "Daemon Mode" (runs silently in the background).
 1. **Execute the main task normally.** Follow all user instructions, core directives, and skills EXACTLY as requested by the task prompt.
 2. **Absolute Isolation:** Treat the main task completely independently from this interactive workflow wrapper. **DO NOT** let this interactive workflow distract you from doing a thorough, complete job or cause abnormal task execution. You must pretend the wrapper does not exist during this step. Do not act stupid, lazy, or skip any steps specified by other skills. You MUST fully comply with all other .cursorrules, general directives, and active skills while executing the main task.
-3. You MUST wait until the main task is 100% complete and double confirm that the main task is done. If you are using a To-Do list, every single item MUST be marked as COMPLETED before you can even think about moving to Step 2.
-4. **NEVER call `echo 'Interactive workflow summary rendered'` before the main task is completely finished, verified, and the execution summary is fully output.**
+3. **Multi-Iteration & Loop-Work Invariant:** When running looping skills or iterative workflows (e.g., `loop-work`), the ENTIRE sequence of all N iterations constitutes the "main task". Do NOT trigger Step 2 or Step 3 after intermediate iterations. Wait until all iterations are 100% complete.
+4. You MUST wait until the main task is 100% complete and double confirm that the main task is done. If you are using a To-Do list, every single item MUST be marked as COMPLETED before you can even think about moving to Step 2.
+5. **NEVER call `echo 'Interactive workflow summary rendered'` before the main task is completely finished, verified, and the execution summary is fully output.**
 
 ### Step 2: State 2 - WRAP-UP & SUMMARY ISOLATION
 
@@ -64,6 +65,7 @@ Once Step 2's `echo` shell tool has returned:
 - [X] **PREMATURE SUMMARY FORBIDDEN**: You MUST NOT call `echo 'Interactive workflow summary rendered'` before the main task is 100% finished and the main task summary has been output to the chat window.
 - [X] **PREMATURE WRAP-UP FORBIDDEN**: You MUST NOT ask the follow-up question or stop working if there are still pending tasks in your To-Do list or if the user's core request is not fully met.
 - [X] **MANDATORY ASKQUESTION AFTER 'OTHER' TASKS**: Once interactive workflow is enabled, you are STRICTLY FORBIDDEN from ending the turn or stopping after executing an 'Other' task without executing Step 2 (summary + echo) and Step 3 (`AskQuestion`). The agent MUST NOT end the turn without invoking AskQuestion after 'Other' task completion. You MUST always use AskQuestion after each task iteration is done when the user inputs a new task in the 'Other' option.
+- [X] **MANDATORY LOOP-WORK SUMMARY BEFORE ASKQUESTION**: When running loop-work or iterative workflows, you MUST NOT trigger Step 2 or Step 3 until all N iterations are complete, and you MUST NOT call AskQuestion without first printing the full final loop-work summary to chat and executing `echo 'Interactive workflow summary rendered'`.
 - [X] **DO NOT BUNDLE ASKQUESTION WITH TASK TOOLS**: Do NOT bundle the final `AskQuestion` tool call in the same batch as the final task execution tools. Always separate them via Step 2 and Step 3.
 - [X] Do NOT make other agents (like Claude Code, Roo Code, etc.) use this interactive workflow. This is strictly for the Cursor Agent.
 - [X] Do NOT call `AskQuestion` at the end of the task without first doing the `echo 'Interactive workflow summary rendered'` step to force the summary output.

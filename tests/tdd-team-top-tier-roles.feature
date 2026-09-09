@@ -38,3 +38,9 @@ Feature: Top-Tier Industry Professional Roles in TDD Team Skill
     Given the tdd-team skill specification file
     When the Tech Writer role definition is inspected
     Then the Tech Writer role must specify principal technical communications architecture, comprehensive architectural documentation suites, operational runbooks, edge-case caveats, and exact copy-paste workflows
+
+  Scenario: Principal SME & Domain Architect is dynamically instantiated with world-class domain standards
+    Given the tdd-team skill specification file
+    When the Dynamic SME role definition is inspected
+    Then the SME role must specify dynamic persona assumption, domain terminology, regulatory constraints (GDPR, HIPAA, PCI-DSS, ISO), industry RFCs, domain failure modes, and NFRs
+

@@ -37,7 +37,7 @@ AI Suite is a structured set of skills, templates, and meta-protocols that makes
 ## Features
 
 - **Memory System**: Agents maintain a persistent, layered index of project context, a chronological log of tasks, an important memory for long sessions, and a timeline memory. This memory is isolated per agent and split into project-specific memory (indexes, layers, timeline, important) and global history (tasks), preventing context flushing in long sessions. The memory system is auto-initialized when the suite is installed, and can be temporarily masked or excluded during evolution. The AI suite explicitly instructs agents to review and update this memory during tasks.
-- **Enhanced TDD Team & Top-Tier Industry Professional Roles**: The `tdd-team` skill operates as a fully autonomous seven-role distinguished engineering team composed of top-tier, industry-leading professionals (Staff/Principal PM & Product Strategist, Distinguished AI Expert & Cognitive Architect, Fellow/Principal Engineer & Chief Reviewer with absolute veto authority, Senior Principal Distributed Systems Architect, Senior Principal SDET / Chaos Gatekeeper, Staff Systems Developer, and Senior Staff Technical Writer & Knowledge Architect). It enforces deep architectural reviews (scalability, concurrency, parallel processing, failure blast radius, graceful degradation) and mandatory 7-dimension line-level code reviews (boundary & off-by-one handling, deterministic error handling, string/stream injection safety, resource/memory safety, concurrency/race safety, algorithmic complexity, prompt alignment).
+- **Enhanced TDD Team, Dynamic Domain SME, Web/Mobile Architecture & AI-Augmented Workflow**: The `tdd-team` skill operates as a fully autonomous eleven-role distinguished engineering team composed of top-tier, industry-leading professionals (Principal Subject Matter Expert (SME) & Domain Architect dynamically instantiated for any target domain, Staff/Principal PM & Product Strategist, Distinguished AI Expert & Cognitive Architect, Fellow/Principal Engineer & Chief Reviewer with absolute veto authority, Senior Principal Distributed Systems Architect, Principal UX/UI Product Designer & Design Systems Architect, Principal Frontend & Mobile Solutions Architect, Principal AI-Augmented Workflow & Interaction Engineer, Senior Principal SDET / Chaos Gatekeeper, Staff Systems Developer, and Senior Staff Technical Writer & Knowledge Architect). It enforces dynamic domain expertise (Domain Classification & Risk Profiling, Domain Context Matrix, industry RFC/compliance mapping, domain-specific failure mode test conversion), modern UI/UX design systems (color palette, typography hierarchy, 4px/8px spacing grids, 44px+ mobile touch targets, WCAG AA/AAA accessibility), dumb presentation components with custom hook logic isolation, AI-augmented workflow patterns (token streaming, optimistic UI updates, generative skeleton loaders, fallback recovery), deep architectural reviews (scalability, concurrency, parallel processing, failure blast radius, graceful degradation, domain regulatory conformance), and mandatory multi-dimensional line-level code reviews (boundary & off-by-one handling, deterministic error handling, string/stream injection safety, resource/memory safety, concurrency/race safety, algorithmic complexity, domain integrity & regulatory safety, prompt alignment).
 - **Enhanced Early Product Design**: The TDD process includes a robust Phase 1 that explicitly mandates simulated PM discussion to debate tradeoffs and multiple iterations to thoroughly review legacy features before generating executable specifications.
 - **Multi-Agent Support**: Works seamlessly with Cursor, Claude Code, OpenCode, VS Code Continue, Roo Code, and Codex.
 - **Proactive Resolution & Never-Give-Up Spirit**: AI Suite Agents operate in a continuous loop of proactive execution. If an issue is encountered, they autonomously explore alternative approaches, analyze, and iterate until the problem is solved. When explicitly instructed not to give up, they will persist--exhausting all possible solutions--while strictly adhering to the prohibition against damaging the production environment. Otherwise, it should run as normal mode.
@@ -262,6 +262,97 @@ Package the ai-suite for distribution, excluding vendor-specific domain knowledg
 |---|---|
 | `ai-suite-architect` | "design a Cursor skill", "harden a prompt", "generate .cursorrules" |
 | `prompt-developer` | "design a prompt", "improve this rule" |
+
+---
+
+## Dynamic Domain SME Operational Runbook & Developer Guide
+
+The `tdd-team` skill integrates a dynamically instantiated **Principal Subject Matter Expert (SME) & Domain Architect** into an autonomous eleven-role distinguished engineering team. This runbook provides complete operational guidance, architectural workflows, multi-domain reference matrices, and verification recipes for developers and AI agents.
+
+### Domain Profiling & SME Lifecycle Workflow
+
+When `tdd-team` is invoked, the AI agent must strictly follow the stage-gated lifecycle:
+
+```
+[TASK] + [BACKGROUND]
+        |
+        v (Immediate Domain Identification)
+[Principal SME & Domain Architect Instantiated]
+        |
+        v (Phase 1.1 Domain Classification & Risk Profiling)
+[Domain Context Matrix Emitted in Chat]
+        |
+        +---> Standards & Regulatory Mapping (RFCs, ISO, HIPAA, PCI-DSS)
+        +---> Domain-Specific Failure Modes (Race conditions, packet loss, entity leaks)
+        +---> Domain Non-Functional Requirements (Latency SLAs, payload bounds)
+        |
+        v (Review Gate 1.4 / 1.6 Veto Authority)
+[BDD Gherkin & SDET Test Translation] (Failure modes converted into executable tests)
+        |
+        v (Phase 2 & Phase 3 Concurrency & 1E-Class Safety)
+[Architecture & Implementation] (Distributed locks, idempotency, deterministic bounds)
+        |
+        v (Phase 4 Chaos Injection Gate)
+[Adversarial Testing] (Network partitions, malformed frames, clock jitter, mid-tx expirations)
+        |
+        v (Phase 5 Project Closure)
+[Domain Compliance & Regulatory Traceability Matrix Delivered]
+```
+
+### Multi-Domain Recipe Matrix
+
+| Domain | Standards & Regulations | Critical Failure Modes | Target NFRs & Latency SLAs |
+|---|---|---|---|
+| **FinTech & HFT** | PCI-DSS 4.0, SOC2 Type II, FIX 5.0, FAST | Order book race conditions, double-spend, floating-point drift | P99 latency < 1ms, zero precision loss, atomic idempotency |
+| **Telecom** | RFC 3261 (SIP), RFC 3550 (RTP), 3GPP 5G-NR | Packet drop, out-of-order SIP INVITE, jitter buffer underrun | Media latency < 20ms, jitter < 5ms, 99.999% availability |
+| **HealthTech** | HIPAA Security Rule, HITECH, HL7 v2, FHIR | PHI leaks in error logs/telemetry, unencrypted resting payload | Strict access audit logging, zero PHI leakage, TLS 1.3 |
+| **Aerospace & Defense** | DO-178C DAL-A, ARINC 429, ARINC 653 | Task scheduling overrun, avionics bus collision, bit flips | Deterministic execution time, zero dynamic allocations, formal proof |
+| **IoT & Telemetry** | MQTT 5.0, CoAP (RFC 7252), TLS 1.3 | Broker disconnect during QOS-2, clock drift, flash wear | Payload bound < 512B, sub-50ms processing, power-loss safety |
+| **Automotive** | ISO 26262 ASIL-D, UNECE R155/R156, AUTOSAR | CAN frame collisions, priority inversion, ECU spoofing | Hard real-time cycle < 10ms, tamper-proof audit log, memory bounds |
+
+### Translating Domain Failure Modes to Executable Tests
+
+In Phase 1.3 (Define) and Phase 1.5 (Test Design), the SDET and BDD specifications must directly convert every failure mode identified by the Dynamic SME into executable test scenarios:
+
+1. **Network Partitions**: Verify circuit breaker tripping, backoff retries, and offline queueing.
+2. **Expired Tokens Mid-Transaction**: Verify transaction rollback, token refreshing, and idempotent resumption.
+3. **Concurrent Order Checkouts**: Verify distributed lock leases, idempotency tokens, and optimistic concurrency versioning.
+4. **Sensitive Entity Redaction**: Verify automated masking of PHI/PII/cardholder data in debug logs and telemetry streams.
+
+```gherkin
+Scenario: Prevent double-spend during concurrent order processing
+  Given two concurrent checkout requests arrive with the same idempotency token
+  When the distributed transaction manager acquires the distributed lock lease
+  Then the first transaction successfully reserves inventory and charges payment
+  And the second transaction is safely deduplicated and returns the cached receipt
+```
+
+### Domain Chaos Injection & Adversarial Chaos Testing Runbook
+
+In Phase 4 (End-to-End System QA Gate), tests must subject the system to active adversarial conditions:
+
+- **Network Partition Simulation**: Simulate split-brain and severed socket connections to confirm cluster failover without split state.
+- **Malformed Protocol Frame Injection**: Fuzz input endpoints with corrupted byte streams and out-of-spec packet payloads to verify deterministic rejection.
+- **Clock Jitter & Skew**: Introduce artificial time dilation and leap second events to test TTL algorithms and lease expirations.
+- **Mid-Transaction Token Expiration**: Terminate authorization credentials during payload ingestion to guarantee atomic rollback without orphan resources.
+
+### 1E-Class Safety & Deterministic Resource Runbook
+
+In Phase 3.5, the Fellow/Principal Engineer executes line-level code reviews strictly auditing 1E-Class Safety standards:
+
+- **Zero Dynamic Allocations**: Hot paths and real-time processing loops must utilize pre-allocated static ring buffers.
+- **Deterministic Execution Time**: Ensure all loops and recursions have hard-coded max iteration caps; no unbounded while-loops.
+- **Resource Deallocation & Leak Prevention**: Audit every file descriptor, socket handle, and database transaction for explicit `defer` / `finally` release.
+- **Defensive Boundary Bounding**: Enforce explicit string truncation, payload length checks, and slice bounds checks before memory copy.
+
+### Domain Compliance & Regulatory Traceability Matrix
+
+In Phase 5 (Project Closure), the Technical Writer produces a comprehensive compliance traceability matrix mapping:
+- Requirement ID and User Story
+- Target Industry Regulatory Rule or RFC (e.g., PCI-DSS Section 3.4, HIPAA 164.312)
+- SME-Identified Domain Failure Mode
+- Executable Test File and Assertion Method
+- Terminal Verification Result (PASS / MC-DC proof)
 
 ---
 

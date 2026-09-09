@@ -58,7 +58,8 @@ When `interactive-workflow` is enabled or active, you MUST handle it carefully t
 - **The "Main Task" is the ENTIRE loop:** The full `N` iterations constitute the "Main Task" in State 1 of the `interactive-workflow`.
 - **Do NOT trigger State 2 or State 3 prematurely:** You MUST NOT output the final task summary, call `echo 'Interactive workflow summary rendered'`, or call the `AskQuestion` tool until ALL $N$ iterations are completely finished.
 - **Step Action Visibility per Iteration:** For EACH iteration, you MUST output the detailed step actions (Architectural Analysis, Step-by-Step Execution Plan, and Implementation) to the chat window, ensuring full visibility of what is happening inside the loop.
-- **Final Summary:** Once all $N$ iterations are complete, you MUST output a comprehensive final task summary BEFORE moving to State 2 and State 3 (the final `AskQuestion` tool box).
+- **Mandatory Final Summary in Chat:** Once all $N$ iterations are complete, you MUST output a comprehensive final task summary explicitly in the chat window text.
+- **Strict Separation of State 2 and State 3:** You MUST strictly follow the two-stage wrap-up: State 2 (output the full execution summary to the chat window AND call `echo 'Interactive workflow summary rendered'`) and State 3 (call `AskQuestion` in the subsequent response). DO NOT call AskQuestion until the chat summary has been rendered and the UI echo has returned. Do NOT bundle AskQuestion with task execution tools.
 
 ## State Tracking & Structured Logging (.loop_state.md)
 
@@ -195,9 +196,12 @@ For `i = 1` to `N`:
 
 ### Step 7: Final Summary & Interactive Workflow Wrap-up
 - **High-Quality Achievement Verification:** Verify that the final deliverable represents a high-quality achievement of the goal across all $N$ completed iterations.
-- **ONLY AFTER ALL $N$ ITERATIONS ARE DONE:** Output the final task summary detailing What, Why, How, Key Points, and Special Notes.
+- **ONLY AFTER ALL $N$ ITERATIONS ARE DONE (Mandatory Chat Summary):** You MUST explicitly write the full execution summary of the entire loop-work process (covering What, Why, How, Key Points, and Special Notes) in the conversational chat window text. Do not just silently call a tool.
 - **Cleanup:** Actively identify and remove any unused files, temporary files, or leftover artifacts created during the iterations.
-- Proceed to State 2 and State 3 of the `interactive-workflow` (output execution summary, execute `echo 'Interactive workflow summary rendered'`, and call the `AskQuestion` tool).
+- **Proceed to State 2 and State 3 of Interactive Workflow:**
+  1. In **State 2 (Wrap-Up & Summary Isolation)**: Output the final execution summary as visible chat text AND call `echo 'Interactive workflow summary rendered'` to force UI synchronization. DO NOT call `AskQuestion` in this response.
+  2. In **State 3 (The Follow-Up Loop)**: After the `echo` shell tool has returned, call the `AskQuestion` tool in your very next response.
+- **Strict Separation of State 2 and State 3:** You are strictly forbidden from calling `AskQuestion` before the full summary is output to the chat window and the UI echo has returned. Do NOT bundle AskQuestion with task execution tools.
 
 ## Negative Constraints (Must NOT)
 - [X] Do NOT trigger an early exit before completing all $N$ requested iterations. You MUST NOT assume premature convergence or exit early on 100% defect-free claims. All $N$ iterations are mandatory.
@@ -214,3 +218,4 @@ For `i = 1` to `N`:
 - [X] Do NOT break or bypass the self-evolution mechanisms.
 - [X] Do NOT run the next iteration without explicitly validating the previous one, designing improvements, and logging to State Tracking.
 - [X] Do NOT call `AskQuestion` or trigger `interactive-workflow` State 2/3 until the entire loop of all $N$ iterations is complete.
+- [X] Do NOT call `AskQuestion` before outputting the full final execution summary to the chat window and executing `echo 'Interactive workflow summary rendered'`.

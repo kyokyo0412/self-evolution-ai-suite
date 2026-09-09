@@ -77,5 +77,8 @@ The Cursor Interactive Workflow is a zero-cost collaborative wrapper that enable
 4. **Negative Constraint: Mandatory AskQuestion**:
    The agent is **strictly forbidden** from terminating its turn or finishing execution after completing an "Other" task without executing Step 2 and calling `AskQuestion` in Step 3.
 
-5. **No Extra Cost Guarantee**:
+5. **Loop-Work & Iterative Multi-turn Guarantee**:
+   When running iterative workflows such as `loop-work`, all N iterations must complete in Step 1 before transitioning to Step 2. The full final execution summary MUST be explicitly written to chat and flushed with the UI sync echo before `AskQuestion` is presented in Step 3.
+
+6. **No Extra Cost Guarantee**:
    The wrapper uses native UI questions and single-turn continuous chaining to prevent consuming additional included user quota.
