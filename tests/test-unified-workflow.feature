@@ -1,33 +1,26 @@
-Feature: Unified AI Suite Workflow Orchestration
-  In order to manage the AI suite lifecycle effectively
-  As an AI agent or a developer
-  I want a single unified CLI entry point that wraps all disparate scripts
+Feature: AI Suite Unified Workflow Requirements Specification
 
   Scenario: Enable the AI suite
-    Given the AI suite is not enabled
-    When I run "ai-suite workflow enable --agent cursor --scope project"
-    Then it should delegate to ai-suite enable and succeed
+    Given an AI agent workspace
+    When the user runs ai-suite enable
+    Then the suite is deployed to the agent
 
   Scenario: Disable the AI suite
-    Given the AI suite is enabled
-    When I run "ai-suite workflow disable --agent cursor --scope project"
-    Then it should delegate to ai-suite disable and succeed
+    Given an enabled AI agent workspace
+    When the user runs ai-suite disable
+    Then the suite is cleanly uninstalled
 
   Scenario: Publish the AI suite
-    Given the AI suite is ready
-    When I run "ai-suite workflow publish"
-    Then it should delegate to ai-suite publish and succeed
+    Given the AI suite source repository
+    When the user runs ai-suite publish
+    Then an archive package is created without domain leakage
 
   Scenario: Evolve the AI suite
-    Given the AI suite has local evolutions
-    When I run "ai-suite workflow evolve"
-    Then it should output instructions for reflection and collection
+    Given new skills or reflection logs
+    When the user runs ai-suite evolve
+    Then evolutions are collected and validated
 
   Scenario: Guide AI suite development
-    Given I want to develop the AI suite
-    When I run "ai-suite workflow develop"
-    Then it should explain the isolation requirements and steps to develop
-
-  Scenario: Invalid command
-    When I run "ai-suite workflow invalid_command"
-    Then it should fail and print usage
+    Given an engineer developing the suite
+    When the user runs ai-suite workflow develop
+    Then isolated development instructions are provided

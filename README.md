@@ -265,6 +265,57 @@ Package the ai-suite for distribution, excluding vendor-specific domain knowledg
 
 ---
 
+## Loop-Work & Interactive Workflow Synergy Guide
+
+The AI suite integrates a seamless human-in-the-loop interaction model specifically for Cursor Agent while maintaining 100% autonomous capability during deep execution loops (such as `loop-work` and `tdd-team`).
+
+### State Machine Lifecycle
+
+```
+[Session Start: Initial Prompt]
+            |
+            v
+  Step 0: INITIALIZATION (AskQuestion for interactive workflow)
+            |
+      +-----+-----+
+    [yes]       [no]
+      |           |
+      v           v
+  Daemon Mode   Standard Execution
+  (State 1)     (Stop at completion)
+      |
+  [Loop-work iterations 1..N run autonomously]
+      |
+  (All N iterations 100% complete)
+      |
+      v
+  Step 2: WRAP-UP & SUMMARY ISOLATION
+  1. Full aggregate summary outputted explicitly to chat window
+  2. UI sync echo barrier executed: echo 'Interactive workflow summary rendered'
+      |
+      v
+  Step 3: THE FOLLOW-UP LOOP (AskQuestion)
+      |
+  +---+--------------------+
+  |                        |
+[complete]          [Other: Custom Task]
+  |                        |
+  v                        v
+[Finish]            Skip Step 0 (Zero Cost)
+                    Re-enter Step 1 (Execute Active Task)
+                    Mandatory loop-back to Step 2 & Step 3
+```
+
+### Core Guarantees & Constraints
+
+1. **Mandatory Final Summary Before Questions**: When `loop-work` runs, intermediate iterations execute silently via background sleepers. When all $N$ iterations conclude, the agent MUST write the comprehensive multi-iteration summary report to the chat window before invoking any wrap-up or question tools.
+2. **Deterministic UI Render Barrier**: The agent executes `echo 'Interactive workflow summary rendered'` in the same turn as the chat summary to flush markdown streams to the client interface before triggering `AskQuestion` in the subsequent turn.
+3. **Multi-Turn Persistent Chaining**: When a user provides follow-up tasks via the "Other" option in `AskQuestion`, the agent executes the task in Step 1, outputs the completion summary and UI echo in Step 2, and MUST re-invoke `AskQuestion` in Step 3. The agent is strictly forbidden from dropping the turn after completing an "Other" task.
+4. **Cursor Agent-Only Isolation**: The interactive workflow rule is deployed strictly to Cursor Agent (`.cursor/rules/cursor-suite-interactive-workflow.mdc`). It is never deployed to or required for Codex or other IDE agents.
+5. **Zero-Cost Refinement**: Follow-up tasks skip Step 0 initialization entirely, guaranteeing zero extra Cursor included request consumption.
+
+---
+
 ## Dynamic Domain SME Operational Runbook & Developer Guide
 
 The `tdd-team` skill integrates a dynamically instantiated **Principal Subject Matter Expert (SME) & Domain Architect** into an autonomous eleven-role distinguished engineering team. This runbook provides complete operational guidance, architectural workflows, multi-domain reference matrices, and verification recipes for developers and AI agents.
@@ -459,7 +510,7 @@ triggers:
 ```
 
 3. Validate: `bash .ai-suite/layer4-evolutionary/validation/validate-suite.sh`
-4. For Cursor: `./ai-suite enable --agent cursor --scope global` to deploy
+4. For Cursor: `./ai-suite enable --agent cursor --scope global` to deploy (automatically prunes obsolete skills and rules)
 5. For Claude: `./ai-suite enable --agent claude --scope project` to regenerate `CLAUDE.md`
 
 ---

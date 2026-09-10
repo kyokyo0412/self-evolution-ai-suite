@@ -83,6 +83,13 @@ exit(0)
 }
 check_step "Zero Whitespace-Only Blank Lines across Modified Files" check_whitespace
 
+# 9. Loop-Work & Interactive Workflow Contracts & EUT
+check_step "Loop-Work & Interactive Workflow Contracts" bash tests/test-loop-work-interactive-contracts.sh
+check_step "Loop-Work & Interactive Workflow EUT" bash tests/test-loop-work-interactive-eut.sh
+
+# 10. Cursor Adapter Pruning & Zero Stale Artifact Invariance
+check_step "Cursor Adapter Pruning Contracts" bash tests/test-cursor-adapter-enable-pruning-contracts.sh
+
 echo "=================================================================="
 echo " Formal Convergence Summary: $PASS_COUNT passed, $FAIL_COUNT failed"
 echo "=================================================================="

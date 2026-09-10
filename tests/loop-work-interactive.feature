@@ -21,3 +21,17 @@ Feature: Loop-Work and Interactive Workflow Robustness
     And the agent MUST proceed to Step 2 to output the execution summary in chat and call the UI sync echo
     And the agent MUST proceed to Step 3 to invoke AskQuestion again
     And the agent is STRICTLY FORBIDDEN from ending the turn or stopping without invoking AskQuestion.
+
+  Scenario: Strict Cursor Agent isolation and zero cost refinement
+    Given the interactive workflow is enabled in the workspace
+    When inspecting configuration and adapter logic for Codex or non-Cursor agents
+    Then the interactive workflow rule MUST NOT be deployed to or required for Codex
+    And the interactive workflow MUST NOT cost any extra Cursor included requests
+    And follow-up tasks MUST NOT re-prompt Step 0 initialization.
+
+  Scenario: Explain option execution fidelity
+    Given the user selects the "explain" option in AskQuestion
+    When the agent processes the selection
+    Then the agent MUST provide the detailed explanation in chat text
+    And the agent MUST call "echo 'Interactive workflow summary rendered'" or directly invoke AskQuestion
+    And the interactive workflow loop MUST remain open.

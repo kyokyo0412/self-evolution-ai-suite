@@ -196,12 +196,18 @@ For `i = 1` to `N`:
 
 ### Step 7: Final Summary & Interactive Workflow Wrap-up
 - **High-Quality Achievement Verification:** Verify that the final deliverable represents a high-quality achievement of the goal across all $N$ completed iterations.
-- **ONLY AFTER ALL $N$ ITERATIONS ARE DONE (Mandatory Chat Summary):** You MUST explicitly write the full execution summary of the entire loop-work process (covering What, Why, How, Key Points, and Special Notes) in the conversational chat window text. Do not just silently call a tool.
-- **Cleanup:** Actively identify and remove any unused files, temporary files, or leftover artifacts created during the iterations.
+- **ONLY AFTER ALL $N$ ITERATIONS ARE DONE (Mandatory Chat Summary Before Any Interactive Tool):**
+  You MUST explicitly write the full execution summary of the entire loop-work process in the conversational chat window text before invoking any wrap-up or question tools.
+  The summary MUST contain:
+  1. **Overall Achievement**: Statement of overarching goal, final completion status, and aggregate outcomes.
+  2. **Multi-Iteration Progress & Audit Table**: Table documenting each iteration (1..N), customized focus, tests added/verified, and status.
+  3. **Multi-Dimensional Hardening Coverage**: Concrete achievements across all 5 dimensions (Correctness, Concurrency, Chaos, Resources, Mutation).
+  4. **Key Points, Caveats & Special Notes**: Crucial operational takeaways.
 - **Proceed to State 2 and State 3 of Interactive Workflow:**
-  1. In **State 2 (Wrap-Up & Summary Isolation)**: Output the final execution summary as visible chat text AND call `echo 'Interactive workflow summary rendered'` to force UI synchronization. DO NOT call `AskQuestion` in this response.
+  1. In **State 2 (Wrap-Up & Summary Isolation)**: Output the final execution summary as visible chat text AND call `echo 'Interactive workflow summary rendered'` to force UI synchronization and client-side stream flushing. DO NOT call `AskQuestion` in this response.
   2. In **State 3 (The Follow-Up Loop)**: After the `echo` shell tool has returned, call the `AskQuestion` tool in your very next response.
 - **Strict Separation of State 2 and State 3:** You are strictly forbidden from calling `AskQuestion` before the full summary is output to the chat window and the UI echo has returned. Do NOT bundle AskQuestion with task execution tools.
+- **Cleanup:** Actively identify and remove any unused files, temporary files, or leftover artifacts created during the iterations.
 
 ## Negative Constraints (Must NOT)
 - [X] Do NOT trigger an early exit before completing all $N$ requested iterations. You MUST NOT assume premature convergence or exit early on 100% defect-free claims. All $N$ iterations are mandatory.

@@ -13,8 +13,8 @@ if [ -z "${SUITE_DIR:-}" ]; then
     fi
 fi
 
-PROJECT_MEMORY_DIR="$(cd "$SUITE_DIR/.." && pwd)/.ai-memory"
-GLOBAL_MEMORY_DIR="$HOME/.ai-suite/memory"
+PROJECT_MEMORY_DIR="${AI_MEMORY_PROJECT_DIR:-$(cd "$SUITE_DIR/.." && pwd)/.ai-memory}"
+GLOBAL_MEMORY_DIR="${AI_MEMORY_GLOBAL_DIR:-$HOME/.ai-suite/memory}"
 
 ai_memory_init() {
     local agent_name="$1"

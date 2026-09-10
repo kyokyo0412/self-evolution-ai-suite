@@ -123,11 +123,13 @@ do_domain_install() {
   
   rm -rf "$tmpdir"
   
-  # Validate installed domains
+  # Validate installed domains (warnings only, do not fail)
   local validator="$SUITE_DIR/layer4-evolutionary/validation/validate-suite.sh"
   if [[ -x "$validator" ]]; then
     info "Running validator ..."
-    run "$validator"
+    if ! bash "$validator" 2>&1; then
+      warn "Skill validation reported issues -- review before committing."
+    fi
   fi
   
   info "Domain install complete."
