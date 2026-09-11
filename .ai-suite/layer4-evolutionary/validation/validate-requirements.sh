@@ -2,10 +2,10 @@
 set -euo pipefail
 
 # This script validates the Gherkin feature file using grep to ensure it has required scenarios
-FEATURE_FILE="tests/test-unified-workflow.feature"
+FEATURE_FILE="${1:-tests/test-unified-workflow.feature}"
 
 if [[ ! -f "$FEATURE_FILE" ]]; then
-  echo "FAIL: Feature file not found."
+  echo "FAIL: Feature file not found: $FEATURE_FILE" >&2
   exit 1
 fi
 

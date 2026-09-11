@@ -65,6 +65,7 @@ VERIFY=0
 INSTALL_HOOK=0
 SHELL_TARGETS="auto"
 UNINSTALL=0
+SYNC="rsync"
 
 HOOK_MARK_START="### AI SUITE AUTO-ENABLE HOOK START ###"
 HOOK_MARK_END="### AI SUITE AUTO-ENABLE HOOK END ###"
@@ -84,6 +85,7 @@ while [[ $# -gt 0 ]]; do
     --dry-run)      export AI_SUITE_DRY_RUN=1; shift ;;
     --verify)       VERIFY=1; shift ;;
     --install-hook) INSTALL_HOOK=1; shift ;;
+    --sync)         SYNC="${2:?--sync requires rsync|scp}"; shift 2 ;;
     --shell)        SHELL_TARGETS="${2:?--shell requires auto|zsh|bash|both}"; shift 2 ;;
     --uninstall)    UNINSTALL=1; shift ;;
     -h|--help)      usage 0 ;;
@@ -274,8 +276,9 @@ do_remote_scope() {
   [[ -n "$HOST" ]] || die "--scope remote requires --host USER@HOST" 1
   command -v ssh >/dev/null || die "ssh not found in PATH" 1
 
-  local SYNC
-  command -v rsync >/dev/null && SYNC="rsync" || SYNC="scp"
+  if [[ -z "${SYNC:-}" ]]; then
+    command -v rsync >/dev/null && SYNC="rsync" || SYNC="scp"
+  fi
 
   log "scope=remote agent=$AGENT host=$HOST remote-path=$REMOTE_PATH remote-scope=$REMOTE_SCOPE"
 

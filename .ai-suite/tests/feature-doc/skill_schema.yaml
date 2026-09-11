@@ -1,0 +1,14 @@
+required_frontmatter:
+  - name
+  - description
+  - triggers
+required_sections:
+  - "# Feature Documentation Generator"
+  - "## Execution Rules"
+  - "## Required Analysis Points"
+required_analysis_points:
+  - "Entry Points (Ingress)"
+  - "Control & Data Flow (The Call Chain)"
+  - "Component Collaboration (Inter-process Communication)"
+  - "State Mutations (Persistence)"
+output_directory: "aigen_doc/features/"

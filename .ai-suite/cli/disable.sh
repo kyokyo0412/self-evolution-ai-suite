@@ -73,6 +73,11 @@ case "$AGENT" in
   *) die "Unsupported agent: '$AGENT'. Valid: cursor | claude | opencode | continue | roo-code | codex | all" 1 ;;
 esac
 
+case "$SCOPE" in
+  project|global|remote) ;;
+  *) die "Unsupported scope: '$SCOPE'. Valid: project | global | remote" 1 ;;
+esac
+
 _load_adapter() {
   local name="$1"
   local adapter="$SUITE_DIR/layer1-abstraction/agents/$name/adapter.sh"

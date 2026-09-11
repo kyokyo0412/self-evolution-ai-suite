@@ -142,6 +142,40 @@ else
   fail "mutation-proof: sed_inplace truncated or corrupted file content"
 fi
 
+# ==============================================================================
+# MUTATION 6: Validate-Requirements Parameter Fallback Mutation
+# ==============================================================================
+VAL_REQ="$SUITE_ROOT/.ai-suite/layer4-evolutionary/validation/validate-requirements.sh"
+set +e
+VR_FAIL=$(bash "$VAL_REQ" "$TMP_SANDBOX/does_not_exist_req.feature" 2>&1)
+VR_CODE=$?
+set -e
+if [[ $VR_CODE -ne 0 ]] && [[ "$VR_FAIL" == *"FAIL: Feature file not found"* ]]; then
+  pass "mutation-proof: validate-requirements fails safely on missing custom file"
+else
+  fail "mutation-proof: validate-requirements did not reject missing custom file"
+fi
+
+# ==============================================================================
+# MUTATION 7: Validate-Requirements Missing Scenario Mutation
+# ==============================================================================
+INCOMPLETE_FEAT="$TMP_SANDBOX/incomplete_req.feature"
+cat > "$INCOMPLETE_FEAT" << 'EOF'
+Feature: Incomplete
+Scenario: Enable the AI suite
+  When enable
+  Then done
+EOF
+set +e
+VR_MISSING=$(bash "$VAL_REQ" "$INCOMPLETE_FEAT" 2>&1)
+VR_MISSING_CODE=$?
+set -e
+if [[ $VR_MISSING_CODE -ne 0 ]] && [[ "$VR_MISSING" == *"FAIL: Missing scenario"* ]]; then
+  pass "mutation-proof: validate-requirements fails safely when required scenario is missing"
+else
+  fail "mutation-proof: validate-requirements allowed missing scenario"
+fi
+
 total=$((PASS+FAIL))
 echo ""
 if [[ "$FAIL" -eq 0 ]]; then

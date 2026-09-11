@@ -246,6 +246,32 @@ else
   pass "enable --uninstall correctly delegates to disable"
 fi
 
+# Test 17: Multi-agent enable and disable with --agent all in project scope
+ALL_PROJ="$TMP_SANDBOX/all_agents_proj"
+mkdir -p "$ALL_PROJ"
+bash "$SUITE_CLI" enable --agent all --scope project --project "$ALL_PROJ" >/dev/null
+if [[ -f "$ALL_PROJ/.cursorrules" ]] && [[ -f "$ALL_PROJ/CLAUDE.md" ]] && [[ -f "$ALL_PROJ/AGENTS.md" ]]; then
+  pass "Enable all: all agent artifacts installed in project scope"
+fi
+
+bash "$SUITE_CLI" disable --agent all --scope project --project "$ALL_PROJ" >/dev/null
+if [[ ! -s "$ALL_PROJ/CLAUDE.md" ]] && [[ ! -d "$ALL_PROJ/.cursor/skills" ]]; then
+  pass "Disable all: cleanly removed all agent artifacts in project scope"
+else
+  fail "Disable all: artifacts remained in project scope"
+fi
+
+# Test 18: Opencode adapter legacy empty dir rmdir coverage
+OPENCODE_PROJ="$TMP_SANDBOX/opencode_empty_proj"
+mkdir -p "$OPENCODE_PROJ"
+bash "$SUITE_CLI" enable --agent opencode --scope project --project "$OPENCODE_PROJ" >/dev/null
+bash "$SUITE_CLI" disable --agent opencode --scope project --project "$OPENCODE_PROJ" >/dev/null
+if [[ ! -d "$OPENCODE_PROJ/.opencode" ]]; then
+  pass "Disable opencode: empty .opencode directory removed"
+else
+  fail "Disable opencode: directory was not removed"
+fi
+
 total=$((PASS+FAIL))
 echo ""
 if [[ "$FAIL" -eq 0 ]]; then

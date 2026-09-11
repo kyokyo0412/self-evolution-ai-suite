@@ -207,7 +207,9 @@ For `i = 1` to `N`:
   1. In **State 2 (Wrap-Up & Summary Isolation)**: Output the final execution summary as visible chat text AND call `echo 'Interactive workflow summary rendered'` to force UI synchronization and client-side stream flushing. DO NOT call `AskQuestion` in this response.
   2. In **State 3 (The Follow-Up Loop)**: After the `echo` shell tool has returned, call the `AskQuestion` tool in your very next response.
 - **Strict Separation of State 2 and State 3:** You are strictly forbidden from calling `AskQuestion` before the full summary is output to the chat window and the UI echo has returned. Do NOT bundle AskQuestion with task execution tools.
-- **Cleanup:** Actively identify and remove any unused files, temporary files, or leftover artifacts created during the iterations.
+- **Cleanup & File List Inspection:** Before proceeding to Step 2 wrap-up summary and Step 3 `AskQuestion`:
+  - The AI agent MUST check the file list (via `git status --porcelain` or workspace directory listing) to detect all leftover, temporary, scratch, or unused files created during the iterations (e.g. `*.bak`, `*.tmp`, `patch.sh*`, `.cursor_build.*`, `.cov_init.sh`, `.coverage_trace.log`, intermediate test logs, scratch artifacts).
+  - The AI agent MUST remove all such temporary and unused files before outputting the final summary and before invoking `AskQuestion`.
 
 ## Negative Constraints (Must NOT)
 - [X] Do NOT trigger an early exit before completing all $N$ requested iterations. You MUST NOT assume premature convergence or exit early on 100% defect-free claims. All $N$ iterations are mandatory.
@@ -225,3 +227,5 @@ For `i = 1` to `N`:
 - [X] Do NOT run the next iteration without explicitly validating the previous one, designing improvements, and logging to State Tracking.
 - [X] Do NOT call `AskQuestion` or trigger `interactive-workflow` State 2/3 until the entire loop of all $N$ iterations is complete.
 - [X] Do NOT call `AskQuestion` before outputting the full final execution summary to the chat window and executing `echo 'Interactive workflow summary rendered'`.
+- [X] Do NOT call `AskQuestion` before removing all temporary or unused files generated during the active task execution.
+- [X] Do NOT conclude the loop or advance to AskQuestion without having the AI agent check the file list (e.g. `git status --porcelain` or directory listing) to identify and clean up all temporary and unused files.

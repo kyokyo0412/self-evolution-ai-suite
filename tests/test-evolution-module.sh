@@ -390,9 +390,66 @@ else
   fail "Evolve: push failed to handle remote enable error (code: $FAIL_ENABLE_CODE)"
 fi
 
+# 24. Push with remote-scope project
+cat > "$MOCK_BIN/ssh" << 'EOF'
+#!/usr/bin/env bash
+exit 0
+EOF
+set +e
+PUSH_PROJ_OUT=$(PATH="$MOCK_BIN:$PATH" bash "$SUITE_CLI" evolve push --host user@proj-host.example.com --remote-scope project --remote-path /custom/path --agent codex 2>&1)
+PUSH_PROJ_CODE=$?
+set -e
+if [[ $PUSH_PROJ_CODE -eq 0 ]] && [[ "$PUSH_PROJ_OUT" == *"Push complete"* ]]; then
+  pass "Evolve: push with remote-scope project and agent codex executes cleanly"
+fi
+
+# 25. Subcommand --help flags
+set +e
+COL_HELP=$(bash "$SUITE_CLI" evolve collect --help 2>&1)
+COL_HELP_CODE=$?
+PUSH_HELP=$(bash "$SUITE_CLI" evolve push --help 2>&1)
+PUSH_HELP_CODE=$?
+set -e
+if [[ $COL_HELP_CODE -eq 0 ]] && [[ $PUSH_HELP_CODE -eq 0 ]]; then
+  pass "Evolve: collect and push --help exit 0"
+else
+  fail "Evolve: subcommand --help failed"
+fi
+
+# 26. Missing core.sh in evolve.sh exits 2
+{
+  MOCK_FAIL_EVOLVE="$TMP_SANDBOX/mock_fail_evolve/.ai-suite/cli"
+  mkdir -p "$MOCK_FAIL_EVOLVE"
+  cp "$SUITE_ROOT/.ai-suite/cli/evolve.sh" "$MOCK_FAIL_EVOLVE/"
+  set +e
+  EV_FAIL=$(bash "$MOCK_FAIL_EVOLVE/evolve.sh" 2>&1)
+  EV_FAIL_CODE=$?
+  set -e
+  if [[ $EV_FAIL_CODE -eq 2 ]] && [[ "$EV_FAIL" == *"core.sh not found"* ]]; then
+    pass "Evolve: fails safely with exit 2 when core.sh is absent"
+  else
+    fail "Evolve: missing core.sh did not exit 2"
+  fi
+}
+
+# 27. Remote collect with --exclude-memory
+cat > "$MOCK_BIN/rsync" << 'EOF'
+#!/usr/bin/env bash
+exit 0
+EOF
+set +e
+EXCL_OUT=$(PATH="$MOCK_BIN:$PATH" bash "$SUITE_CLI" evolve collect --host user@test-host.example.com --exclude-memory 2>&1)
+EXCL_CODE=$?
+set -e
+if [[ $EXCL_CODE -eq 0 ]]; then
+  pass "Evolve: collect with --exclude-memory executes cleanly"
+else
+  fail "Evolve: collect with --exclude-memory failed"
+fi
+
 # Cleanup test-generated reflection and evolution reports
 rm -f "$SUITE_ROOT/.ai-suite/layer4-evolutionary/reflection"/remote_new_*.md
-find "$SUITE_ROOT/.ai-suite/layer4-evolutionary/reflection/evolutions" -maxdepth 1 -name "*fail-host*.md" -o -name "*test-host*.md" -o -name "evolution_report_*.md" -delete 2>/dev/null || true
+find "$SUITE_ROOT/.ai-suite/layer4-evolutionary/reflection/evolutions" -maxdepth 1 -name "*fail-host*.md" -o -name "*test-host*.md" -o -name "*proj-host*.md" -o -name "evolution_report_*.md" -delete 2>/dev/null || true
 
 total=$((PASS+FAIL))
 echo ""

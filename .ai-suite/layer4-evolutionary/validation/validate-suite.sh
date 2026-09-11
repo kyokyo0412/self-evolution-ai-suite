@@ -177,6 +177,9 @@ if [[ $# -eq 0 ]]; then
 
   validate_target "$SUITE_ROOT/layer3-registry/core"
   validate_target "$SUITE_ROOT/layer1-abstraction/agents/cursor/skills"
+  if [[ -d "$SUITE_ROOT/layer2-cognitive/meta-compiler" ]]; then
+    validate_target "$SUITE_ROOT/layer2-cognitive/meta-compiler"
+  fi
   if [[ -d "$SUITE_ROOT/layer3-registry/domains" ]]; then
     for domain in "$SUITE_ROOT"/layer3-registry/domains/*; do
       if [[ -d "$domain/skills" ]]; then

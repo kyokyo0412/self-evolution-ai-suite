@@ -29,23 +29,27 @@ CMD="$1"
 shift
 
 case "$CMD" in
+  -h|--help|help)
+    usage
+    exit 0
+    ;;
   enable)
-    exec "$SCRIPT_DIR/.ai-suite/cli/enable.sh" "$@"
+    "$SCRIPT_DIR/.ai-suite/cli/enable.sh" "$@"
     ;;
   disable)
-    exec "$SCRIPT_DIR/.ai-suite/cli/disable.sh" "$@"
+    "$SCRIPT_DIR/.ai-suite/cli/disable.sh" "$@"
     ;;
   evolve)
-    exec "$SCRIPT_DIR/.ai-suite/cli/evolve.sh" "$@"
+    "$SCRIPT_DIR/.ai-suite/cli/evolve.sh" "$@"
     ;;
   workflow)
-    exec "$SCRIPT_DIR/.ai-suite/cli/workflow.sh" "$@"
+    "$SCRIPT_DIR/.ai-suite/cli/workflow.sh" "$@"
     ;;
   manage)
-    exec "$SCRIPT_DIR/.ai-suite/cli/manage.sh" "$@"
+    "$SCRIPT_DIR/.ai-suite/cli/manage.sh" "$@"
     ;;
   publish)
-    exec "$SCRIPT_DIR/.ai-suite/cli/publish.sh" "$@"
+    "$SCRIPT_DIR/.ai-suite/cli/publish.sh" "$@"
     ;;
   *)
     echo "Unknown command: $CMD"

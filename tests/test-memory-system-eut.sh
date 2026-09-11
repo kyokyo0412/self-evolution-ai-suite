@@ -198,9 +198,22 @@ fi
 ai_memory_clean "nonexistent_agent_xyz"
 pass "ai_memory_clean handles nonexistent agent cleanly"
 
+# Test memory CLI options
+(
+  bash "$REPO_ROOT/.ai-suite/layer2-cognitive/memory/memory.sh" init "$AGENT" "$SANDBOX" >/dev/null
+  bash "$REPO_ROOT/.ai-suite/layer2-cognitive/memory/memory.sh" summary "$AGENT" >/dev/null
+  bash "$REPO_ROOT/.ai-suite/layer2-cognitive/memory/memory.sh" search "$AGENT" "keyword" >/dev/null
+  bash "$REPO_ROOT/.ai-suite/layer2-cognitive/memory/memory.sh" clean "$AGENT" >/dev/null
+  bash "$REPO_ROOT/.ai-suite/layer2-cognitive/memory/memory.sh" unknown_subcmd 2>/dev/null || true
+)
+pass "memory.sh direct CLI execution commands passed"
+
 # Test fallback SUITE_DIR resolution
 (
   unset SUITE_DIR
+  unset TEST_SUITE_DIR
+  source "$MEMORY_LIB"
+  TEST_SUITE_DIR="$SANDBOX"
   source "$MEMORY_LIB"
 )
 pass "memory.sh fallback SUITE_DIR resolution verified"

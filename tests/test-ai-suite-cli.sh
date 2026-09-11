@@ -22,6 +22,23 @@ else
   fail "ai-suite with no arguments failed to print expected usage"
 fi
 
+# 1b. --help and -h flags print usage and exit 0
+set +e
+HELP_OUT=$("$AI_SUITE" --help 2>&1)
+HELP_CODE=$?
+H_OUT=$("$AI_SUITE" -h 2>&1)
+H_CODE=$?
+HLP_CMD_OUT=$("$AI_SUITE" help 2>&1)
+HLP_CMD_CODE=$?
+set -e
+if [[ $HELP_CODE -eq 0 ]] && echo "$HELP_OUT" | grep -q "USAGE:" && \
+   [[ $H_CODE -eq 0 ]] && echo "$H_OUT" | grep -q "USAGE:" && \
+   [[ $HLP_CMD_CODE -eq 0 ]] && echo "$HLP_CMD_OUT" | grep -q "USAGE:"; then
+  pass "ai-suite with --help, -h, and help prints full usage and exits 0"
+else
+  fail "ai-suite with --help, -h, or help failed (codes: $HELP_CODE, $H_CODE, $HLP_CMD_CODE)"
+fi
+
 # 2. Unknown command prints error, prints usage, and exits 1
 set +e
 ERR_OUT=$("$AI_SUITE" unknown_cmd_xyz 2>&1)

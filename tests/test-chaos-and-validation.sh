@@ -524,6 +524,55 @@ else
   fail "chaos: ai-suite enable did not fail on read-only directory"
 fi
 
+# 25. validate-suite with no arguments (scans all tiers including meta-compiler)
+set +e
+VS_ALL_OUT=$(bash "$VALIDATOR_SUITE" 2>&1)
+VS_ALL_CODE=$?
+set -e
+if [[ $VS_ALL_CODE -eq 0 ]] && [[ "$VS_ALL_OUT" == *"checks passed, 0 failed"* ]]; then
+  pass "validate-suite: no arguments scans and passes all suite tiers"
+else
+  fail "validate-suite: no arguments failed (code: $VS_ALL_CODE)"
+fi
+
+# 26. lint-feature floating keyword check
+FLOAT_FEAT="$TMP_SANDBOX/floating_keyword.feature"
+cat > "$FLOAT_FEAT" << 'EOF'
+Feature: Floating test
+  Given a top-level given before scenario
+Scenario: S1
+  When w
+  Then t
+EOF
+set +e
+LF_FLOAT=$(bash "$LINT_FEATURE" "$FLOAT_FEAT" 2>&1)
+LF_FLOAT_CODE=$?
+set -e
+if [[ $LF_FLOAT_CODE -ne 0 ]] || [[ "$LF_FLOAT" == *"Scenario"* ]]; then
+  pass "lint-feature: rejects floating keywords outside Scenario blocks"
+else
+  fail "lint-feature: allowed floating step keywords"
+fi
+
+# 27. lint-feature scenarios missing When or Then
+MISSING_STEPS_FEAT="$TMP_SANDBOX/missing_steps.feature"
+cat > "$MISSING_STEPS_FEAT" << 'EOF'
+Feature: Missing Steps
+Scenario: Only When
+  When action taken
+Scenario: Only Then
+  Then assert made
+EOF
+set +e
+LF_MISSING=$(bash "$LINT_FEATURE" "$MISSING_STEPS_FEAT" 2>&1)
+LF_MISSING_CODE=$?
+set -e
+if [[ $LF_MISSING_CODE -ne 0 ]] && [[ "$LF_MISSING" == *"has no Then step"* ]] && [[ "$LF_MISSING" == *"has no When step"* ]]; then
+  pass "lint-feature: correctly identifies scenarios missing When or Then steps"
+else
+  fail "lint-feature: did not report missing When or Then steps"
+fi
+
 total=$((PASS+FAIL))
 echo ""
 if [[ "$FAIL" -eq 0 ]]; then

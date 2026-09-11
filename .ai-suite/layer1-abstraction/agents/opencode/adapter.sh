@@ -56,6 +56,9 @@ agent_uninstall_project() {
   
   # Clean up legacy path
   remove_block_from_file "$project_dir/.opencode.md" "$_OPENCODE_SENTINEL_START" "$_OPENCODE_SENTINEL_END" 2>/dev/null || true
+  if [[ -f "$target_dir/instructions.md" ]] && [[ ! -s "$target_dir/instructions.md" ]]; then
+    rm -f "$target_dir/instructions.md"
+  fi
   if [[ -d "$target_dir" ]] && [[ -z "$(ls -A "$target_dir" 2>/dev/null)" ]]; then
     rmdir "$target_dir" 2>/dev/null || true
   fi

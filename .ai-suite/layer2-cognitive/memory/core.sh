@@ -9,7 +9,7 @@ if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
   if [[ -z "${CURSOR_SUITE_PORTABLE_LOADED:-}" ]]; then
     # find the script dir that called this
     _CORE_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    _PORTABLE_DIR="$(cd "$_CORE_LIB_DIR/../../layer1-abstraction" && pwd)"
+    _PORTABLE_DIR="$(cd "$_CORE_LIB_DIR/../../layer1-abstraction" 2>/dev/null && pwd || true)"
     if [[ -f "$_PORTABLE_DIR/_portable.sh" ]]; then
       # shellcheck source=../../layer1-abstraction/_portable.sh disable=SC1091
       source "$_PORTABLE_DIR/_portable.sh"
@@ -360,11 +360,38 @@ if [[ -z "${AI_SUITE_CORE_LOADED:-}" ]]; then
     cp -r "$suite_dir/layer4-evolutionary/validation/"* "$meta_dest/" 2>/dev/null || true
     cp -r "$suite_dir/layer4-evolutionary/reflection/"* "$meta_dest/" 2>/dev/null || true
     
-    # Copy root scripts to meta_dest/scripts so the AI suite Agent can use them
+    # Copy root scripts and cli to meta_dest/scripts so the AI suite Agent can use them
     local root_dir="$(cd "$suite_dir/.." && pwd)"
     mkdir -p "$meta_dest/scripts"
     cp "$root_dir"/*.sh "$meta_dest/scripts/" 2>/dev/null || true
+    if [[ -f "$root_dir/ai-suite" ]]; then
+      cp "$root_dir/ai-suite" "$meta_dest/scripts/" 2>/dev/null || true
+      cp "$root_dir/ai-suite" "$meta_dest/" 2>/dev/null || true
+    fi
+    if [[ -f "$root_dir/README.md" ]]; then
+      cp "$root_dir/README.md" "$meta_dest/" 2>/dev/null || true
+    fi
     cp "$suite_dir/layer2-cognitive/memory/core.sh" "$meta_dest/scripts/" 2>/dev/null || true
+
+    # Mirror core framework layers into meta for agent self-publishing and multi-agent lifecycle
+    if [[ -d "$suite_dir/layer1-abstraction" ]]; then
+      mkdir -p "$meta_dest/layer1-abstraction"
+      cp -r "$suite_dir/layer1-abstraction/"* "$meta_dest/layer1-abstraction/" 2>/dev/null || true
+    fi
+    if [[ -d "$suite_dir/cli" ]]; then
+      mkdir -p "$meta_dest/cli"
+      cp -r "$suite_dir/cli/"* "$meta_dest/cli/" 2>/dev/null || true
+      cp "$suite_dir/cli/"*.sh "$meta_dest/scripts/" 2>/dev/null || true
+    fi
+    if [[ -d "$suite_dir/layer2-cognitive" ]]; then
+      mkdir -p "$meta_dest/layer2-cognitive"
+      cp -r "$suite_dir/layer2-cognitive/"* "$meta_dest/layer2-cognitive/" 2>/dev/null || true
+    fi
+    if [[ -d "$suite_dir/layer3-registry" ]]; then
+      mkdir -p "$meta_dest/layer3-registry"
+      cp -r "$suite_dir/layer3-registry/"* "$meta_dest/layer3-registry/" 2>/dev/null || true
+      rm -rf "$meta_dest/layer3-registry/domains"
+    fi
   }
 
   _remove_meta() {
