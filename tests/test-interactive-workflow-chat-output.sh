@@ -11,18 +11,18 @@ SKILL_FILE_3=".cursor/skills/interactive-workflow/SKILL.md"
 
 check_skill_file() {
     local file="$1"
-    
+
     if [ ! -f "$file" ]; then
         echo "FAIL: $file not found!"
         exit 1
     fi
-    
+
     # Check for mandate to output text before AskQuestion
     if ! grep -qiE "(explicitly.*output.*chat window|must not.*askquestion.*until.*text)" "$file"; then
         echo "FAIL: $file does not explicitly forbid AskQuestion before textual output."
         exit 1
     fi
-    
+
     echo "PASS: $file mandates chat output before AskQuestion."
 }
 

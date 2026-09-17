@@ -90,6 +90,10 @@ check_step "Loop-Work & Interactive Workflow EUT" bash tests/test-loop-work-inte
 # 10. Cursor Adapter Pruning & Zero Stale Artifact Invariance
 check_step "Cursor Adapter Pruning Contracts" bash tests/test-cursor-adapter-enable-pruning-contracts.sh
 
+# 11. Principal Coding Engineer & Adversarial AI-Review Contracts & EUT
+check_step "Principal Coding Engineer Contracts" bash tests/test-tdd-team-principal-coding-review-contracts.sh
+check_step "Principal Coding Engineer EUT" bash tests/test-tdd-team-principal-coding-review-eut.sh
+
 echo "=================================================================="
 echo " Formal Convergence Summary: $PASS_COUNT passed, $FAIL_COUNT failed"
 echo "=================================================================="

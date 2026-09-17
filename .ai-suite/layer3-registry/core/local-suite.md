@@ -98,6 +98,7 @@ After running, if changes were collected, you MUST write an Evolution Report man
 2. Check if `ai-suite enable` or `ai-suite disable` exist in the workspace. If they do not exist, report an error.
 3. Run the appropriate command and stream output to the user.
 4. Confirm success or report the error to the user.
+5. **Validation & Quality Assurance:** After collecting local evolutions, execute `bash .ai-suite/layer4-evolutionary/validation/validate-suite.sh` to ensure all updated skills pass frontmatter and structure validation. Perform deterministic cleanup of any temporary diff files.
 
 ## Negative Constraints (Must NOT)
 - [X] Do not modify files outside the `.ai-suite` directory unless explicitly requested.

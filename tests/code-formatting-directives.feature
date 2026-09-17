@@ -21,6 +21,13 @@ Feature: Code Formatting and Style Directives in AI Suite
     Then empty lines MUST NOT contain trailing spaces or tabs
     And blank lines MUST be purely empty without invisible whitespace characters
 
+  Scenario: Elimination of spaces or tabs on empty lines to avoid gitreview red flags
+    Given the AI agent generates or modifies code
+    When a line contains leading spaces or tabs but no actual code
+    Then the AI suite MUST remove all spaces and tabs from that line
+    And only a purely empty line MUST be kept for visual readability
+    And gitreview, Gerrit, and diff tools MUST NOT show red flags or trailing whitespace warnings
+
   Scenario: Selective formatting scope for changed lines only
     Given the AI agent is modifying an existing source file
     Then formatting MUST be applied only to new and modified code lines

@@ -50,6 +50,25 @@ else
   bash "$REPO_ROOT/tests/test-cursor-adapter-enable-pruning-contracts.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/tests/test-mutation-regression.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/tests/test-interactive-workflow-cleanup.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-code-formatting-unit.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-code-quality-enhancement-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-tdd-team-code-quality-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-reviewer-code-quality-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-nuclear-safety-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-find-and-local-suite-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-multi-agent-code-quality-harmony.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-prompt-compiler-code-quality-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-anti-red-flag-clean-whitespace-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-directives-structural-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-safety-rules-structural-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-core-skills-structural-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-domain-skills-structural-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-cognitive-templates-structural-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-agent-adapters-structural-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-evolutionary-validation-structural-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-tdd-team-principal-coding-review-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-tdd-team-principal-coding-review-eut.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-cross-module-regression-closure.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/tests/test-safety-limits-and-portability.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/.ai-suite/layer4-evolutionary/validation/validate-requirements.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/.ai-suite/layer4-evolutionary/validation/lint-feature.sh" "$REPO_ROOT/tests/test-unified-workflow.feature" >/dev/null 2>&1 || true

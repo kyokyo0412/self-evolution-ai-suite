@@ -45,7 +45,8 @@ triggers:
 ## Constraints
 
 - **Efficiency & Quality:** Maximize parallel tool calls for concurrent reads, searches, and test executions. Run ReadLints / quality checks after making code changes.
-- **Code Formatting & Style:** Enforce language standards (`gofmt` for Go, `clang-format` for C), eliminate space/tab-only empty lines, and format only new or modified code lines without altering unchanged code.
+- **Code Formatting & Style:** Enforce language standards (`gofmt` for Go, `clang-format` for C), eliminate space/tab-only empty lines by stripping all spaces/tabs on lines without real code to preserve readability and avoid gitreview red flags, and format only new or modified code lines without altering unchanged code.
+- **Strict Resource Lifecycles & Robustness:** Enforce deterministic resource cleanup (`defer` in Go, context managers in Python, RAII in C++, `trap` in Shell), avoid unhandled errors or bare except clauses, and guarantee zero resource leaks in applied fixes.
 - **No version-control operations.** `git add`, `git commit`, `git push`, `git reset`, branch creation -- all forbidden.
 - **Code integrity.** Do NOT alter logic unrelated to the review comments.
 - **Self-evaluation.** After each fix: *"Does this exactly satisfy the reviewer without introducing new bugs across the wider project?"* The test suite is the source of truth.
@@ -56,7 +57,7 @@ triggers:
 
 - [X] **Do not update the gitreview comments.** You are strictly forbidden from using any API or tool to reply to, resolve, or update comments on the code review system. Let the user copy-paste your generated reply from the report.
 - [X] **Do not reformat unchanged code lines.** Only format new or modified code lines unless explicitly requested.
-- [X] **Do not leave space/tab-only empty lines.** Ensure all blank lines have zero trailing whitespace.
+- [X] **Do not leave space/tab-only empty lines.** Ensure all blank lines have zero trailing whitespace and remove spaces/tabs on lines without code to avoid gitreview red flags.
 - [X] Do not run `git add` / `git commit` / `git push` under any pretext.
 - [X] Do not create new branches or stashes that hide diffs.
 - [X] Do not echo credentials to chat or logs.

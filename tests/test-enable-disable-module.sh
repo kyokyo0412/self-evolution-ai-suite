@@ -42,7 +42,7 @@ if [[ -d "$PROJ_DIR/.cursor/rules" ]]; then
   else
     pass "Cursor: no duplicate raw .md files in .cursor/rules"
   fi
-  
+
   MDC_RULES=$(find "$PROJ_DIR/.cursor/rules" -maxdepth 1 -name "*.mdc" 2>/dev/null || true)
   if [[ -n "$MDC_RULES" ]]; then
     pass "Cursor: .mdc rules properly deployed"

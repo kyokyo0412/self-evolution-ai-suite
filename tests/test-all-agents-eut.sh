@@ -25,20 +25,20 @@ ALL_AGENTS=("cursor" "claude" "opencode" "continue" "roo-code" "codex")
 for agent in "${ALL_AGENTS[@]}"; do
   echo ""
   echo "--- Testing Agent: $agent ---"
-  
+
   SANDBOX=$(mktemp -d "${TMPDIR:-/tmp}/eut-agent-${agent}.XXXXXX")
   trap 'rm -rf "$SANDBOX"' EXIT
-  
+
   PROJ_DIR="$SANDBOX/proj"
   mkdir -p "$PROJ_DIR"
-  
+
   # 1. Project Scope Enable
   (
     export HOME="$SANDBOX/home"
     mkdir -p "$HOME"
     bash "$SUITE_CLI" enable --agent "$agent" --scope project --project "$PROJ_DIR" >/dev/null 2>&1
   )
-  
+
   case "$agent" in
     cursor)
       INSTRUCTION_FILE="$PROJ_DIR/.cursorrules"
@@ -71,25 +71,25 @@ for agent in "${ALL_AGENTS[@]}"; do
       META_DIR="$PROJ_DIR/.codex/meta"
       ;;
   esac
-  
+
   if [[ -f "$INSTRUCTION_FILE" ]]; then
     pass "$agent: instruction file created ($INSTRUCTION_FILE)"
   else
     fail "$agent: instruction file missing ($INSTRUCTION_FILE)"
   fi
-  
+
   if [[ -d "$SKILLS_DIR" ]]; then
     pass "$agent: skills directory populated ($SKILLS_DIR)"
   else
     fail "$agent: skills directory missing ($SKILLS_DIR)"
   fi
-  
+
   if [[ -d "$META_DIR" ]]; then
     pass "$agent: meta directory populated ($META_DIR)"
   else
     fail "$agent: meta directory missing ($META_DIR)"
   fi
-  
+
   # Verify directives and safety rules exist in instruction file (or .cursor/rules for cursor)
   if [[ "$agent" == "cursor" ]]; then
     if [[ -f "$PROJ_DIR/.cursor/rules/cursor-suite-production-safety.mdc" ]] && [[ -f "$PROJ_DIR/.cursor/rules/cursor-suite-agent-directives.mdc" ]]; then
@@ -104,19 +104,19 @@ for agent in "${ALL_AGENTS[@]}"; do
       fail "$agent: instruction file missing embedded directives or safety rules"
     fi
   fi
-  
+
   # 2. Disable in Project Scope
   (
     export HOME="$SANDBOX/home"
     bash "$SUITE_CLI" disable --agent "$agent" --scope project --project "$PROJ_DIR" >/dev/null 2>&1
   )
-  
+
   if [[ -d "$SKILLS_DIR" ]]; then
     fail "$agent: skills directory not removed after disable"
   else
     pass "$agent: skills directory removed after disable"
   fi
-  
+
   if [[ "$agent" == "cursor" ]]; then
     if grep -q ">>>>> cursor-ai-suite >>>>>" "$INSTRUCTION_FILE" 2>/dev/null; then
       fail "$agent: .cursorrules block not removed after disable"
@@ -130,14 +130,14 @@ for agent in "${ALL_AGENTS[@]}"; do
       pass "$agent: ai-suite block removed after disable"
     fi
   fi
-  
+
   # 3. Global Scope Enable & Disable
   (
     export HOME="$SANDBOX/home"
     mkdir -p "$HOME"
     bash "$SUITE_CLI" enable --agent "$agent" --scope global >/dev/null 2>&1
   )
-  
+
   case "$agent" in
     cursor)
       GLOBAL_INST="$SANDBOX/home/.cursorrules"
@@ -164,30 +164,30 @@ for agent in "${ALL_AGENTS[@]}"; do
       GLOBAL_SKILLS="$SANDBOX/home/.codex/skills"
       ;;
   esac
-  
+
   if [[ -f "$GLOBAL_INST" ]]; then
     pass "$agent: global instruction file created ($GLOBAL_INST)"
   else
     fail "$agent: global instruction file missing ($GLOBAL_INST)"
   fi
-  
+
   if [[ -d "$GLOBAL_SKILLS" ]]; then
     pass "$agent: global skills directory populated ($GLOBAL_SKILLS)"
   else
     fail "$agent: global skills directory missing ($GLOBAL_SKILLS)"
   fi
-  
+
   (
     export HOME="$SANDBOX/home"
     bash "$SUITE_CLI" disable --agent "$agent" --scope global >/dev/null 2>&1
   )
-  
+
   if [[ -d "$GLOBAL_SKILLS" ]]; then
     fail "$agent: global skills directory not removed after disable"
   else
     pass "$agent: global skills directory removed after disable"
   fi
-  
+
   rm -rf "$SANDBOX"
 done
 

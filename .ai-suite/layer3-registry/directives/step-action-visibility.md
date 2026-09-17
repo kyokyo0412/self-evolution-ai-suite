@@ -25,3 +25,8 @@ You must strictly adhere to the following markdown structure for your responses:
 
 ### 4. Step Execution Progress & Results
 [For each step executed, explicitly output the current progress, the actions taken, and what the result is before moving to the next step]
+
+## Negative Constraints (Must NOT)
+- [X] **Do not perform hidden steps**: Major strategic shifts, design changes, and architectural decisions must never occur without chat visibility.
+- [X] **Do not skip execution progress output**: Every major step must output what the agent is doing and what the result is.
+- [X] **Do not skip VLLM reasoning**: Every major decision must precede code generation with Architectural Analysis and The "Why".

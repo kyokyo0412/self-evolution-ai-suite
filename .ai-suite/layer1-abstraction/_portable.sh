@@ -52,4 +52,14 @@ if [[ -z "${CURSOR_SUITE_PORTABLE_LOADED:-}" ]]; then
       printf '\n' >> "$f"
     fi
   }
+
+  # -- clean_empty_lines_whitespace <file> -----------------------------------
+  # Strips all spaces and tabs on lines that contain no other real code,
+  # keeping only clean empty lines for visual readability and preventing
+  # gitreview, Gerrit, or diff tool red flags.
+  clean_empty_lines_whitespace() {
+    local f="$1"
+    [[ -f "$f" ]] || return 0
+    sed_inplace 's/^[[:space:]]\{1,\}$//' "$f"
+  }
 fi

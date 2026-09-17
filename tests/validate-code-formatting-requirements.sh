@@ -19,6 +19,7 @@ echo "Checking Gherkin syntax and required scenarios..."
 grep -qi "Scenario: Go code adheres to gofmt standard" "$FEATURE_FILE" || { echo "FAIL: Missing Go gofmt scenario"; exit 1; }
 grep -qi "Scenario: C code adheres to clang-format standard" "$FEATURE_FILE" || { echo "FAIL: Missing C clang-format scenario"; exit 1; }
 grep -qi "Scenario: Prevention of trivial empty lines" "$FEATURE_FILE" || { echo "FAIL: Missing trivial empty lines scenario"; exit 1; }
+grep -qi "gitreview" "$FEATURE_FILE" || { echo "FAIL: Missing gitreview red flags avoidance scenario"; exit 1; }
 grep -qi "Scenario: Selective formatting scope for changed lines only" "$FEATURE_FILE" || { echo "FAIL: Missing selective formatting scenario"; exit 1; }
 grep -qi "Scenario: Deployment of code formatting directives" "$FEATURE_FILE" || { echo "FAIL: Missing deployment scenario"; exit 1; }
 

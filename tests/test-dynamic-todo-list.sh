@@ -8,7 +8,7 @@ AUTO_FILE=".ai-suite/layer3-registry/core/autonomous-team.md"
 
 check_dynamic_todo() {
     local file="$1"
-    
+
     if [ ! -f "$file" ]; then
         echo "FAILED: $file does not exist."
         exit 1

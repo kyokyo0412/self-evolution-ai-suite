@@ -21,10 +21,10 @@ Scan for violations of SOLID/DRY principles, tight coupling, high cyclomatic com
 Scan for direct security risks: injection vulnerabilities, unvalidated inputs, hardcoded secrets, weak cryptography, and unsafe dependency usage. Map out how a malicious actor might reach the vulnerable code.
 
 ### Phase 3: Performance & Bottlenecks
-Identify Big-O time and space complexity issues, N+1 database/network calls, blocking asynchronous operations, and potential memory leaks.
+Identify Big-O time and space complexity issues, N+1 database/network calls, blocking asynchronous operations, and potential resource leaks (unclosed file descriptors, sockets, dangling child processes, memory leaks).
 
 ### Phase 4: Defects & Logic Flaws
-Cross-reference the target code with test files and documentation to understand business intent. Flag unhandled edge cases, missing error boundaries, state inconsistencies, and race conditions.
+Cross-reference the target code with test files and documentation to understand business intent. Flag unhandled edge cases, missing error boundaries, state inconsistencies, race conditions, and language robustness issues (unhandled error returns, bare excepts, unquoted shell variables).
 
 ### Phase 5: Final Report Generation
 Once all scans are complete, use the filesystem to create a new file named `code_quality_audit_report.md` in the root directory. You must structure it strictly using the following format:

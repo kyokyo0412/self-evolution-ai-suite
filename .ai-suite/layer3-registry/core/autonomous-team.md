@@ -19,7 +19,7 @@ Use `tdd-team` instead when correctness is paramount and stage isolation matters
 
 - **PM** -- functional spec, Master To-Do list, requirement revisions.
 - **Architect** -- system design, tech-stack choices, design revisions on failure.
-- **Developer** -- implementation, terminal execution, debugging, and adhering to strict language formatting standards (`gofmt` for Go, `clang-format` for C, clean empty lines without spaces/tabs, formatting only new/modified lines).
+- **Developer** -- implementation, terminal execution, debugging, and adhering to strict language formatting standards (`gofmt` for Go, `clang-format` for C, clean empty lines without spaces/tabs, stripping whitespace on lines without code to avoid gitreview red flags, formatting only new/modified lines).
 - **SDET / QA Lead** -- UT / IT / FT / EUT suites, pre-execution audit, final report.
 - **Technical Writer** -- final documentation suite.
 
@@ -32,6 +32,7 @@ Use `tdd-team` instead when correctness is paramount and stage isolation matters
 5. **Production safety.** Never run destructive commands on remote/production hosts without explicit user confirmation.
 6. **Dynamic To-Do List Tracking.** Continuously maintain a dynamic To-Do list of tasks. When you found any issues or requirements change, immediately update the To-Do list with the new tasks and continue running the new To-Do list until all items are 100% completed.
 7. **Efficiency & Quality.** Maximize parallel tool calls for concurrent operations and enforce ReadLints or linter checks after code changes.
+8. **Deterministic Resource & Subprocess Safety.** Strictly prevent resource and memory leaks. Deterministically close file descriptors, sockets, and subprocesses using native patterns (`defer` in Go, context managers / `finally` in Python, RAII in C++, `trap` in Shell).
 
 ## Execution Protocol
 
@@ -52,7 +53,7 @@ Use `tdd-team` instead when correctness is paramount and stage isolation matters
 5. **Exit** -- when 100% of tests pass, QA Lead emits the **Detailed Test Report** (commands + terminal logs proving UT/IT/FT/EUT pass).
 
 ### Phase 3 -- Peer Polish
-- Developer refactors green code for SOLID + DRY and ensures strict adherence to language formatting standards (`gofmt` for Go, `clang-format` for C, no space/tab-only empty lines), applying formatting only to changed lines without touching unchanged code.
+- Developer refactors green code for SOLID + DRY and ensures strict adherence to language formatting standards (`gofmt` for Go, `clang-format` for C, no space/tab-only empty lines; remove all spaces/tabs on lines without code to preserve readability and avoid gitreview red flags), applying formatting only to changed lines without touching unchanged code.
 - Run ReadLints or linter checks and re-run the full suite to prove the refactor didn't break anything.
 
 ### Phase 4 -- Final Verification & Documentation
@@ -79,7 +80,7 @@ Before Phase 1, confirm:
 - [X] Do not stop while any `[ ]` remains.
 - [X] Do not modify files outside the task scope.
 - [X] Do not reformat unchanged code unless explicitly requested by the user. Only apply formatting to new or modified code lines.
-- [X] Do not leave trivial empty lines containing only spaces or tabs.
+- [X] Do not leave trivial empty lines containing only spaces or tabs; remove spaces/tabs from lines without code to preserve readability and avoid gitreview red flags.
 - [X] Do not run `rm -rf`, `git push --force`, or remote destructive commands without confirmation.
 
 ## Verification

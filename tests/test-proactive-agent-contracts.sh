@@ -46,7 +46,7 @@ for adapter in cursor claude opencode continue roo-code codex; do
     source "$adapter_script"
     mkdir -p "$TMP_TEST_DIR/$adapter"
     agent_install_project "/fake/suite" "$TMP_TEST_DIR/$adapter" > /dev/null 2>&1
-    
+
     full_out_file="$TMP_TEST_DIR/$adapter/$out_file"
     if [ ! -f "$full_out_file" ]; then
       echo "FAIL: $adapter did not generate $full_out_file"

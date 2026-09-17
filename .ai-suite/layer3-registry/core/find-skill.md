@@ -21,6 +21,7 @@ triggers:
 3. **Match Discovery:** Find the closest matching markdown files based on the keyword or requested capability.
 4. **Presentation:** Present the matching skills to the user, including their Title, Description/Objective, and Triggers/Context Tags.
 5. **Workflow Explanation:** Explain how to apply the workflow using the instructions or "Golden Prompt" from the selected skill.
+6. **Efficiency & Quality:** Maximize parallel tool calls when searching across multiple skill directories concurrently. Verify that candidate markdown files have valid YAML frontmatter before presenting them to the user.
 
 ## Negative Constraints (Must NOT)
 

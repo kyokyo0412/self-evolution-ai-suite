@@ -9,7 +9,7 @@ check_contract() {
   fi
 
   echo "Checking $file for enhanced early stage product design..."
-  
+
   if ! grep -qi "Product Discovery & Legacy Review" "$file"; then
     echo "FAIL: 'Product Discovery & Legacy Review' phase not found in $file"
     return 1

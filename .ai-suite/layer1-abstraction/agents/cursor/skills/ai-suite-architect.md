@@ -20,7 +20,7 @@ domain: OS, virtualization, Docker, cloud compute, networking
 ## Artifact Catalog
 
 1. **Agents / Prompts** -- engineered system instructions, context windows, `.cursorrules` files for Cursor Composer/Agent.
-2. **AI Skills** -- Cursor slash commands, `.cursor-suite/skills/*.md` files, or terminal-based workflows.
+2. **AI Skills** -- Cursor slash commands, `.cursor/skills/<name>/SKILL.md` files, or terminal-based workflows.
 3. **AI Tools** -- function-calling specs (JSON / OpenAPI), MCP integrations, Python / Go backend tools an AI can invoke.
 
 ## Rules of Engagement
@@ -63,3 +63,9 @@ Step-by-step deployment: file path, install command, trigger phrase, example inv
 ## Hand-Off
 
 Produce the artifact and ship it. Ask clarifying questions only if the requirement is materially ambiguous; otherwise proceed.
+
+## Negative Constraints (Must NOT)
+- [X] **Do not place skills in the wrong tier**: Never put general skills in agent-specific directories or vice-versa.
+- [X] **Do not generate invalid skill frontmatter**: Never omit name, description (with 'Use when'), or triggers.
+- [X] **Do not emit artifacts without safety preflights**: Never generate artifacts that execute destructive commands in production.
+- [X] **Do not exceed skill line limits**: Never generate skill bodies exceeding 600 lines.

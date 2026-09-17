@@ -228,6 +228,13 @@ If the diff looks good, commit it yourself -- I will NOT auto-commit:
 - **Evolution report is mandatory.** Every Reflection call MUST write the report file.
   Do not skip it even if the change is small.
 
+## Negative Constraints (Must NOT)
+- [X] **Do not perform multi-issue improvements**: Fix at most one improvement target per reflection turn.
+- [X] **Do not perform drive-by refactors**: Touch only the announced improvement target file.
+- [X] **Do not omit the evolution report**: Every reflection invocation must write the evolution report.
+- [X] **Do not allow recursive reflection**: Never reflect upon a reflection within the same turn.
+- [X] **Do not commit or push autonomously**: Leave git commit and push to the user.
+
 ---
 
 ## DIAGNOSTIC HEURISTICS (use during Step 1)

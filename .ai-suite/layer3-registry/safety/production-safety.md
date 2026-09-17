@@ -61,3 +61,10 @@ Record that authorization in your reasoning and respect its narrow scope. Do not
 ## Verification
 
 If you are uncertain whether a command is safe, the answer is: **stop and ask.** Cost of a question is low. Cost of breaking production is high.
+
+## Negative Constraints (Must NOT)
+- [X] **Do not execute destructive operations in production**: Never run unconfirmed deletions or destructive actions on production environments.
+- [X] **Do not run git commit autonomously**: Always leave git commit execution to the user.
+- [X] **Do not force push to protected branches**: Never run git push -f or git push --force on main, master, release/*, prod/*.
+- [X] **Do not create files with cat or echo heredocs**: Always use native agent file tools (Write or StrReplace).
+- [X] **Do not expose credentials or secrets**: Never quote unredacted passwords, tokens, or private keys in chat or logs.

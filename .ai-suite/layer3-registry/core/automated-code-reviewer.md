@@ -20,9 +20,11 @@ triggers:
 2. **Context Gathering:** Use codebase indexing and semantic search to understand the surrounding context, architecture, and existing patterns if a file path is provided.
 3. **Thorough Review:** Act as an expert software engineer and perform a thorough code review. Focus on:
    - Verifying business logic correctness and State Mutation integrity (e.g., data flow, race conditions, invalid states).
-   - Identifying security vulnerabilities.
-   - Finding performance bottlenecks.
-   - Spotting deviations from standard coding practices.
+   - Auditing resource lifecycle management: detect resource leak hazards (unclosed file descriptors, sockets, database handles, and orphaned child processes).
+   - Auditing language robustness: detect bare except clauses, unquoted shell variables, missing type annotations, and ignored error return values.
+   - Identifying security vulnerabilities and injection risks.
+   - Finding performance bottlenecks and high-complexity algorithms ($O(N^2)$ vs $O(N)$).
+   - Spotting deviations from standard coding practices and anti-hardcoding testing principles.
 4. **Actionable Feedback:** Provide actionable feedback and suggest specific code improvements.
 5. **Structured Report:** Return a structured review report to the user detailing your findings.
 6. **Efficiency & Quality Checks:** Maximize parallel tool calls when gathering context and inspecting multiple files concurrently. Run quality checks, linter checks, or ReadLints to confirm syntax and quality standards.

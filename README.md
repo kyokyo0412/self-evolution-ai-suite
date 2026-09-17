@@ -37,7 +37,7 @@ AI Suite is a structured set of skills, templates, and meta-protocols that makes
 ## Features
 
 - **Memory System**: Agents maintain a persistent, layered index of project context, a chronological log of tasks, an important memory for long sessions, and a timeline memory. This memory is isolated per agent and split into project-specific memory (indexes, layers, timeline, important) and global history (tasks), preventing context flushing in long sessions. The memory system is auto-initialized when the suite is installed, and can be temporarily masked or excluded during evolution. The AI suite explicitly instructs agents to review and update this memory during tasks.
-- **Enhanced TDD Team, Dynamic Domain SME, Web/Mobile Architecture & AI-Augmented Workflow**: The `tdd-team` skill operates as a fully autonomous eleven-role distinguished engineering team composed of top-tier, industry-leading professionals (Principal Subject Matter Expert (SME) & Domain Architect dynamically instantiated for any target domain, Staff/Principal PM & Product Strategist, Distinguished AI Expert & Cognitive Architect, Fellow/Principal Engineer & Chief Reviewer with absolute veto authority, Senior Principal Distributed Systems Architect, Principal UX/UI Product Designer & Design Systems Architect, Principal Frontend & Mobile Solutions Architect, Principal AI-Augmented Workflow & Interaction Engineer, Senior Principal SDET / Chaos Gatekeeper, Staff Systems Developer, and Senior Staff Technical Writer & Knowledge Architect). It enforces dynamic domain expertise (Domain Classification & Risk Profiling, Domain Context Matrix, industry RFC/compliance mapping, domain-specific failure mode test conversion), modern UI/UX design systems (color palette, typography hierarchy, 4px/8px spacing grids, 44px+ mobile touch targets, WCAG AA/AAA accessibility), dumb presentation components with custom hook logic isolation, AI-augmented workflow patterns (token streaming, optimistic UI updates, generative skeleton loaders, fallback recovery), deep architectural reviews (scalability, concurrency, parallel processing, failure blast radius, graceful degradation, domain regulatory conformance), and mandatory multi-dimensional line-level code reviews (boundary & off-by-one handling, deterministic error handling, string/stream injection safety, resource/memory safety, concurrency/race safety, algorithmic complexity, domain integrity & regulatory safety, prompt alignment).
+- **Enhanced TDD Team, Dynamic Domain SME, Web/Mobile Architecture & AI-Augmented Workflow**: The `tdd-team` skill operates as a fully autonomous eleven-role distinguished engineering team composed of top-tier, industry-leading professionals (Principal Subject Matter Expert (SME) & Domain Architect dynamically instantiated for any target domain, Staff/Principal PM & Product Strategist, Distinguished AI Expert & Cognitive Architect, Fellow/Principal Coding Engineer & Chief Reviewer with absolute veto authority and autonomous pre-emptive remediation responsibility, Senior Principal Distributed Systems Architect, Principal UX/UI Product Designer & Design Systems Architect, Principal Frontend & Mobile Solutions Architect, Principal AI-Augmented Workflow & Interaction Engineer, Senior Principal SDET / Chaos Gatekeeper, Staff Systems Developer, and Senior Staff Technical Writer & Knowledge Architect). It enforces dynamic domain expertise (Domain Classification & Risk Profiling, Domain Context Matrix, industry RFC/compliance mapping, domain-specific failure mode test conversion), modern UI/UX design systems (color palette, typography hierarchy, 4px/8px spacing grids, 44px+ mobile touch targets, WCAG AA/AAA accessibility), dumb presentation components with custom hook logic isolation, AI-augmented workflow patterns (token streaming, optimistic UI updates, generative skeleton loaders, fallback recovery), deep architectural reviews (scalability, concurrency, parallel processing, failure blast radius, graceful degradation, domain regulatory conformance), mandatory multi-dimensional line-level code reviews, and the **Principal Coding Engineer Adversarial AI-Review & Pre-Emptive Fix Gate** that simulates external AI review tools across 10 critical dimensions to eliminate all code smells, boundary gaps, resource leaks, and whitespace errors before code delivery.
 - **Enhanced Early Product Design**: The TDD process includes a robust Phase 1 that explicitly mandates simulated PM discussion to debate tradeoffs and multiple iterations to thoroughly review legacy features before generating executable specifications.
 - **Multi-Agent Support**: Works seamlessly with Cursor, Claude Code, OpenCode, VS Code Continue, Roo Code, and Codex.
 - **Proactive Resolution & Never-Give-Up Spirit**: AI Suite Agents operate in a continuous loop of proactive execution. If an issue is encountered, they autonomously explore alternative approaches, analyze, and iterate until the problem is solved. When explicitly instructed not to give up, they will persist--exhausting all possible solutions--while strictly adhering to the prohibition against damaging the production environment. Otherwise, it should run as normal mode.
@@ -48,6 +48,7 @@ AI Suite is a structured set of skills, templates, and meta-protocols that makes
 - **Domain Registry**: Share and install specialized AI skills across teams instantly using a lightweight Git-backed registry.
 - **Smart 3-Way Merge**: Intelligently merge remote evolutions back to your local repository without silently overwriting data.
 - **Production Safety & General Directives**: Built-in guardrails to prevent destructive actions on production environments, and universal directives that enforce strict negative constraints against autonomous `git commit` execution and temporary file pollution, concise task summaries (which follow normal skill reports), support for executing multiple skills together without skipping steps, and mandatory verification of all tasks.
+- **Code Formatting & Gitreview Red-Flag Prevention**: The AI suite strictly enforces language formatting standards (`gofmt` for Go, `clang-format` for C) and selective formatting scoped only to newly added or modified lines. When code lines contain leading spaces or tabs without any real code, the AI suite strips all whitespace characters from those lines, preserving only a clean empty line for visual readability and eliminating red flags in gitreview, Gerrit, `git diff --check`, and CI linters without breaking functional behavior.
 - **1E-Class Nuclear Safety Standards**: Built-in code quality and testing standards specifically designed for 1E-class safety systems (e.g., Nuclear Reactor Protection Systems), enforcing deterministic execution, formal verification, MC/DC coverage, and strict traceability.
 - **Efficiency & Quality**: Core skills enforce parallel tool execution for faster performance and mandatory linter/quality checks to ensure high product development quality.
 
@@ -376,6 +377,44 @@ Scenario: Prevent double-spend during concurrent order processing
   When the distributed transaction manager acquires the distributed lock lease
   Then the first transaction successfully reserves inventory and charges payment
   And the second transaction is safely deduplicated and returns the cached receipt
+```
+
+### Principal Coding Engineer Adversarial AI-Review & Pre-Emptive Fix Gate
+
+To ensure external AI review tools (SonarQube, CodeQL, Bugbot, PR-Agent, Gerrit AI Reviewers) never detect defects or code smells in code produced by `tdd-team`, the workflow integrates a mandatory **Principal Coding Engineer (PCE) Adversarial AI-Review Simulation & Pre-Emptive Fix Loop** (Phase 3.5 & Phase 3.6):
+
+```
+[Phase 3.4 Refactor & Cleanup Completed]
+                 |
+                 v
+[Phase 3.5 Principal Coding Engineer Adversarial AI-Review Simulation]
+  Mimics external automated AI review tools against 10 critical dimensions:
+  1. Boundary & Null/Nil Safety (nil checks, length guards, off-by-one prevention)
+  2. Deterministic Error Handling & Propagation (no swallowed errors, contextual wrapping)
+  3. Strict Resource Lifecycles (defer, context managers, trap, zero leaked handles)
+  4. Concurrency & Race Safety (mutex ordering, atomic operations, race-free state)
+  5. Security & Input Sanitization (strict shell quoting "$var", injection defense)
+  6. Algorithmic Efficiency & Bounded Complexity (O(N) vs O(N^2), bounded loops)
+  7. Code Formatting & Gitreview Cleanliness (zero space/tab empty lines, functions <= 50 lines)
+  8. UI/UX & AI Workflow Fidelity (dumb components, custom hook isolation, WCAG AAA)
+  9. Anti-Hardcoding Rigor & Dynamic Test Assertions (dynamically computed runtime metrics)
+ 10. Domain Integrity & RFC Conformance (domain compliance bounds, exact user prompt alignment)
+                 |
+                 +-----> [Defect / Smell Detected] -----> [Phase 3.6 Autonomous Pre-Emptive Fix]
+                 |                                                |
+                 |                                                v
+                 |                                  [Code Refactored & Patched]
+                 |                                                |
+                 |                                                v
+                 |                                  [All Test Suites Re-run Green]
+                 |                                                |
+                 +<-----------------------------------------------+
+                 |
+                 v [Zero Findings Confirmed]
+[Zero-Defect Audit Certification Issued]
+                 |
+                 v
+[Advance to Phase 4 QA Gate]
 ```
 
 ### Domain Chaos Injection & Adversarial Chaos Testing Runbook

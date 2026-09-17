@@ -35,7 +35,7 @@ for adapter in cursor claude opencode continue roo-code codex; do
     _remove_skills() { :; }
     _remove_meta() { :; }
     get_all_skill_files() { echo ""; }
-    
+
     export -f _mirror_skills _mirror_meta _remove_cursorrules_block _deploy_safety_rule _remove_safety_rule _remove_skills _remove_meta get_all_skill_files
     # We must source core.sh to get the real generate_markdown_block
     source ".ai-suite/layer2-cognitive/memory/core.sh"
@@ -44,9 +44,9 @@ for adapter in cursor claude opencode continue roo-code codex; do
     mkdir -p "$TMP_PROJECT/$adapter"
     # Execute the install
     agent_install_project "." "$TMP_PROJECT/$adapter" > /dev/null 2>&1
-    
+
     out_file="$TMP_PROJECT/$adapter/$target_file"
-    
+
     # Assert
     if ! grep -qi "proactively resolve" "$out_file"; then
       echo "FAIL: E2E missing 'proactively resolve' in $adapter ($out_file)"
@@ -56,7 +56,7 @@ for adapter in cursor claude opencode continue roo-code codex; do
       echo "FAIL: E2E missing 'evolution system' in $adapter ($out_file)"
       exit 1
     fi
-    
+
     echo "PASS E2E: $adapter successfully generated proactive resolution guidance."
   ) || exit 1
 done

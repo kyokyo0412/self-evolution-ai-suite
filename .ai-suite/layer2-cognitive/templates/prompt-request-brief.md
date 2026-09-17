@@ -12,7 +12,7 @@
 ## Desired Artifact
 Choose one (or describe a hybrid):
 - A `.cursorrules` file
-- A Cursor slash command / `.cursor-suite/skills/<file>.md`
+- A Cursor slash command / `.cursor/skills/<name>/SKILL.md` or `.ai-suite/layer3-registry/core/<file>.md`
 - An MCP tool / JSON function-calling schema
 - A reusable engineered prompt
 - An autonomous agent definition
@@ -27,6 +27,8 @@ Choose one (or describe a hybrid):
 - `[e.g. "Only use bash and standard Linux utilities -- no Python"]`
 - `[e.g. "JSON must adhere to OpenAI function-calling specs"]`
 - `[e.g. "MUST NOT run any destructive command without explicit user confirmation"]`
+- `[e.g. "Strict resource lifecycle: must deterministically close file descriptors, sockets, and subprocesses"]`
+- `[e.g. "Anti-hardcoding: all test assertions on corpus counts must be computed dynamically at runtime"]`
 
 ## Validation Criteria
 `[How will I know the artifact works? 1-2 concrete tests, e.g. "running `/audit-net` on a host with sshd listening must include port 22 in the JSON output".]`

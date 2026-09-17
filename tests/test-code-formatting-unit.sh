@@ -60,6 +60,12 @@ if ! grep -qi "unchanged code" "$TMP_OUTPUT"; then
   rm -f "$TMP_OUTPUT"
   exit 1
 fi
+
+if ! grep -qi "gitreview" "$TMP_OUTPUT"; then
+  echo "  [FAIL] generate_markdown_block missing gitreview red-flags directive"
+  rm -f "$TMP_OUTPUT"
+  exit 1
+fi
 rm -f "$TMP_OUTPUT"
 echo "  [PASS] Markdown block generation verified with formatting directives."
 
@@ -74,10 +80,46 @@ if [ -f "$TMP_PROJ/.cursor/rules/cursor-suite-code-quality.mdc" ]; then
   grep -qi "gofmt" "$TMP_PROJ/.cursor/rules/cursor-suite-code-quality.mdc" || { echo "  [FAIL] deployed code-quality.mdc missing gofmt"; rm -rf "$TMP_PROJ"; exit 1; }
   grep -qi "clang-format" "$TMP_PROJ/.cursor/rules/cursor-suite-code-quality.mdc" || { echo "  [FAIL] deployed code-quality.mdc missing clang-format"; rm -rf "$TMP_PROJ"; exit 1; }
   grep -qi "unchanged code" "$TMP_PROJ/.cursor/rules/cursor-suite-code-quality.mdc" || { echo "  [FAIL] deployed code-quality.mdc missing unchanged code"; rm -rf "$TMP_PROJ"; exit 1; }
+  grep -qi "gitreview" "$TMP_PROJ/.cursor/rules/cursor-suite-code-quality.mdc" || { echo "  [FAIL] deployed code-quality.mdc missing gitreview"; rm -rf "$TMP_PROJ"; exit 1; }
   echo "  [PASS] Project-level deployed rule contains code formatting directives."
 fi
 
 rm -rf "$TMP_PROJ"
+
+# 4. Test clean_empty_lines_whitespace helper
+echo "4. Testing clean_empty_lines_whitespace helper..."
+if ! type clean_empty_lines_whitespace >/dev/null 2>&1; then
+  echo "  [FAIL] clean_empty_lines_whitespace helper function not found in _portable.sh"
+  exit 1
+fi
+
+TMP_SRC=$(mktemp)
+printf 'func testFunction() {\n    \n\t\n  \t  \n    val := 42\n\n    return val\n}\n' > "$TMP_SRC"
+
+clean_empty_lines_whitespace "$TMP_SRC"
+
+# Verify no lines have only spaces or tabs
+if grep -n '^[[:space:]]\+$' "$TMP_SRC" >/dev/null; then
+  echo "  [FAIL] clean_empty_lines_whitespace left whitespace on empty lines!"
+  rm -f "$TMP_SRC"
+  exit 1
+fi
+
+# Verify line with real code preserved its 4-space indentation
+if ! grep -q '^    val := 42' "$TMP_SRC"; then
+  echo "  [FAIL] clean_empty_lines_whitespace corrupted valid code indentation!"
+  rm -f "$TMP_SRC"
+  exit 1
+fi
+
+# Verify clean empty line preserved for readability
+if ! grep -q '^$' "$TMP_SRC"; then
+  echo "  [FAIL] clean_empty_lines_whitespace failed to keep clean empty lines!"
+  rm -f "$TMP_SRC"
+  exit 1
+fi
+rm -f "$TMP_SRC"
+echo "  [PASS] clean_empty_lines_whitespace correctly stripped empty line whitespace while preserving valid indentation."
 
 echo "PASS: All unit tests passed successfully."
 exit 0
