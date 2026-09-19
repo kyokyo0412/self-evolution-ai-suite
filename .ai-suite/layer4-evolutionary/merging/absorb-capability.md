@@ -1,6 +1,6 @@
 ---
 name: absorb-capability
-description: Ingest, deduplicate, and merge capabilities from an external agent into the AI suite Agent using semantic analysis and deep architectural integration. Use when the user asks to absorb, ingest, or fetch capabilities from an external agent's configuration directory.
+description: Ingest, deduplicate, and merge capabilities from external agents via semantic analysis. Use when absorbing, ingesting, or fetching capabilities from an external agent configuration directory.
 triggers:
   - absorb capability
   - absorb agent

@@ -1,6 +1,6 @@
 ---
 name: prompt-developer
-description: Convert a fuzzy requirement into a high-fidelity prompt another LLM can execute autonomously the first time, using a four-seat "prompt engineering agency" workflow (Lead Prompt Engineer, System Architect, Cursor Workflow Specialist, QA Tester). Use when the user asks to design, refine, or harden a new prompt, `.cursorrules` block, or agent rule, especially one that another AI will execute.
+description: Convert fuzzy requirements into high-fidelity AI prompts via a four-role agency workflow. Use when designing, refining, or hardening new prompts, rules, or system instructions.
 triggers:
   - design a prompt
   - refine this prompt

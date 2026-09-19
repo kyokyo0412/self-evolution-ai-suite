@@ -1,6 +1,6 @@
 ---
 name: automated-code-reviewer
-description: Perform a comprehensive code review focusing on security, performance, and best practices. Use when the user asks to review code, perform a security audit, check for performance bottlenecks, or verify coding standards.
+description: Comprehensive code review for security, performance, and standards. Use when reviewing code, conducting security audits, or checking performance bottlenecks.
 triggers:
   - review code
   - code review

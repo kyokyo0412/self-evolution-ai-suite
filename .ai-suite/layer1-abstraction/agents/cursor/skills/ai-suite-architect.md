@@ -1,6 +1,6 @@
 ---
 name: ai-suite-architect
-description: Generate production-ready AI artifacts (prompts, agents, `.cursorrules` files, Cursor skills, slash commands, MCP tools, JSON function-calling schemas) from a structured technical brief. Use when the user asks to design or harden a prompt, agent, custom Cursor skill, slash command, MCP tool, JSON tool spec, or similar AI tooling artifact.
+description: Generate production-ready AI artifacts (prompts, skills, rules, MCP tools) from technical briefs. Use when designing or hardening prompts, agent rules, skills, or tool schemas.
 triggers:
   - design a prompt
   - design an agent

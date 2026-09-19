@@ -8,6 +8,14 @@ A self-improving AI framework that works with **any AI coding agent** (Cursor, C
 
 AI Suite is a structured set of skills, templates, and meta-protocols that makes AI coding agents smarter and more consistent. After each task, the agent can **reflect and improve its own skills** - without auto-committing, so you stay in control.
 
+> [!NOTE]
+> ### 💡 Token Economics & Code Quality Notice
+> **The AI Suite is heavily optimized for code quality, architectural correctness, and mission-critical 1E-class robustness over minimal token consumption.**
+>
+> Unlike basic single-shot coding assistants, the AI Suite utilizes multi-role stage gates (`tdd-team`), comprehensive domain profiling, iterative red-green-refactor cycles, deep context exploration, automated linter/verification checks, and adversarial pre-commit AI reviews. Consequently, **it consumes significantly more prompt and completion tokens than typical AI tools**.
+>
+> This higher token expenditure is a deliberate architectural trade-off: spending tokens upfront on thorough reasoning, strict boundary verification, and deterministic error handling eliminates hallucinations, silent regressions, resource leaks, and multiple rounds of human code-review corrections.
+
 ```
 .ai-suite/
 |-- layer1-abstraction/   <- Host & Environment Interface
@@ -51,6 +59,7 @@ AI Suite is a structured set of skills, templates, and meta-protocols that makes
 - **Code Formatting & Gitreview Red-Flag Prevention**: The AI suite strictly enforces language formatting standards (`gofmt` for Go, `clang-format` for C) and selective formatting scoped only to newly added or modified lines. When code lines contain leading spaces or tabs without any real code, the AI suite strips all whitespace characters from those lines, preserving only a clean empty line for visual readability and eliminating red flags in gitreview, Gerrit, `git diff --check`, and CI linters without breaking functional behavior.
 - **1E-Class Nuclear Safety Standards**: Built-in code quality and testing standards specifically designed for 1E-class safety systems (e.g., Nuclear Reactor Protection Systems), enforcing deterministic execution, formal verification, MC/DC coverage, and strict traceability.
 - **Efficiency & Quality**: Core skills enforce parallel tool execution for faster performance and mandatory linter/quality checks to ensure high product development quality.
+- **Quality-First Architecture (Higher Token Investment)**: The AI suite prioritizes zero-defect engineering, 1E-class security standards, and comprehensive test-driven verification over minimal token usage. Because multi-role teams, adversarial code reviews, and deep context analysis require substantial prompt and reasoning bandwidth, token consumption is naturally higher than that of simple code completion tools.
 
 ---
 
@@ -249,7 +258,8 @@ Package the ai-suite for distribution, excluding vendor-specific domain knowledg
 | `tdd-team` | "use TDD", "Red-Green-Refactor", "Gherkin" |
 | `autonomous-team` | "act as a team", "end-to-end delivery" |
 | `codebase-deepdoc` | "deep doc", "full architectural documentation" |
-| `ai-review-fix` | provide a code-review URL + "fix comments" |
+| `ai-review-fix` | provide single or multiple code-review URLs + "fix comments", "fix multiple review urls" |
+| `ai-review-bot` | "ai review", "ai-review-bot", "review code", "review diff", "review pr", "senior engineer review" |
 | `evolve-collect` | "collect evolution from", "sync reflection" |
 | `remote-suite` | "install ai-suite on", "check ai-suite status on", "remove ai-suite from", "deploy ai-suite to" |
 | `absorb-capability` | "absorb capability", "absorb agent", "ingest external agent" |

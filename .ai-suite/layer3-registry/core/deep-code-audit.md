@@ -1,6 +1,6 @@
 ---
 name: deep-code-audit
-description: Deep Code Quality & Architecture Audit Skill. Triggers a Staff-level multi-pass inspection for maintainability, security, performance, and defects. Use when the user asks for a deep code audit, architecture review, or comprehensive code quality check.
+description: Staff-level multi-pass inspection for maintainability, security, performance, and defects. Use when conducting deep code audits, architecture reviews, or comprehensive code quality checks.
 globs: "*"
 triggers:
   - deep code audit

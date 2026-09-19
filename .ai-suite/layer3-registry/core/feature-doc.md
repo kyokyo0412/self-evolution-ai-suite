@@ -1,6 +1,6 @@
 ---
 name: feature-doc
-description: Produce exhaustive architecture and logic documentation for a specific feature by analyzing the codebase. Use when the user asks to document a feature, answer questions about a feature, or map out the architecture of a specific feature.
+description: Document architecture and logic for a specific codebase feature. Use when documenting a feature, mapping feature architecture, or analyzing feature behavior.
 globs: ""
 alwaysApply: false
 triggers:

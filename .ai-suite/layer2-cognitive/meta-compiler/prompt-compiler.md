@@ -1,6 +1,6 @@
 ---
 name: prompt-compiler
-description: Acts as the AI Expert, Prompt Architect, and Meta-Cognitive Layer. Translates ambiguous tasks into hyper-structured, execution-ready prompts using a Context Aggregator and a Meta-Prompt Compiler. Use when the user asks to compile a prompt, analyze requirements, optimize prompts, or review AI-suite enhancements.
+description: Translate ambiguous tasks into hyper-structured execution prompts via Meta-Prompt Compiler. Use when compiling prompts, analyzing requirements, or optimizing prompts.
 triggers:
   - compile prompt
   - enhance prompt

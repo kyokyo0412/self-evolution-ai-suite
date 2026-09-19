@@ -1,84 +1,65 @@
 # Agent General Directives
 
-> **This file is the source of truth.** `ai-suite enable` deploys this content as
-> `.cursor/rules/cursor-suite-agent-directives.mdc` with `alwaysApply: true`.
-
-These are general rules the AI agent MUST adhere to across all tasks and interactions:
+General rules the AI agent MUST adhere to across all tasks and interactions:
 
 ## 1. Version Control Operations
-- **Leave `git commit` to the user**: Do not perform `git commit` directly. Always prepare the changes, optionally provide the `git commit` command in your response, and leave the actual execution of the `git commit` step to the user.
+- **Leave `git commit` to the user**: Do not perform `git commit` directly. Prepare changes, optionally provide git commit command, and leave actual execution of `git commit` to the user.
 
 ## 2. Communication and Reporting
-- **Provide a summary**: Upon completing any task, you MUST output a structured and detailed summary.
-- **Summary Order**: If the invoked skills specify their own normal report (e.g., `tdd-team` report), the summary report MUST follow after the normal report.
-- **Content of summary**: The summary must clearly cover:
-  - **What**: What was accomplished during the tasks (let the user know what is done by the AI agent).
-  - **Why**: The reasoning, rationale, and design choices behind why the tasks were done in this manner.
-  - **How**: The specific steps and details of how the tasks were implemented.
-  - **Key Points**: A clear, concise list of key points and highlights of what the AI agent has done.
-- **Keep it structured**: Ensure all four elements (What, Why, How, Key Points) are distinctly visible and clearly separated. Use clear headings or bullet points.
+- **Provide a summary**: Upon completing any task, output a structured summary covering:
+  - **What**: Accomplishments and completed items.
+  - **Why**: Design choices and technical rationale.
+  - **How**: Implementation steps and specifics.
+  - **Key Points**: Concise list of highlights and deliverables.
+- **Summary Order**: When skills specify their own normal report (e.g., `tdd-team` report), the summary report MUST follow after the normal report. Keep What, Why, How, Key Points distinctly visible.
 
 ## 3. Multiple Skills Execution
-- **Combine Skills**: You can use multiple skills together.
-- **Preserve Behavior**: When multiple skills are invoked, you MUST NOT change the behaviors of the skills, and you MUST NOT skip any steps specified by those skills.
-- **Execution Order**: Execute the core task skill first (e.g., `tdd-team` to finish the task and output its report), then output the summary report, and finally invoke any follow-up actions.
+- **Multiple skills execution**: You can combine multiple skills. Preserve behavior: do not alter skills or skip steps. Execute core task skill first, then output summary report, then follow-ups.
 
 ## 4. Verification
-- **Actual Verification Required**: Every task must be backed by actual verification.
-- **Completion Criteria**: A task cannot be considered complete without such verification (e.g., running tests, validating scripts, confirming functionality).
+- **Verification required**: Every task must be backed by actual verification. Tasks cannot be considered complete without running tests, validating scripts, or confirming functionality.
 
 ## 5. Deep Comprehension
-- **Requirement Analysis**: The agent MUST thoroughly analyze input prompts, extract intent, identify ambiguities, and refine prior to execution.
-- **Pre-execution Refinement**: Do not begin implementation without confirming deep comprehension of the user's intent.
+- **Requirement Analysis**: The agent MUST thoroughly analyze prompts, extract intent, and refine prior to execution. Do not implement without deep comprehension of user intent.
 
-## 6. Autonomous Resilience (Do Not Disturb)
-- **Obstacle Management**: Do not stall or prompt the user for input when encountering an obstacle.
-- **Fallback Execution**: The agent must try alternative strategies, fallbacks, or diagnostic paths autonomously to resolve blocks.
+## 6. Autonomous Resilience
+- **Do not stall or prompt the user when encountering an obstacle**: Try alternative strategies, fallbacks, and diagnostic paths autonomously to resolve blocks.
 
 ## 7. Continuous Self-Evolution
-- **Dynamic Optimization**: The agent continuously learns, adapt and refine its prompt/skill suite based on task outcomes and operational feedback.
-- **Feedback Loop**: Ensure lessons learned in execution are captured for Self-Evolution.
+- **Self-Evolution**: The agent continuously learns, adapt and refine its prompt/skill suite based on task outcomes and operational feedback.
 
 ## 8. Workspace Cleanup
-- **Strict Cleanup Verification**: Before calling a task complete, you MUST execute a terminal command (e.g., `find . -name "*.bak" -o -name "*.tmp" -o -name "patch.sh*" -o -name ".cursor_build.*"`) to verify no temporary files remain in the working directory.
-- **AI Agent File List Inspection**: The AI agent MUST check the file list (via `git status --porcelain` or directory file list inspection) to audit all newly created, untracked, or residual files, and actively determine which files are temporary or unused artifacts generated during task execution.
-- **Temporary & Unused Files Removal**: The agent MUST actively delete all temporary files (e.g., `.bak`, `.tmp`, temporary `patch.sh` execution scripts, `.cursor_build.log`, `.cursor_build.pid`, `.cov_init.sh`, `.coverage_trace.log`) and any unused files or redundant assets that are no longer needed after the task is done, ensuring the active task cleans up before completing and before any follow-up interactive tools (such as `AskQuestion`) are processed.
-- **Active Task Cleanup Before AskQuestion**: When running the interactive workflow, if the active task should clean up unused and temporary files, let the active task remove it. Then process the `AskQuestion` tool.
-- **No Pollution**: Do not leave the user's workspace polluted with artifacts that were only needed for intermediate steps.
+- **Strict Cleanup Verification**: Verify no temporary files (`*.bak`, `*.tmp`, `patch.sh*`, `.cursor_build.*`) remain via terminal check.
+- **AI agent file list inspection**: Check file list (`git status --porcelain` or directory inspection) to audit all newly created files and remove temporary/unused artifacts.
+- **Active Task Cleanup Before AskQuestion**: If the active task should clean up unused and temporary files, let the active task remove them first. Then process the `AskQuestion` tool. Never leave workspace polluted.
 
 ## 9. Efficiency & Performance
-- **Parallel Execution**: Maximize parallel tool calls whenever independent tasks can be run concurrently (e.g., executing parallel linters, reading multiple files) to improve AI agent execution efficiency.
+- **Parallel tool calls**: Maximize parallel tool calls whenever independent tasks can run concurrently.
 
-## 10. Quality Check
-- **Linting & Quality**: Use `ReadLints` or specific automated checking tools after code modifications to maintain a high standard of product developing quality.
-- **Principal Coding Engineer Adversarial AI-Review**: Before concluding any code-generation or refactoring task, the AI agent MUST conduct a Principal Coding Engineer Adversarial AI-Review to proactively identify and fix any boundary bugs, error suppression, resource leaks, or whitespace flaws that external AI review tools would flag.
+## 10. Quality Check & Adversarial AI-Review
+- **ReadLints**: Use `ReadLints` or linters after code modifications.
+- **Principal Coding Engineer Adversarial AI-Review**: Conduct an adversarial pre-review audit to proactively eliminate boundary flaws, resource leaks, and gitreview warnings before completion.
 
 ## 11. Continuous Task Tracking
-- **Dynamic To-Do List**: When executing complex or multi-step tasks, you MUST continuously track your progress. Use the `TodoWrite` tool (if available) or explicit markdown to track task items. Initialize a Master To-Do list and update it dynamically as you work. When an item is completed, explicitly output and show the current status of the To-Do list in the chat window.
+- **Dynamic To-Do list**: Track multi-step tasks dynamically with TodoWrite or markdown; update status in real-time.
 
 ## 12. Code Formatting & Style Standards
-- **Language Standards**: When generating or modifying code, adhere strictly to established language standards:
-  - For Go code, the format MUST align strictly to the `gofmt` standard.
-  - For C code, the format MUST adhere to `clang-format` conventions.
-- **Project Consistency**: When generating code, follow the existing code style, naming conventions, and indentation of the project.
-- **No Trivial Empty Lines & Gitreview Red-Flag Prevention**: Code files must NOT have trivial empty lines containing only spaces or tabs. When generating or editing code, if a line contains spaces or tabs in front of the line and no other real code in that line, the AI agent MUST strip all spaces/tabs for that line, keeping only a pure empty line without whitespace for visual readability. This prevents red flags and trailing whitespace errors in gitreview, Gerrit, `git diff --check`, and code review tools.
-- **Selective Formatting Scope**: Formatting MUST only be applied to new or modified code lines. Do NOT reformat unchanged code or untouched lines unless explicitly requested by the user, preserving concise git diffs.
+- **Language Standards**: Go code MUST align to `gofmt`; C code MUST adhere to `clang-format`. Follow existing project naming and indentation conventions.
+- **No Space/Tab Empty Lines & Gitreview Red-Flag Prevention**: Code files must NEVER contain empty lines consisting only of spaces/tabs. Strip trailing whitespace from blank lines, preserving clean empty lines for visual readability. This eliminates gitreview red flags.
+- **Formatting Scope**: Only format new or modified code lines; never reformat untouched code.
 
 ## 13. Deterministic Resource & Subprocess Management
-- **Resource Cleanup**: All file descriptors, sockets, database handles, and temporary buffers MUST have explicit, deterministic cleanup lifecycles (`defer` in Go, context managers / `finally` in Python, RAII in C++, `trap ... EXIT` in Shell).
-- **Subprocess Tracking**: Never leave backgrounded or orphaned child processes. Monitor, track, and deterministically terminate spawned processes upon completion or failure.
+- **Deterministic Cleanup**: All handles, sockets, and buffers require explicit cleanup (`defer`, `with`/`finally`, `RAII`, `trap ... EXIT`). Terminate spawned subprocesses; never leave orphaned child processes.
 
 ## 14. Dynamic Test Assertions & Anti-Hardcoding Rigor
-- **Dynamic Corpus Computations**: Any test assertion on a count that grows with the codebase (e.g., number of skills, rules, checks, tests, files in a directory) MUST be computed dynamically at test runtime -- never asserted as a static literal integer.
-- **Anti-Fragile Contracts**: Dynamic baseline calculations prevent brittle test failures when capabilities, skills, or rules are added or evolved.
+- Assertions on counts that grow with codebase MUST be dynamically computed at runtime. Never hardcode corpus size or static integer counts.
 
 ## Negative Constraints (Must NOT)
-- [X] **Do not run `git commit`**: The AI agent MUST NEVER run `git commit` autonomously. Always leave the execution of `git commit` to the user.
-- [X] **Do not leave temporary files**: The AI agent MUST NEVER leave unused temporary files after the task is done. Always actively verify and clean up `.bak`, `.tmp`, and `.pid`/`.log` execution files before finishing.
-- [X] **Do not call AskQuestion before cleanup**: The AI agent MUST NOT call or process `AskQuestion` while temporary or unused files generated by the active task remain in the workspace. All temporary and unused files must be removed by the active task first.
-- [X] **Do not reformat unchanged code**: Only format new or modified code lines. Do NOT reformat unchanged code unless explicitly requested by the user.
-- [X] **Do not leave space/tab-only empty lines**: Ensure all empty lines have zero trailing whitespace and contain no spaces or tabs. Strip all spaces/tabs from lines without code to keep clean empty lines for visual readability and avoid gitreview red flags.
-- [X] **Do not violate language formatting standards**: Ensure Go code adheres to `gofmt` and C code adheres to `clang-format`.
-- [X] **Do not hardcode corpus sizes in test assertions**: All assertions on entity counts that grow with the codebase MUST be computed dynamically at runtime.
-- [X] **Do not leak resources or orphaned subprocesses**: Ensure all open file descriptors, sockets, child processes, and temporary buffers are deterministically released.
-- [X] **Do not skip Principal Coding Engineer Pre-Review**: Never deliver code changes without completing the Principal Coding Engineer Adversarial AI-Review audit to guarantee zero findings from external review tools.
+- [X] **Do not run `git commit`**: The AI agent MUST NEVER run git commit autonomously.
+- [X] **Do not leave temporary files**: Actively verify and clean up `.bak`, `.tmp`, `.pid`, and `.log` execution artifacts before finishing.
+- [X] **Do not call AskQuestion before cleanup**: Active task must remove all temporary/unused files before calling AskQuestion.
+- [X] **Do not reformat unchanged code**: Selective formatting applies strictly to new or modified lines.
+- [X] **Do not leave space/tab-only empty lines**: Ensure all empty lines have zero trailing whitespace to avoid gitreview red flags.
+- [X] **Do not hardcode corpus counts**: Dynamic baseline calculations mandatory for entity counts.
+- [X] **Do not leak resources or subprocesses**: Guarantee deterministic deallocation of handles and processes.
+- [X] **Do not skip Principal Coding Engineer Pre-Review**: Always execute adversarial review before delivery.

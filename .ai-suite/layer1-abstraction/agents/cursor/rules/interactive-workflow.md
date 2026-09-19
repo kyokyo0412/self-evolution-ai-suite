@@ -1,81 +1,66 @@
 # Interactive Workflow & Zero-Cost Refinement
 
-This rule enforces a collaborative wrapper around your normal execution. It ensures that you can provide clear, actionable options for the user to guide the task execution without consuming additional Cursor requests.
-
-**CRITICAL RULE:** This interactive workflow is ONLY a wrapper. It must NEVER alter, simplify, or skip your normal task execution, rules, or skills. You must handle the main task EXACTLY as you would if this rule did not exist.
-
-**CONSTRAINT:** This interactive workflow is strictly and ONLY for the Cursor Agent. It will NOT be installed to or used by any other agents.
+Collaborative wrapper around agent execution providing zero-cost follow-ups for the user.
+To prevent the interactive workflow from causing abnormal main task execution or skipping questions, strictly follow this persistent state machine for EVERY task and all subsequent task iterations.
+**CRITICAL RULE:** This is ONLY a wrapper. Handle main tasks EXACTLY as normal.
+**CONSTRAINT:** This interactive workflow is strictly and ONLY for the Cursor Agent.
 
 ## The Continuous Interactive Workflow Lifecycle
 
-To prevent the interactive workflow from causing abnormal main task execution or skipping questions, you MUST strictly follow this persistent state machine for EVERY task and all subsequent task iterations.
-
 ### Step 0: State 0 - INITIALIZATION (Hard Block)
-
-**[HARD BLOCK] HARD BLOCK: You MUST NOT execute any state-changing tools (e.g., Shell, Write, StrReplace) or begin the main task execution until you have FIRST called the `AskQuestion` tool to ask if the user wants an interactive workflow and received their answer. You MUST always ask this FIRST before any other actions.**
-
-At the **very beginning of any task / conversation session** (before any other action):
-You MUST use the `AskQuestion` tool:
+**[HARD BLOCK]** You MUST NOT execute any state-changing tools (e.g., Shell, Write, StrReplace) or begin main task execution until you FIRST call `AskQuestion`:
 - **prompt**: "Do you need an interactive workflow for this task? (This allows you to provide follow-up prompts after the task is done without consuming extra Cursor included requests. If no response is received in 3 minutes, it will default to No.)"
 - **options**:
   1. `{"id": "yes", "label": "Yes, start an interactive workflow."}`
   2. `{"id": "no", "label": "No, just run the task and stop."}`
-
-*Wait for the user's answer before proceeding to Step 1. If the system or user environment causes a timeout after 3 minutes of waiting for input, you MUST assume the user selected "No" and proceed immediately to execute the main task without the interactive workflow wrapper.*
+*Default to "No" on 3-minute timeout.*
 
 ### Step 1: State 1 - NORMAL / MAIN TASK EXECUTION (Daemon Mode)
-
-Once the user answers "Yes" in Step 0 (or when a new follow-up task is received in Step 3), the Interactive Wrapper enters "Daemon Mode" (runs silently in the background).
-1. **Execute the main task normally.** Follow all user instructions, core directives, and skills EXACTLY as requested by the task prompt.
-2. **Absolute Isolation:** Treat the main task completely independently from this interactive workflow wrapper. **DO NOT** let this interactive workflow distract you from doing a thorough, complete job or cause abnormal task execution. You must pretend the wrapper does not exist during this step. Do not act stupid, lazy, or skip any steps specified by other skills. You MUST fully comply with all other .cursorrules, general directives, and active skills while executing the main task.
-3. **Multi-Iteration & Loop-Work Invariant:** When running looping skills or iterative workflows (e.g., `loop-work`), the ENTIRE sequence of all N iterations constitutes the "main task". Do NOT trigger Step 2 or Step 3 after intermediate iterations. Wait until all iterations are 100% complete.
-4. You MUST wait until the main task is 100% complete and double confirm that the main task is done. If you are using a To-Do list, every single item MUST be marked as COMPLETED before you can even think about moving to Step 2.
-5. **Active Task Workspace Cleanup & AI Agent File List Inspection:** Before moving to Step 2 wrap-up summary and Step 3 `AskQuestion`:
-   - If the active task should clean up unused and temporary files, the active task MUST remove them FIRST. Then process the `AskQuestion` tool.
-   - The AI agent MUST check the file list (via `git status --porcelain` or directory file listing) to identify all temporary, scratch, leftover, or unused files generated during the active task execution (such as `*.bak`, `*.tmp`, `patch.sh*`, `.cursor_build.*`, `.cov_init.sh`, `.coverage_trace.log`, temporary logs, or scratch artifacts).
-   - The AI agent MUST actively remove all temporary or unused files before proceeding to generate the summary in Step 2 and before invoking the `AskQuestion` tool in Step 3.
-6. **NEVER call `echo 'Interactive workflow summary rendered'` before the main task is completely finished, verified, the workspace cleanup is confirmed via file list check, and the execution summary is fully output.**
+Runs silently in background upon "Yes" or new follow-up from Step 3:
+1. **Normal Execution:** Execute main task fully per instructions, core directives, and active skills. Prevent abnormal main task execution.
+2. **Absolute Isolation:** Wrapper MUST NOT alter, simplify, or skip task steps.
+3. **Multi-Iteration & Loop-Work Invariant:** For looping skills (e.g., `loop-work`), all N iterations constitute the main task. Do NOT trigger Step 2 or 3 on intermediate iterations; wait until all iterations are 100% complete.
+4. **Double Confirmation:** You must wait until the main task is 100% complete and double confirm that the main task is done. If using a To-Do list, every single item MUST be marked as COMPLETED before you can even think about moving to Step 2.
+5. **Active Task Workspace Cleanup & AI Agent File List Inspection:** Before Step 2 wrap-up summary and Step 3 `AskQuestion`:
+   - Active task cleanup before AskQuestion: if the active task should clean up unused and temporary files, the active task MUST remove them FIRST. Then process the AskQuestion tool.
+   - AI agent file list inspection: check `git status --porcelain` or directory listing to identify and delete all temporary files (`*.bak`, `*.tmp`, `patch.sh*`, `.cursor_build.*`, `.cov_init.sh`, `.coverage_trace.log`).
+6. NEVER call `echo 'Interactive workflow summary rendered'` before main task is 100% done, verified, cleanup confirmed via file list check, and execution summary fully output.
 
 ### Step 2: State 2 - WRAP-UP & SUMMARY ISOLATION
-
-When the main task is fully completed and all temporary or unused files have been removed by the active task after inspecting the file list:
-1. **If the user selected "No" in Step 0**, gracefully end your turn and STOP here. Do NOT advance to Step 3.
-2. **If the user selected "Yes" in Step 0 (Interactive Mode is active)**, you must output your detailed execution summary to the chat window. You MUST explicitly output all step outputs and final results in the chat window text. You MUST print all output of the main task in the chat window before invoking the question.
-3. **CRITICAL HARD BLOCK FOR FINAL OUTPUT**: To ensure the user sees the summary before the final question, you MUST do the following in ONE response:
-   - **CRITICAL**: You MUST write the full execution summary text (and the final To-Do list status, if applicable) explicitly in your conversational response text so it is visible in the chat window. Do NOT just silently call a tool. You MUST NOT use the AskQuestion tool until the chat text is fully generated.
-   - After the main task is 100% finished and the summary text is output, you must output the execution summary as normal text AND call a minor tool (such as calling the `Shell` tool with: `echo 'Interactive workflow summary rendered'`) to force UI rendering.
+1. If "No" in Step 0: stop and end turn.
+2. If "Yes" (Interactive Mode active): explicitly output all step outputs and final results in the chat window text. You MUST print all output of the main task in the chat window before invoking the question. The detailed summary must cover What, Why, How, and Key Points.
+3. **CRITICAL HARD BLOCK FOR FINAL OUTPUT**: In ONE response:
+   - Output full execution summary text (and final To-Do list status) explicitly in chat text. Do NOT silently call a tool. You MUST NOT use the AskQuestion tool until the chat text is fully generated.
+   - After main task summary is output, output the execution summary as normal text AND call a minor tool (such as calling the `Shell` tool with: `echo 'Interactive workflow summary rendered'`) to force UI rendering.
    - **DO NOT call `AskQuestion` in this response.**
-4. Wait for the `Shell` tool to return.
 
 ### Step 3: State 3 - THE FOLLOW-UP LOOP
-
-Once Step 2's `echo` shell tool has returned:
-1. In your very next response, call the `AskQuestion` tool:
+Once Step 2's `echo` tool returns, call `AskQuestion` in the very next response:
 - **prompt**: "Task completed. What would you like to do next? (Select an option or choose the native 'Other' to provide a custom follow-up prompt without consuming an extra request)"
 - **options**:
   1. `{"id": "complete", "label": "Task is complete, stop here."}`
   2. `{"id": "explain", "label": "Explain the changes in more detail."}`
 
-**Handling the Result & Continuous Multi-Turn Loop Invariant**:
-- If **"complete"**: Stop here and gracefully end your turn.
-- If **"explain"**: Output the detailed explanation explicitly in conversational chat text, and then call `AskQuestion` again in your follow-up action to maintain the interactive loop. Do NOT call `AskQuestion` without outputting the explanation.
-- If **custom text ("Other")**: This is a **NEW TASK**.
-  - **Persistent Interactive Mode**: The interactive workflow remains **already enabled and active**. You must **skip Step 0** (do not re-prompt Step 0 since interactive workflow is already active).
-  - **Execute as Active Task**: You MUST fully re-engage all your skills, coding tools, and agent rules to execute it. Do NOT just give a conversational reply. Treat it as a completely new prompt from the user. You MUST execute the required actions to fully complete the user's request in **Step 1 (State 1)**.
-  - **Always Loop Back to Step 2 and Step 3 (Persistent Chaining)**: Every task iteration received from the "Other" option MUST follow the complete lifecycle (`Step 1 -> Step 2 -> Step 3`). Before concluding Step 1, the AI agent MUST check the file list and clean up any unused and temporary files generated by the active task. Then execute **Step 2 (State 2)** to output the execution summary and run `echo 'Interactive workflow summary rendered'`, and then in **Step 3 (State 3)** you MUST always use AskQuestion tool after each task is done when user input new task in the other option to ask the next question. You are STRICTLY FORBIDDEN from ending the turn or stopping without invoking AskQuestion in Step 3.
-- **EXCEPTION for Reflection Protocol:** If the custom text input is a trigger for the Reflection Protocol (e.g., "run reflection", "improve the suite", "reflect on the last task"), you MUST immediately break the interactive workflow loop. Do not execute the task within the interactive loop constraints and do NOT loop back to call `AskQuestion`. Instead, instantly pause all non-reflection work and execute the strict one-turn Reflection Protocol.
+**Handling Result & Continuous Multi-Turn Loop Invariant**:
+- **"complete"**: Stop and end turn.
+- **"explain"**: Output detailed explanation in chat text, then call `AskQuestion` again to maintain interactive loop.
+- **Custom text ("Other")**: Treated as a **NEW TASK**:
+  - Interactive mode remains **already active**; **skip Step 0** (do not re-prompt Step 0).
+  - Execute as Active Task: fully re-engage skills and tools to execute the required actions to fully complete the user's request in **Step 1 (State 1)**.
+  - Persistent Chaining: Every task from "Other" follows `Step 1 -> Step 2 -> Step 3`. Perform file list inspection and cleanup before proceeding to Step 2 and Step 3. You MUST always use AskQuestion tool after each task is done when user input new task in the other option to ask the next question. You are STRICTLY FORBIDDEN from ending the turn or stopping without invoking AskQuestion in Step 3.
+- **EXCEPTION for Reflection Protocol:** If input triggers Reflection Protocol ("run reflection", "improve the suite", "reflect on the last task"), you MUST immediately break the interactive workflow loop, pause non-reflection work, and do NOT loop back to call `AskQuestion`. Instead, execute the one-turn Reflection Protocol.
 
 ## Negative Constraints (Must NOT)
-- [X] **PREMATURE ASKQUESTION BEFORE CLEANUP FORBIDDEN**: You MUST NOT process or call the `AskQuestion` tool while temporary or unused files remain uncleaned in the workspace. If the active task should clean up unused and temporary files, the active task must remove them first before AskQuestion is called.
-- [X] **OMISSION OF FILE LIST CHECK FORBIDDEN**: You MUST NOT conclude the active task or advance to Step 2 / Step 3 without having the AI agent check the file list (e.g. `git status --porcelain` or workspace directory listing) to detect and remove all temporary and unused files.
+- [X] **PREMATURE ASKQUESTION BEFORE CLEANUP FORBIDDEN**: You MUST NOT process or call the `AskQuestion` tool while temporary or unused files remain uncleaned in the workspace. Active task must remove them first before AskQuestion is called.
+- [X] **OMISSION OF FILE LIST CHECK FORBIDDEN**: You MUST NOT conclude the active task or advance to Step 2 / Step 3 without having the AI agent check the file list (`git status --porcelain`) to detect and remove all temporary and unused files.
 - [X] **PREMATURE SUMMARY FORBIDDEN**: You MUST NOT call `echo 'Interactive workflow summary rendered'` before the main task is 100% finished and the main task summary has been output to the chat window.
 - [X] **PREMATURE WRAP-UP FORBIDDEN**: You MUST NOT ask the follow-up question or stop working if there are still pending tasks in your To-Do list or if the user's core request is not fully met.
-- [X] **MANDATORY ASKQUESTION AFTER 'OTHER' TASKS**: Once interactive workflow is enabled, you are STRICTLY FORBIDDEN from ending the turn or stopping after executing an 'Other' task without executing Step 2 (summary + echo) and Step 3 (`AskQuestion`). The agent MUST NOT end the turn without invoking AskQuestion after 'Other' task completion. You MUST always use AskQuestion after each task iteration is done when the user inputs a new task in the 'Other' option.
-- [X] **MANDATORY LOOP-WORK SUMMARY BEFORE ASKQUESTION**: When running loop-work or iterative workflows, you MUST NOT trigger Step 2 or Step 3 until all N iterations are complete, and you MUST NOT call AskQuestion without first printing the full final loop-work summary to chat and executing `echo 'Interactive workflow summary rendered'`.
+- [X] **MANDATORY ASKQUESTION AFTER 'OTHER' TASKS**: The agent MUST NOT end the turn without invoking AskQuestion after 'Other' task completion. You MUST always use AskQuestion after each task iteration is done when the user inputs a new task in the 'Other' option.
+- [X] **MANDATORY LOOP-WORK SUMMARY BEFORE ASKQUESTION**: When running loop-work, you MUST NOT trigger Step 2 or 3 until all N iterations are complete, and you MUST NOT call AskQuestion without first printing the full final loop-work summary to chat and executing `echo 'Interactive workflow summary rendered'`.
 - [X] **DO NOT BUNDLE ASKQUESTION WITH TASK TOOLS**: Do NOT bundle the final `AskQuestion` tool call in the same batch as the final task execution tools. Always separate them via Step 2 and Step 3.
-- [X] **EXPLAIN OPTION TEXT OUTPUT REQUIRED**: When the user selects 'explain', you MUST output the actual explanation in chat text before calling `AskQuestion` again. Do NOT just call `AskQuestion` with an empty or non-informative response.
-- [X] Do NOT make other agents (like Claude Code, Roo Code, etc.) use this interactive workflow. This is strictly for the Cursor Agent.
-- [X] Do NOT call `AskQuestion` at the end of the task without first doing the `echo 'Interactive workflow summary rendered'` step to force the summary output.
-- [X] Do NOT treat a custom text follow-up as a simple chat question. You MUST execute it as a full, new task using your tools and rules. You must re-initialize your mental state to Step 1 and execute fully.
-- [X] Do NOT skip the primary task's steps or summary. You MUST fully complete the primary task.
+- [X] **EXPLAIN OPTION TEXT OUTPUT REQUIRED**: Output actual explanation in chat text before calling `AskQuestion` again.
+- [X] Do NOT make other agents use this interactive workflow. Strictly for Cursor Agent.
+- [X] Do NOT call `AskQuestion` without first executing `echo 'Interactive workflow summary rendered'`.
+- [X] Do NOT treat custom text follow-up as a simple chat question; execute it as a full, new task.
+- [X] Do NOT skip the primary task's steps or summary.
 - [X] Must not cost any extra Cursor included request in the interactive workflow.

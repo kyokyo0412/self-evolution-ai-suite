@@ -1,6 +1,6 @@
 ---
 name: bazel-deb-deps
-description: Analyze Bazel BUILD/WORKSPACE/MODULE.bazel files and translate them into an exact Ubuntu/Debian apt runtime + build-time dependency tree for the target .deb. Use when the user asks about Debian/Ubuntu package dependencies for a bazel-built binary, library, or VIB, or when figuring out what apt-get install commands are required to deploy a .deb.
+description: Map Bazel build targets into Debian/Ubuntu apt runtime and build dependency trees. Use when resolving Debian dependencies for Bazel targets or determining package installations for a .deb.
 triggers:
   - bazel deb dependencies
   - debian packages for bazel

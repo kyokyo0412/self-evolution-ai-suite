@@ -1,6 +1,6 @@
 ---
 name: integrate-capability
-description: Integrate your own capabilities (as an AI suite Agent) to an external agent by reviewing its directory, analyzing features, and merging capabilities without duplication. Use when you need to integrate or push your capabilities to an external agent.
+description: Integrate AI suite capabilities into an external agent directory without duplication. Use when integrating or pushing suite capabilities to an external agent.
 triggers:
   - integrate ai suite
   - push capability

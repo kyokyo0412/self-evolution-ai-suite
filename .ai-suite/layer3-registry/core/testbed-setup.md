@@ -1,6 +1,6 @@
 ---
 name: testbed-setup
-description: Autonomously build and verify a remote testbed (Linux VM, container host) over SSH following an Idempotent Discovery -> Execute -> Debug -> Verify loop. Use when the user asks to set up a testbed, install/configure a remote environment, or build a Dockerized lab. Includes mandatory safety preflight to refuse known-production targets.
+description: Build and verify remote SSH testbeds via Idempotent Discovery-Execute-Debug-Verify loops. Use when setting up testbeds, configuring remote host environments, or provisioning Docker labs.
 triggers:
   - set up a testbed
   - configure a remote environment

@@ -1,6 +1,6 @@
 ---
 name: local-suite
-description: Manage the local lifecycle of ai-suite -- install and remove on the local machine. Use when the user asks to install ai-suite locally, enable ai-suite globally, remove ai-suite locally, or manage the local ai-suite installation.
+description: Manage local ai-suite lifecycle installation and removal. Use when installing, enabling globally, removing, or checking status of local ai-suite.
 triggers:
   - enable ai suite
   - install ai suite
