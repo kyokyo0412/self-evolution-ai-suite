@@ -78,7 +78,13 @@ The Cursor Interactive Workflow is a zero-cost collaborative wrapper that enable
    The agent is **strictly forbidden** from terminating its turn or finishing execution after completing an "Other" task without executing Step 2 and calling `AskQuestion` in Step 3.
 
 5. **Loop-Work & Iterative Multi-turn Guarantee**:
-   When running iterative workflows such as `loop-work`, all N iterations must complete in Step 1 before transitioning to Step 2. The full final execution summary MUST be explicitly written to chat and flushed with the UI sync echo before `AskQuestion` is presented in Step 3.
+   When running iterative workflows such as `loop-work` (or `loop-work` orchestrating `tdd-team`), all N iterations must complete in Step 1 before transitioning to Step 2.
+   - The agent MUST NOT mistake an inner skill's Phase 5 or sub-report for the outer task summary.
+   - Control MUST return to `loop-work` Step 7.
+   - The comprehensive, dedicated **Loop-Work Final Execution Summary** (covering overall goal achievement, 5-dimension hardening progression, state transitions, and deliverables) MUST be explicitly written to chat and flushed with the UI sync echo (`echo 'Interactive workflow summary rendered'`) in Step 2 before `AskQuestion` is presented in Step 3.
 
 6. **No Extra Cost Guarantee**:
    The wrapper uses native UI questions and single-turn continuous chaining to prevent consuming additional included user quota.
+
+7. **Zero-Drop Multi-Turn Persistence Guarantee**:
+   Every follow-up prompt or task submitted through the "Other" option is an active task in Step 1. The agent MUST NOT stop or finish the turn after completing the task; it MUST execute Step 2 (summary + echo) and Step 3 (`AskQuestion`) persistently for EVERY iteration.

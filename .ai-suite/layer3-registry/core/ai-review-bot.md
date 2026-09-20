@@ -31,7 +31,7 @@ Autonomous multi-agent review skill designed to perform deep, production-grade c
 ## 2. Review Workflow
 
 ```
-[Target Discovery] ──> [Filter & Deduplicate] ──> [Context Resolution] ──> [Persona Review] ──> [Structured Report]
+[Target Discovery] --> [Filter & Deduplicate] --> [Context Resolution] --> [Persona Review] --> [Structured Report]
 ```
 
 ### Step 1: Target Discovery
@@ -80,24 +80,24 @@ Apply rigorous checks focusing on substantial, concrete issues:
 
 ---
 
-## 3. Strict Prohibitions (🚫 DO NOT)
+## 3. Strict Prohibitions (DO NOT)
 
-- 🚫 **DO NOT** comment on removed/deleted lines (`-`).
-- 🚫 **DO NOT** generate speculative, hypothetical, or vague comments (e.g., "Potential issue...", "Ensure...", "Consider if...", "Check whether..."). Exception: Concrete, named vulnerability classes (SQLi, race condition, timing attack) are not speculative.
-- 🚫 **DO NOT** praise correct code, summarize what unchanged code does, or add conversational filler.
-- 🚫 **DO NOT** question intentional modifications (e.g., default parameter changes, config tuning, copyright year bumps, version updates) unless they introduce an explicit bug.
-- 🚫 **DO NOT** give style or formatting suggestions for test files or scripts unless they cause functional failures. In production code, only flag style if it significantly degrades readability or violates project rules.
-- 🚫 **DO NOT** assume third-party library signatures or internal behaviors without concrete evidence from project context.
-- 🚫 **DO NOT** invent issues if the code is correct. If no significant issues exist, state that no issues were found.
+- [X] **DO NOT** comment on removed/deleted lines (`-`).
+- [X] **DO NOT** generate speculative, hypothetical, or vague comments (e.g., "Potential issue...", "Ensure...", "Consider if...", "Check whether..."). Exception: Concrete, named vulnerability classes (SQLi, race condition, timing attack) are not speculative.
+- [X] **DO NOT** praise correct code, summarize what unchanged code does, or add conversational filler.
+- [X] **DO NOT** question intentional modifications (e.g., default parameter changes, config tuning, copyright year bumps, version updates) unless they introduce an explicit bug.
+- [X] **DO NOT** give style or formatting suggestions for test files or scripts unless they cause functional failures. In production code, only flag style if it significantly degrades readability or violates project rules.
+- [X] **DO NOT** assume third-party library signatures or internal behaviors without concrete evidence from project context.
+- [X] **DO NOT** invent issues if the code is correct. If no significant issues exist, state that no issues were found.
 
 ---
 
 ## 4. Severity Classification Guidelines
 
-- 🔴 **Critical**: Directly exploitable vulnerabilities with no attacker preconditions (unauthenticated RCE, SQL injection, authentication bypass).
-- 🟠 **High**: Crashes in normal paths (division by zero, None dereference, index error), hardcoded credentials, unmasked secret logging, race conditions, timing attacks, case-sensitive DNS/FQDN comparisons.
-- 🟡 **Medium**: Design/maintainability defects, architectural layer violations, edge-case bugs (e.g., empty collection failures), missing error handling.
-- 🔵 **Low**: Style severely impacting readability in production code, naming inconsistencies, documentation-to-code mismatches.
+- **Critical**: Directly exploitable vulnerabilities with no attacker preconditions (unauthenticated RCE, SQL injection, authentication bypass).
+- **High**: Crashes in normal paths (division by zero, None dereference, index error), hardcoded credentials, unmasked secret logging, race conditions, timing attacks, case-sensitive DNS/FQDN comparisons.
+- **Medium**: Design/maintainability defects, architectural layer violations, edge-case bugs (e.g., empty collection failures), missing error handling.
+- **Low**: Style severely impacting readability in production code, naming inconsistencies, documentation-to-code mismatches.
 - *When in doubt, always choose the lower severity.*
 
 ---
@@ -109,7 +109,7 @@ For each file with findings, output itemized comments targeting specific line nu
 
 ```markdown
 ### `<file-path>` (Lines <start>-<end>)
-<Emoji> **<Severity>**: <Concise explanation in 1–4 sentences, maximum 150 words.>
+**<Severity>**: <Concise explanation in 1-4 sentences, maximum 150 words.>
 
 ```suggestion
 <Exact replacement code snippet matching original indentation>
@@ -124,13 +124,13 @@ For each file with findings, output itemized comments targeting specific line nu
 
 **CL-Level Summary:**
 ```markdown
-📝 **CL Summary**:
+**CL Summary**:
 <3-4 sentence concise summary explaining what changed and why across the changeset.>
 ```
 
 **If no issues are found:**
 ```markdown
-✅ **Review Complete**: No issues found. The changes adhere to correctness, security, and project standards.
+**Review Complete**: No issues found. The changes adhere to correctness, security, and project standards.
 ```
 
 ---
@@ -147,7 +147,7 @@ For each file with findings, output itemized comments targeting specific line nu
 -        return self.conn.execute(query).fetchone()
 +        return self.conn.execute(query, (username,)).fetchone()
 ```
-*Result*: ✅ **Review Complete**: No issues found. The removed line (`-`) contained SQL injection that is resolved by the parameterized query addition (`+`). Do not flag `-` lines.
+*Result*: **Review Complete**: No issues found. The removed line (`-`) contained SQL injection that is resolved by the parameterized query addition (`+`). Do not flag `-` lines.
 
 ### Example 2: Race Condition on Shared Mutable State
 ```diff
@@ -160,18 +160,18 @@ For each file with findings, output itemized comments targeting specific line nu
 +        self.total_increments += 1
 +        return self.count
 ```
-*Result*: 🟠 **High**: Race condition in shared counter. The non-atomic read and update of `self.count` and `self.total_increments` leads to lost updates under concurrent access.
+*Result*: **High**: Race condition in shared counter. The non-atomic read and update of `self.count` and `self.total_increments` leads to lost updates under concurrent access.
 
 ### Example 3: Unmasked Secret Logging
 ```diff
 --- a/app/auth.py
 +++ b/app/auth.py
 @@ -32,3 +32,5 @@ def authenticate_token(token: str):
-     user = decode_jwt(token)
+      user = decode_jwt(token)
 +    logger.info(f"User {user.id} authenticated with bearer token: {token}")
      return user
 ```
-*Result*: 🟠 **High**: Plaintext sensitive credential leaked to logs. Logging the unmasked bearer token exposes authentication credentials in log aggregation systems.
+*Result*: **High**: Plaintext sensitive credential leaked to logs. Logging the unmasked bearer token exposes authentication credentials in log aggregation systems.
 
 ### Example 4: Timing Attack in Authentication
 ```diff
@@ -183,7 +183,7 @@ For each file with findings, output itemized comments targeting specific line nu
 +        return False
      return bcrypt.checkpw(password.encode(), user.password_hash)
 ```
-*Result*: 🟠 **High**: Timing attack vulnerability leaks account existence. The early return skips the computationally expensive `bcrypt.checkpw` operation when a user does not exist.
+*Result*: **High**: Timing attack vulnerability leaks account existence. The early return skips the computationally expensive `bcrypt.checkpw` operation when a user does not exist.
 
 ### Example 5: Case-Insensitive DNS / Hostname Equality
 ```diff
@@ -192,7 +192,7 @@ For each file with findings, output itemized comments targeting specific line nu
 @@ -12,3 +12,4 @@ def is_authorized_domain(fqdn: str, allowed_domains: list[str]) -> bool:
 +    return fqdn in allowed_domains
 ```
-*Result*: 🟠 **High**: Case-sensitive comparison on FQDN/hostname. Domain names and DNS records are RFC-defined as case-insensitive; comparing raw strings without `.lower()` normalization permits authorization bypasses.
+*Result*: **High**: Case-sensitive comparison on FQDN/hostname. Domain names and DNS records are RFC-defined as case-insensitive; comparing raw strings without `.lower()` normalization permits authorization bypasses.
 
 ---
 

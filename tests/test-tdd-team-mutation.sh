@@ -96,6 +96,16 @@ M10="$SANDBOX/m10.md"
 sed '/Domain Compliance & Regulatory Traceability Matrix/d' "$SOURCE_FILE" > "$M10"
 run_mutation_test "Remove Domain Compliance Traceability Matrix in Phase 5" "tests/test-tdd-team-domain-sme-contracts.sh" "$M10"
 
+# Mutant 11: Remove 12-Dimension Anti-AI-Review Checklist in Phase 3.5
+M11="$SANDBOX/m11.md"
+sed 's/12-Dimension Anti-AI-Review/Standard Review/g' "$SOURCE_FILE" > "$M11"
+run_mutation_test "Mutate 12-Dimension Anti-AI-Review Checklist to Standard Review" "tests/test-tdd-team-principal-coding-review-contracts.sh" "$M11"
+
+# Mutant 12: Remove AI review high-severity vulnerability negative constraint
+M12="$SANDBOX/m12.md"
+sed '/Do not introduce high-severity AI review vulnerabilities/d' "$SOURCE_FILE" > "$M12"
+run_mutation_test "Remove high-severity AI review vulnerability negative constraint" "tests/test-tdd-team-principal-coding-review-contracts.sh" "$M12"
+
 echo "=== Mutation Analysis Results ==="
 echo "Total Mutants Evaluated: $TOTAL_MUTANTS"
 echo "Killed Mutants:          $KILLED_MUTANTS"

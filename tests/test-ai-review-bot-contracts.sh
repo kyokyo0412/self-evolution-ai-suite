@@ -67,7 +67,7 @@ if [[ -f "$SKILL_FILE" ]]; then
     fail "Negative Constraints / Safety section missing"
   fi
 
-  if grep -q '\[X\]' "$SKILL_FILE" || grep -q '🚫' "$SKILL_FILE"; then
+  if grep -q '\[X\]' "$SKILL_FILE"; then
     pass "Checkboxes / explicit negative constraints present"
   else
     fail "Explicit negative constraints missing"

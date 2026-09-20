@@ -28,6 +28,7 @@ Feature: Principal Coding Engineer Adversarial AI-Review & Pre-Emptive Fix Gate
       | 6. Algorithmic Complexity       | Deterministic execution, bounded loops, O(N) vs O(N^2) complexity, vectorized batch operations     |
       | 7. Code Formatting & Cleanliness| Zero space/tab-only empty lines, functions <= 50 lines, selective formatting on new/modified lines |
       | 8. Anti-Hardcoding Rigor        | Dynamic runtime computations in test assertions, zero brittle static integer literals              |
+      | 9. AI Review Tool Alignment     | Case-insensitive FQDN normalization, unmasked secret protection, timing attack defense             |
 
   Scenario: Autonomous Pre-Emptive Fix & Remediation Loop
     Given the Adversarial AI-Review Simulation detects any potential code smell, edge case, or defect

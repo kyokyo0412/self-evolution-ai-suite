@@ -9,7 +9,7 @@ A self-improving AI framework that works with **any AI coding agent** (Cursor, C
 AI Suite is a structured set of skills, templates, and meta-protocols that makes AI coding agents smarter and more consistent. After each task, the agent can **reflect and improve its own skills** - without auto-committing, so you stay in control.
 
 > [!NOTE]
-> ### 💡 Token Economics & Code Quality Notice
+> ### [NOTE] Token Economics & Code Quality Notice
 > **The AI Suite is heavily optimized for code quality, architectural correctness, and mission-critical 1E-class robustness over minimal token consumption.**
 >
 > Unlike basic single-shot coding assistants, the AI Suite utilizes multi-role stage gates (`tdd-team`), comprehensive domain profiling, iterative red-green-refactor cycles, deep context exploration, automated linter/verification checks, and adversarial pre-commit AI reviews. Consequently, **it consumes significantly more prompt and completion tokens than typical AI tools**.
@@ -319,9 +319,9 @@ The AI suite integrates a seamless human-in-the-loop interaction model specifica
 
 ### Core Guarantees & Constraints
 
-1. **Mandatory Final Summary Before Questions**: When `loop-work` runs, intermediate iterations execute silently via background sleepers. When all $N$ iterations conclude, the agent MUST write the comprehensive multi-iteration summary report to the chat window before invoking any wrap-up or question tools.
+1. **Mandatory Final Summary Before Questions**: When `loop-work` runs (including when orchestrating sub-skills like `tdd-team`), intermediate iterations execute silently via background sleepers. When all $N$ iterations conclude, control returns to `loop-work` Step 7. The agent MUST NOT treat an inner skill's sub-report or Phase 5 as the final conversation summary; the agent MUST write the comprehensive multi-iteration `loop-work` summary report to the chat window before invoking the Step 2 UI sync echo and Step 3 `AskQuestion`.
 2. **Deterministic UI Render Barrier**: The agent executes `echo 'Interactive workflow summary rendered'` in the same turn as the chat summary to flush markdown streams to the client interface before triggering `AskQuestion` in the subsequent turn.
-3. **Multi-Turn Persistent Chaining**: When a user provides follow-up tasks via the "Other" option in `AskQuestion`, the agent executes the task in Step 1, outputs the completion summary and UI echo in Step 2, and MUST re-invoke `AskQuestion` in Step 3. The agent is strictly forbidden from dropping the turn after completing an "Other" task.
+3. **Multi-Turn Persistent Chaining**: When a user provides follow-up tasks via the "Other" option in `AskQuestion`, the agent executes the task in Step 1, conducts file list inspection and workspace cleanup, outputs the completion summary and UI echo in Step 2, and MUST re-invoke `AskQuestion` in Step 3. The agent is strictly forbidden from dropping the turn after completing an "Other" task.
 4. **Cursor Agent-Only Isolation**: The interactive workflow rule is deployed strictly to Cursor Agent (`.cursor/rules/cursor-suite-interactive-workflow.mdc`). It is never deployed to or required for Codex or other IDE agents.
 5. **Zero-Cost Refinement**: Follow-up tasks skip Step 0 initialization entirely, guaranteeing zero extra Cursor included request consumption.
 

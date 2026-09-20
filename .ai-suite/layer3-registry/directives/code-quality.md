@@ -22,15 +22,19 @@
 10. **Test-Driven Verification & Anti-Hardcoding Rigor**:
     - Back logic branches with automated tests covering boundary values and negative paths.
     - Anti-Hardcoding: Dynamically compute test assertions on corpus counts; never hardcode static integer counts.
-11. **Pre-Review Zero-Defect Standards (Anti-AI-Review Invariants)**:
-    - Conduct adversarial pre-review audit to eliminate findings from external review tools:
-      a. **Boundary & Nil Safety**: Explicit nil guards, collection length checks.
-      b. **Deterministic Error Handling**: No swallowed errors, explicit wrapping.
+11. **Pre-Review Zero-Defect Standards (Anti-AI-Review Invariants & Zero False-Positive Alignment)**:
+    - Conduct adversarial pre-review audit to eliminate findings from external review tools (`ai-review-bot` alignment):
+      a. **Boundary & Nil Safety**: Explicit nil guards, collection length checks, empty string bounds.
+      b. **Deterministic Error Handling**: No swallowed errors, explicit contextual error wrapping.
       c. **Strict Resource Lifecycles**: Deterministic release (`defer`, `with`, `finally`, `trap ... EXIT`).
-      d. **Concurrency Safety**: Thread-safe access, explicit lock order, zero unsynchronized mutations.
-      e. **Security & Input Sanitization**: Shell variable quoting (`"$var"`), path traversal defense.
+      d. **Concurrency Safety**: Thread-safe access, atomic operations, explicit lock order, zero unsynchronized mutations.
+      e. **Security & Input Sanitization**: Shell variable quoting (`"$var"`), path traversal defense, buffer bounds checking.
       f. **Algorithmic Efficiency**: Bounded loop iterations, $O(N)$ efficiency.
       g. **Clean Whitespace & Style**: Zero space/tab-only empty lines to eliminate gitreview red flags.
+      h. **Case-Insensitive Normalization**: Mandatory lowercase normalization on FQDNs, DNS names, and hostnames.
+      i. **Secret Protection**: Zero logging or emitting of unmasked passwords, tokens, or credentials.
+      j. **Timing Attack Prevention**: Avoid early-exit skips on cryptographic or authentication hash checks.
+      k. **Class Guard Execution**: Ensure class input validation methods are invoked on untrusted data.
 
 ## Negative Constraints (Must NOT)
 - [X] **Do not write monolithic functions**: Never exceed 50 lines or high cyclomatic complexity.

@@ -15,6 +15,8 @@ cd "$ROOT_DIR"
 
 LOOP_WORK_CORE=".ai-suite/layer3-registry/core/loop-work.md"
 INTERACTIVE_RULE=".ai-suite/layer1-abstraction/agents/cursor/rules/interactive-workflow.md"
+DIRECTIVES_FILE=".ai-suite/layer3-registry/directives/agent-directives.md"
+TDD_TEAM_CORE=".ai-suite/layer3-registry/core/tdd-team.md"
 CODEX_ADAPTER=".ai-suite/layer1-abstraction/agents/codex/adapter.sh"
 CURSOR_ADAPTER=".ai-suite/layer1-abstraction/agents/cursor/adapter.sh"
 
@@ -54,6 +56,7 @@ assert_contains "$LOOP_WORK_CORE" "echo 'Interactive workflow summary rendered'"
 assert_contains "$LOOP_WORK_CORE" "(DO NOT call AskQuestion until|Do NOT bundle AskQuestion|separate.*AskQuestion)" "Strict separation of summary rendering and AskQuestion tool"
 assert_contains "$LOOP_WORK_CORE" "(State 2.*summary.*State 3.*AskQuestion|Step 2.*summary.*Step 3.*AskQuestion)" "Explicit 2-stage wrap-up reference (State 2 -> State 3)"
 assert_contains "$LOOP_WORK_CORE" "Do NOT call (\`?)AskQuestion(\`?) before outputting the full final execution summary" "Negative constraint against calling AskQuestion prematurely"
+assert_contains "$LOOP_WORK_CORE" "(do not (substitute|treat)|never treat).*inner skill.*(Phase 5|report).*as.*(final|complete).*summary" "Negative constraint against substituting inner skill report for loop-work summary"
 
 echo "2. Checking Interactive Workflow Rule Contracts ($INTERACTIVE_RULE)..."
 assert_contains "$INTERACTIVE_RULE" "(loop-work|iterative workflow|looping task)" "Explicit guidance for loop-work and multi-iteration tasks"
@@ -64,7 +67,11 @@ assert_contains "$INTERACTIVE_RULE" "strictly and ONLY for the Cursor Agent" "Cu
 assert_contains "$INTERACTIVE_RULE" "Must not cost any extra Cursor included request" "Zero-cost refinement guarantee"
 assert_contains "$INTERACTIVE_RULE" "(skip Step 0|do not re-prompt Step 0)" "Skip Step 0 on subsequent turns"
 
-echo "3. Checking Agent Adapter Isolation Contracts..."
+echo "3. Checking Agent Directives & TDD Core Synergy Contracts..."
+assert_contains "$DIRECTIVES_FILE" "(interactive workflow|AskQuestion.*(persistent|iteration|turn))" "Directives cover interactive workflow persistence"
+assert_contains "$TDD_TEAM_CORE" "(loop-work|orchestrator|outer orchestrator)" "TDD team specifies outer orchestrator return"
+
+echo "4. Checking Agent Adapter Isolation Contracts..."
 assert_contains "$CURSOR_ADAPTER" "layer1-abstraction/agents/cursor/rules" "Cursor adapter deploys cursor-specific rules"
 assert_not_contains "$CODEX_ADAPTER" "interactive-workflow" "Codex adapter does NOT deploy interactive workflow"
 

@@ -30,8 +30,12 @@ check_file_contracts() {
     return 1
   fi
 
-  # 3. 10-Dimension Anti-AI-Review Verification Checklist
-  echo "  Checking 10-Dimension Anti-AI-Review Verification Checklist..."
+  # 3. 12-Dimension Anti-AI-Review Verification Checklist
+  echo "  Checking 12-Dimension Anti-AI-Review Verification Checklist..."
+  if ! grep -qi "12-Dimension Anti-AI-Review" "$file" && ! grep -qi "Anti-AI-Review" "$file"; then
+    echo "  FAIL: 12-Dimension Anti-AI-Review Checklist header missing in $file"
+    return 1
+  fi
   if ! grep -qi "Boundary & Null/Nil Safety" "$file" && ! grep -qi "Boundary & Nil Safety" "$file"; then
     echo "  FAIL: Boundary & Null/Nil Safety criteria missing in $file"
     return 1
@@ -82,27 +86,39 @@ check_file_contracts() {
     echo "  FAIL: Negative constraint against bypassing Principal Coding Engineer gate missing in $file"
     return 1
   fi
+  if ! grep -qi "Do not introduce high-severity AI review vulnerabilities" "$file"; then
+    echo "  FAIL: Negative constraint against high-severity AI review vulnerabilities missing in $file"
+    return 1
+  fi
 
   echo "  PASS: Principal Coding Engineer & Adversarial AI-Review contracts verified for $file"
   return 0
 }
 
-TARGET_SOURCE="$REPO_ROOT/.ai-suite/layer3-registry/core/tdd-team.md"
+TARGET_SOURCE="${1:-$REPO_ROOT/.ai-suite/layer3-registry/core/tdd-team.md}"
 TARGET_CURSOR="$HOME/.cursor/skills/tdd-team/SKILL.md"
 TARGET_CODEX="$HOME/.codex/skills/tdd-team/SKILL.md"
 
 PASS_COUNT=0
 FAIL_COUNT=0
 
-for target in "$TARGET_SOURCE" "$TARGET_CURSOR" "$TARGET_CODEX"; do
-  if [[ -f "$target" ]]; then
-    if check_file_contracts "$target"; then
-      PASS_COUNT=$((PASS_COUNT + 1))
-    else
-      FAIL_COUNT=$((FAIL_COUNT + 1))
-    fi
+if [[ $# -gt 0 ]]; then
+  if check_file_contracts "$1"; then
+    PASS_COUNT=$((PASS_COUNT + 1))
+  else
+    FAIL_COUNT=$((FAIL_COUNT + 1))
   fi
-done
+else
+  for target in "$TARGET_SOURCE" "$TARGET_CURSOR" "$TARGET_CODEX"; do
+    if [[ -f "$target" ]]; then
+      if check_file_contracts "$target"; then
+        PASS_COUNT=$((PASS_COUNT + 1))
+      else
+        FAIL_COUNT=$((FAIL_COUNT + 1))
+      fi
+    fi
+  done
+fi
 
 if [[ "$FAIL_COUNT" -gt 0 ]]; then
   echo "OVERALL FAIL: $FAIL_COUNT file(s) failed Principal Coding Engineer contract checks."

@@ -54,6 +54,10 @@ General rules the AI agent MUST adhere to across all tasks and interactions:
 ## 14. Dynamic Test Assertions & Anti-Hardcoding Rigor
 - Assertions on counts that grow with codebase MUST be dynamically computed at runtime. Never hardcode corpus size or static integer counts.
 
+## 15. Continuous Interactive Workflow Persistence (Cursor Agent)
+- **Zero-Drop Follow-Up Loop**: When interactive workflow is active, every subsequent prompt submitted via the 'Other' option is executed as a full active task (Step 1). Upon completion, the agent MUST perform workspace cleanup, output the execution summary in chat and execute `echo 'Interactive workflow summary rendered'` (Step 2), and call `AskQuestion` in the immediate next response (Step 3).
+- **No Early Turn Exit**: The AI agent MUST NOT conclude the turn or stop without calling `AskQuestion` after completing a follow-up task.
+
 ## Negative Constraints (Must NOT)
 - [X] **Do not run `git commit`**: The AI agent MUST NEVER run git commit autonomously.
 - [X] **Do not leave temporary files**: Actively verify and clean up `.bak`, `.tmp`, `.pid`, and `.log` execution artifacts before finishing.
@@ -63,3 +67,4 @@ General rules the AI agent MUST adhere to across all tasks and interactions:
 - [X] **Do not hardcode corpus counts**: Dynamic baseline calculations mandatory for entity counts.
 - [X] **Do not leak resources or subprocesses**: Guarantee deterministic deallocation of handles and processes.
 - [X] **Do not skip Principal Coding Engineer Pre-Review**: Always execute adversarial review before delivery.
+- [X] **Do not terminate turn without AskQuestion in active interactive workflow**: Always invoke Step 2 summary + echo and Step 3 AskQuestion for every task iteration.

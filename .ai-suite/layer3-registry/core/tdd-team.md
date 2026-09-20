@@ -44,7 +44,7 @@ When generating frontend or mobile code:
 3. **Hard Stage Gates**: Forbidden from advancing until current stage tests pass 100% in terminal.
 4. **Live Workspace Only**: Use file-edit and shell tools; no chat-pasted code dumps.
 5. **Closure Criteria**: 100% complete To-Do list, terminal-verified test logs for every stage, ensure task is 100% completed before stopping.
-6. **Agent & Team Phase Review**: Review `tdd-team` process before starting; review tasks, rules, and constraints at the start of each phase.
+6. **Agent & Team Phase Review**: Review the `tdd-team` skill and process before starting; review tasks, rules, and constraints at the start of each phase.
 7. **Role Visibility**: Explicitly log which role is executing what before invoking tools (e.g., "Staff PM: Reviewing legacy features...", "Principal UX/UI Designer: Proposing design system...", "Principal Engineer: Reviewing requirements...").
 8. **Never-Give-Up Spirit**: Persist through repeated attempts, exploring alternative angles. Absolute prohibition against damaging production environments.
 9. **Efficiency, Parallel Processing & ReadLints**: Maximize parallel tool calls for independent operations; run ReadLints or linter checks after code changes.
@@ -55,7 +55,7 @@ When generating frontend or mobile code:
 
 ### Phase 1 -- Product Design & Requirements Verification Loop (Multiple Iterations)
 - **1.1 Product Discovery & Legacy Review (Domain Profiling)**: Staff PM reviews legacy features and existing codebase. Dynamic SME performs **Domain Classification & Risk Profiling**, outputting Domain Category & Standards Mapping, Domain Specific Failure Modes (e.g., race conditions in inventory, packet loss in telemetry, HIPAA PHI leakage in logging), and Domain Non-Functional Requirements (NFRs) (latency limits, safety margins, payload bounds).
-- **1.2 UI/UX Design System & AI Workflow Discovery**: Principal UX/UI Designer proposes design system (palette, typography, spacing, states). Consults Dynamic SME for domain ergonomics. Principal AI-Augmented Workflow Engineer maps out AI interactions (streaming states, optimistic UI updates, human validation checkpoints, graceful AI fallbacks when offline or high-latency).
+- **1.2 UI/UX Design System & AI Workflow Discovery**: Principal UX/UI Designer proposes design system (color palette, typography hierarchy, spacing rules, interaction states). Consults Dynamic SME for domain ergonomics. Principal AI-Augmented Workflow Engineer maps out AI interactions (streaming states, optimistic UI updates, human validation checkpoints, graceful AI fallbacks when offline or high-latency).
 - **1.3 Define**: PM consults Distinguished AI Expert to optimize prompt/requirements. PM + Senior SDET author Executable Specifications (Gherkin `.feature` files) converting domain failure modes into executable scenarios (e.g., given a network partition, given an expired token, given a concurrent checkout). PM initializes Master To-Do List with `TodoWrite`.
 - **1.4 Plan & Requirement Review**: Fellow/Principal Engineer reviews specs, requirements, and edge-case coverage against user prompt and NFRs (scalability, concurrency, performance, accessibility). Reviewer gate MUST reject requirements if the Dynamic SME determines that domain-specific compliance, safety, or protocol bounds were omitted. Loop back on rejection.
 - **1.5 Test Design & Requirement Validation**: Senior Principal SDET examines requirement sanity. Converts domain failure modes into executable test scenarios covering Boundary Value Analysis (BVA), Equivalence Partitioning, Negative/Failure paths, UI rendering, interaction states, and accessibility. Runs linter/dry-run validation script in terminal.
@@ -63,7 +63,7 @@ When generating frontend or mobile code:
 - **1.7 Iterate**: On failure or rejection, rewrite + re-test. Multi-iteration refinement required before proceeding.
 
 ### Phase 2 -- Architectural Validation Loop
-- **2.1 Contracts & Tech Stack**: Principal Systems Architect and Frontend & Mobile Architect produce interface contracts, mock schemas, API stubs, concurrency and failure models. Incorporates domain protocol schemas, regulatory data flow boundaries (HIPAA PHI, PCI-DSS cardholder data, GDPR telemetry pseudonymization), RFCs, and domain-specific concurrency topologies (distributed lock leases, idempotency tokens, atomic order book mutations, backpressure ring buffers, out-of-order stream reconciliation). Frontend Architect defines dumb/smart boundaries, custom hook isolation, and state management.
+- **2.1 Contracts & Tech Stack**: Principal Systems Architect and Frontend & Mobile Architect produce interface contracts, mock schemas, modern tech stack definitions, API stubs, custom hooks topology, concurrency and failure models. Incorporates domain protocol schemas, regulatory data flow boundaries (HIPAA PHI, PCI-DSS cardholder data, GDPR telemetry pseudonymization), RFCs, and domain-specific concurrency topologies (distributed lock leases, idempotency tokens, atomic order book mutations, backpressure ring buffers, out-of-order stream reconciliation). Frontend Architect defines dumb/smart boundaries, custom hook isolation, and state management.
 - **2.2 Architecture Review**: Fellow/Principal Engineer reviews contracts against 8 dimensions:
   1. *Scalability & Scale*: Throughput, bounded memory, horizontal/vertical scalability, streaming large datasets vs buffering.
   2. *Concurrency & Parallel Processing*: Parallel processing capabilities, worker pools, non-blocking I/O, race condition and deadlock prevention.
@@ -81,17 +81,24 @@ Per module:
 - **3.2 GREEN (Mental Dry-Run)**: Fellow/Principal Coding Engineer conducts static analysis/mental dry-run against edge cases, boundary conditions, algorithmic complexity ($O(N)$ vs $O(N^2)$), parallel safety, resource lifecycles (1E-Class Standards), and UI/UX guidelines (dumb presentation, custom hooks). Staff Developer writes **minimum** code to pass tests.
 - **3.3 Execute & Evaluate**: Staff Developer runs full test suite. On failure, perform Root Cause Analysis (RCA) or step back to Phase 1/2 if architectural flaw.
 - **3.4 REFACTOR & CLEANUP**: Refactor for SOLID/DRY, modularity, and high performance. Enforce language formatting standards (`gofmt` for Go, `clang-format` for C, no trivial empty lines with spaces/tabs; strip spaces/tabs from blank lines to preserve clean empty lines for visual readability and avoid gitreview red flags), applying formatting only to changed lines without reformatting unchanged code. Delete deprecated files. Run `ReadLints` or linters. Re-run tests to confirm green.
-- **3.5 Principal Coding Engineer Adversarial AI-Review Simulation**: Fellow/Principal Coding Engineer & Chief Reviewer conducts adversarial review mimicking external AI reviewers across the **10-Dimension Anti-AI-Review Verification Checklist**:
-  1. *Boundary & Null/Nil Safety*: Off-by-one, empty/null/nil inputs, slice/index bounds, collection length guards.
-  2. *Deterministic Error Handling & Propagation*: No swallowed errors, explicit propagation, actionable messages, safe fallbacks, no bare except, contextual error wrapping.
-  3. *Resource & Memory Safety (1E-Class Standards)*: Strict resource lifecycle and leak prevention, explicit deallocation, file descriptor closures, socket closures, subprocess termination, deterministic cleanup (`defer` in Go, context managers / `finally` in Python, RAII in C++, `trap ... EXIT` in Shell), I/O timeouts, zero dynamic allocations in critical hot paths, and deterministic execution time enforcement with strict bounds on loops and recursion depth.
+- **3.5 Principal Coding Engineer Adversarial AI-Review Simulation**: Fellow/Principal Coding Engineer & Chief Reviewer conducts adversarial review mimicking external AI reviewers across the **12-Dimension Anti-AI-Review Zero-Defect Verification Checklist**:
+  1. *Boundary & Null/Nil Safety*: Off-by-one, empty/null/nil inputs, slice/index bounds, collection length guards, empty string checks before indexing.
+  2. *Deterministic Error Handling & Contextual Propagation*: No swallowed errors, explicit error propagation (`fmt.Errorf("...: %w", err)`), actionable messages, safe fallbacks, no bare except clauses, explicit exception types.
+  3. *Resource & Memory Safety (1E-Class Standards)*: Strict resource lifecycle and leak prevention, explicit deallocation, file descriptor closures, socket closures, subprocess termination, deterministic cleanup (`defer` in Go, context managers (`with`) / `finally` in Python, RAII in C++, `trap ... EXIT` in Shell), I/O timeouts, zero dynamic allocations in critical hot paths, and deterministic execution time enforcement with strict bounds on loops and recursion depth.
   4. *Concurrency, Subprocess & Race Safety*: Thread safety, atomic operations, deadlock-free lock ordering, race detection under contention (`go test -race` or thread sanitizer), subprocess tracking without orphaned child processes, domain concurrency hazard mitigation (preventing double-spend, inventory race conditions, and telemetry buffer overflows).
-  5. *Security, Injection & Sanitization*: Shell variable quoting (`"$var"`), path traversal guards, input sanitization, buffer bounds, injection prevention.
-  6. *Algorithmic Efficiency & Bounded Complexity*: Time/space complexity ($O(N)$ vs $O(N^2)$), vectorization/batching, bounded loops, minimal disk I/O.
+  5. *Security, Injection & Path Traversal Sanitization*: Shell variable quoting (`"$var"`), path traversal guards (`os.path.abspath`, resolving symlinks, checking root bounds), input sanitization, buffer bounds checking, injection prevention.
+  6. *Algorithmic Efficiency & Bounded Complexity*: Time/space complexity ($O(N)$ vs $O(N^2)$), vectorization/batching, bounded loops, minimal disk I/O, avoidance of redundant traversals.
   7. *Code Formatting & Cleanliness Standards (Gitreview Red-Flag Prevention)*: Zero space/tab-only empty lines (strip all spaces/tabs from lines without code), functions <= 50 lines, low cyclomatic complexity, selective formatting only on new/modified lines without touching unchanged code.
   8. *UI/UX & AI Workflow Fidelity*: Dumb component purity, business logic in custom hooks, theme token adherence, WCAG AA/AAA accessibility, optimistic UI / streaming safety.
-  9. *Anti-Hardcoding Rigor & Dynamic Test Assertions*: Dynamically computed counts and lengths in test assertions, zero hardcoded static integer literals for codebase-growing metrics, rigorous boundary and negative path tests.
+  9. *Anti-Hardcoding Rigor & Dynamic Test Assertions*: Dynamically computed counts and lengths in test assertions, zero hardcoded static integer literals for codebase-growing metrics, rigorous boundary and negative path tests (>95% branch coverage).
   10. *Domain Integrity, Protocol RFC Conformance & User Prompt Alignment*: Strict conformance to domain RFCs/protocols, isolation of sensitive domain entities (PHI/PII/PCI), defensive safeguards against domain failure modes, exact fulfillment of user requirements.
+  11. *Anti-False-Positive & Review Rule Compliance (ai-review-bot Alignment)*:
+      - Diff direction awareness: Focus reviews on `+` lines; never flag `-` lines or intentional fixes.
+      - Case-insensitive identifiers: Enforce lowercase normalization (`.lower()`) on FQDNs, hostnames, DNS entries before comparison or dictionary indexing.
+      - Secret & Token Protection: Mask all bearer tokens, private keys, passwords in logging and trace outputs.
+      - Timing Attack Defense: Prevent early returns in authentication checks before credential hash evaluation.
+      - Class Guards: Ensure validation methods (`_validate_path`, `_check_auth`) are explicitly invoked on external inputs.
+  12. *Separation of Concerns & Architecture Purity*: Handlers/services must not issue raw DB calls or bypass repository abstractions; ensure deleted symbols have zero dangling references across codebase.
 - **3.6 Autonomous Pre-Emptive Fix & Remediation**: On any detected defect, trigger Autonomous Pre-Emptive Fix Loop to patch source code; re-run all test suites in terminal; issue **Zero-Defect Audit Certification** only when zero findings remain.
 - **3.7 Stage exit**: Repeat 3.1 - 3.6 across all modules. Exit only when 100% pass and Zero-Defect Audit Certification is granted.
 
@@ -112,6 +119,7 @@ Per module:
   9. Domain Compliance & Regulatory Traceability Matrix (Mapping RFCs, regulatory frameworks, domain failure modes, and passing test proofs).
 - Staff PM emits fully completed `[x]` Master To-Do list.
 - **Final Report**: Output detailed final report explaining **what, how and why** for the task finished, with **important notes** and **what the user should know**.
+- **Outer Orchestrator & Loop-Work Synergy**: When `tdd-team` is executed within an outer orchestrator (such as `loop-work`), completing Phase 5 concludes the current iteration and control explicitly returns to the outer orchestrator's protocol (e.g., `loop-work` Step 7) to emit the comprehensive multi-iteration summary report, rather than replacing the outer orchestrator's summary.
 - **Delivery**: Provide copy-paste `git` commands for user review and commit (`git status`, `git add .`, `git commit -m "..."`).
 
 ## Inputs (user provides)
@@ -128,6 +136,7 @@ Per module:
 - [X] Do not run destructive commands on remote/production hosts without confirmation.
 - [X] **Do not reformat unchanged code unless explicitly requested by the user**: Selective formatting on new/modified lines only.
 - [X] **Do not leave trivial empty lines containing only spaces or tabs**: Strip spaces/tabs from blank lines to preserve clean empty lines for readability and avoid gitreview red flags.
-- [X] **Do not hardcode corpus sizes in test assertions**: Assertions on counts that grow with codebase MUST be computed dynamically at runtime, never hardcoded as static integer literals.
+- [X] **Do not hardcode corpus sizes in test assertions**: Assertions on counts that grow with codebase MUST be computed dynamically at runtime, never hardcoded as static integer literals. Ensure test coverage > 95%.
 - [X] **Do not bypass Domain Classification & Risk Profiling**: Dynamic SME must output Domain Context Matrix before Phase 1.2.
-- [X] **Do not bypass the Principal Coding Engineer Adversarial AI-Review & Pre-Emptive Fix Gate**: Complete 10-Dimension audit and resolve all findings for Zero-Defect Audit Certification before exiting Phase 3.
+- [X] **Do not bypass the Principal Coding Engineer Adversarial AI-Review & Pre-Emptive Fix Gate**: Complete 12-Dimension audit and resolve all findings for Zero-Defect Audit Certification before exiting Phase 3.
+- [X] **Do not introduce high-severity AI review vulnerabilities**: Zero tolerance for case-sensitive FQDN comparisons, unmasked credential logging, timing attacks in authentication paths, unhandled None/nil dereferences, and missing class validation guards.
