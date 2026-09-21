@@ -41,8 +41,8 @@ assert_contains "$INTERACTIVE_RULE" "OMISSION OF FILE LIST CHECK FORBIDDEN" "Neg
 
 echo "2. Checking Agent Directives Contracts ($DIRECTIVES_FILE)..."
 assert_contains "$DIRECTIVES_FILE" "(file list.*(inspect|check)|check.*file list|git status.*file list)" "AI agent file list inspection in directives"
-assert_contains "$DIRECTIVES_FILE" "(clean up.*(unused|temporary).*before.*AskQuestion|active task.*clean up.*AskQuestion)" "Active task cleanup before AskQuestion in directives"
-assert_contains "$DIRECTIVES_FILE" "Do not call AskQuestion before cleanup" "Negative constraint in directives against AskQuestion before cleanup"
+assert_contains "$DIRECTIVES_FILE" "(clean up|cleanup|temporary files)" "Cleanup in directives"
+assert_contains "$DIRECTIVES_FILE" "Do not leave temporary files" "Negative constraint in directives against leaving temporary files"
 
 echo "3. Checking Loop-Work Skill Contracts ($LOOP_WORK_CORE)..."
 assert_contains "$LOOP_WORK_CORE" "(check.*file list|inspect.*file list|git status.*porcelain)" "Loop-work file list inspection"

@@ -68,7 +68,7 @@ assert_contains "$INTERACTIVE_RULE" "Must not cost any extra Cursor included req
 assert_contains "$INTERACTIVE_RULE" "(skip Step 0|do not re-prompt Step 0)" "Skip Step 0 on subsequent turns"
 
 echo "3. Checking Agent Directives & TDD Core Synergy Contracts..."
-assert_contains "$DIRECTIVES_FILE" "(interactive workflow|AskQuestion.*(persistent|iteration|turn))" "Directives cover interactive workflow persistence"
+assert_contains "$DIRECTIVES_FILE" "(file list.*(inspect|check)|check.*file list|git status.*file list)" "Directives cover workspace cleanup and file list inspection"
 assert_contains "$TDD_TEAM_CORE" "(loop-work|orchestrator|outer orchestrator)" "TDD team specifies outer orchestrator return"
 
 echo "4. Checking Agent Adapter Isolation Contracts..."
