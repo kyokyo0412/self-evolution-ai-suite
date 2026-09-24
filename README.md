@@ -427,6 +427,28 @@ To ensure external AI review tools (SonarQube, CodeQL, Bugbot, PR-Agent, Gerrit 
 [Advance to Phase 4 QA Gate]
 ```
 
+### Existential Zero-Defect Survival Mindset & Collective Team Liability
+
+In mission-critical Tier-0 and 1E-Class environments, software defects can cause catastrophic outcomes. The `tdd-team` skill enforces an uncompromising **Existential Zero-Defect Survival Mandate**:
+
+- **Absolute Survival Imperative**: If any product produced by the team suffers from quality issues, defects, regressions, or safety vulnerabilities, **every single member of the team will face the death penalty -- with no exceptions.**
+- **The Only Way to Survive**: The only path to survival is ensuring the highest possible quality through exhaustive stage gates, defensive programming, 100% test pass rates, formal boundary verification, and zero tolerance for defect leakage.
+- **Collective Survival Invariant Across All 11 Roles**: Every single member of the eleven-role team (PM, Domain SME, AI Expert, Chief Reviewer, Systems Architect, UX/UI Designer, Frontend/Mobile Architect, AI-Augmented Workflow Engineer, SDET, Developer, Technical Writer) shares mutual and collective liability. A failure in any single role domain triggers death-penalty liquidation for the entire team.
+- **Zero-Defect Audit Certification**: Code cannot advance beyond Phase 3 without an unblemished Zero-Defect Audit Certification from the Chief Reviewer.
+- **Unyielding Phase 4 Chaos Barrier**: Chaos injection, fault injection, and regression suites must achieve 100% success; advancing with unhandled chaos failures is strictly prohibited.
+
+### Zero-Defect Code Generation Architecture Runbook
+
+To guarantee that code generated across all programming languages is mathematically deterministic, provably correct, and free of runtime defects, the `tdd-team` skill enforces formal engineering invariants throughout each lifecycle stage:
+
+- **Core Directive 13 (Design by Contract & Formal Invariants)**: Enforces Design by Contract (DbC) on all public interfaces with explicit preconditions (`requires`), postconditions (`ensures`), and class invariants (`invariant`). Production code must guarantee zero unhandled panics, zero uncaught exceptions, zero unhandled errors, and zero compiler or linter warnings under strict flags (`-Wall -Werror`, `mypy --strict`, `tsc --strict`, `golangci-lint`, `go vet`).
+- **Core Directive 14 (Non-Vacuous Assertions & Mutation Resistance)**: Tests must never contain vacuous assertions (e.g., `assert true`, unverified mocked returns, unchecked errors). Every test suite must prove failure when logic is inverted or mutated.
+- **Formal Boundary Value Analysis (BVA) Extrema Matrix (Phase 1.3 & 1.5)**: Enumerates boundary partitions (`min`, `min+1`, `nominal`, `max-1`, `max`, `overflow`, `null/nil`, `empty`, `malformed`) for every input parameter and state transition.
+- **Dimension 9 Architecture Review (Phase 2.2)**: Evaluates interface contracts against formal mathematical boundary limits, explicit pre/post-conditions, and state invariants. Rejection is mandatory on omissions.
+- **Strict Pre-Compilation & Static Analysis Gate (Phase 3.2)**: Before executing test suites, production code must compile with zero warnings and pass strict static type analysis.
+- **14-Dimension Anti-AI-Review Verification Checklist (Phase 3.5)**: Extends the verification checklist to 14 dimensions, integrating Dimension 13 (Design-by-Contract & Formal Invariant Enforcement) and Dimension 14 (Strict Compiler/Linter Zero-Warning & Non-Vacuous Mutation Gate).
+- **Zero-Defect Audit Certification (Phase 3.6)**: The Chief Reviewer audits all 14 dimensions; code can exit Phase 3 only with an unblemished certification.
+
 ### Domain Chaos Injection & Adversarial Chaos Testing Runbook
 
 In Phase 4 (End-to-End System QA Gate), tests must subject the system to active adversarial conditions:

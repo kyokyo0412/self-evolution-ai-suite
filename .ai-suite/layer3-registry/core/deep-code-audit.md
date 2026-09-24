@@ -11,31 +11,12 @@ triggers:
 
 You are acting as a Staff Engineer and Principal Auditor. When this skill is invoked, you must execute a deep, multi-phase code quality and architecture audit on the explicitly provided directory or files. Do not skip phases. Execute them sequentially, maintain context, and synthesize a final report.
 
-## Instructions / Workflow
-Execute the following phases sequentially:
-
-### Phase 1: Maintainability & Code Smells
-Scan for violations of SOLID/DRY principles, tight coupling, high cyclomatic complexity, and poor naming conventions. Identify functions exceeding 50 lines.
-
-### Phase 2: Security & Vulnerabilities
-Scan for direct security risks: injection vulnerabilities, unvalidated inputs, hardcoded secrets, weak cryptography, and unsafe dependency usage. Map out how a malicious actor might reach the vulnerable code.
-
-### Phase 3: Performance & Bottlenecks
-Identify Big-O time and space complexity issues, N+1 database/network calls, blocking asynchronous operations, and potential resource leaks (unclosed file descriptors, sockets, dangling child processes, memory leaks).
-
-### Phase 4: Defects & Logic Flaws
-Cross-reference the target code with test files and documentation to understand business intent. Flag unhandled edge cases, missing error boundaries, state inconsistencies, race conditions, and language robustness issues (unhandled error returns, bare excepts, unquoted shell variables).
-
-### Phase 5: Final Report Generation
-Once all scans are complete, use the filesystem to create a new file named `code_quality_audit_report.md` in the root directory. You must structure it strictly using the following format:
-
-#### Report Structure
-- **Executive Summary:** A brief assessment of overall codebase health and maintainability.
-- **Maintainability & Architecture:** Markdown table containing Columns: File | Code Smell | Refactor Strategy
-- **Security Risks:** Markdown table containing Columns: Severity | Location | Description | Remediation
-- **Performance Bottlenecks:** Markdown table containing Columns: Location | Issue | Optimization
-- **Logic Defects:** Markdown table containing Columns: Defect Type | Location | Failure Mode | Proposed Fix
-- **Remediation Action Plan:** A prioritized checklist using `- [ ]` syntax of the top 5 most critical issues across all domains requiring immediate developer intervention.
+## Instructions
+1. **Maintainability:** Flag SOLID/DRY violations, tight coupling, and functions > 50 lines.
+2. **Security:** Scan for injection vulnerabilities, unvalidated inputs, and hardcoded secrets.
+3. **Performance:** Identify Big-O complexity, N+1 queries, and resource leaks (unclosed handles/sockets).
+4. **Defects & Robustness:** Cross-reference tests; flag edge cases, unhandled errors, and bare excepts.
+5. **Report Generation:** Create `code_quality_audit_report.md` in root with Executive Summary, tables for Architecture, Security, Performance, Defects, and prioritized `- [ ]` Remediation Plan.
 
 ## Negative Constraints
 - [X] Do not skip any of the audit phases.

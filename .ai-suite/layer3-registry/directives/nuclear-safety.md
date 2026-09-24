@@ -3,11 +3,10 @@
 Mandatory security and quality standards universally required for all generated code.
 
 ## 1. Code Quality & Implementation Standards
-- **Deterministic Execution**: Deterministic execution time. Avoid unbounded loops, recursion without strict depth limits, and non-deterministic algorithms.
+- **Deterministic Execution**: Avoid unbounded loops, recursion without strict depth limits, and non-deterministic algorithms.
 - **Memory Management**: NO dynamic memory allocation post-initialization. Static allocation prevents leaks and fragmentation.
-- **Formal Verification**: Code MUST support formal verification; avoid untraceable state machines.
-- **Defensive Programming**: Validate inputs against boundary conditions. Graceful degradation and safe-state fallbacks for all error paths.
-- **Resource Lifecycle Determinism**: All system resources, handles, sockets, buffers, and child processes MUST have bounded lifetimes and deterministic deallocation guarantees. Never allow uncollected handles or unbounded resource growth.
+- **Defensive Programming**: Validate inputs against boundary conditions. Safe fallbacks for all error paths.
+- **Resource Lifecycle Determinism**: All resources, handles, sockets, and child processes MUST have bounded lifetimes and deterministic deallocation guarantees.
 
 ## 2. Testing & Validation Standards
 - **MC/DC Coverage**: Tests MUST achieve 100% Modified Condition/Decision Coverage (MC/DC) for safety-critical logic.

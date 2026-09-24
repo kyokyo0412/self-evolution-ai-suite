@@ -42,6 +42,8 @@ bash tests/test-tdd-team-domain-sme-contracts.sh "$SOURCE_FILE" >/dev/null 2>&1 
 bash tests/test-tdd-team-concurrency-race-contracts.sh "$SOURCE_FILE" >/dev/null 2>&1 || { echo "ERROR: Baseline concurrency check failed"; exit 1; }
 bash tests/test-tdd-team-adverse-chaos-contracts.sh "$SOURCE_FILE" >/dev/null 2>&1 || { echo "ERROR: Baseline chaos check failed"; exit 1; }
 bash tests/test-tdd-team-resource-safety-contracts.sh "$SOURCE_FILE" >/dev/null 2>&1 || { echo "ERROR: Baseline resource safety check failed"; exit 1; }
+bash tests/test-tdd-team-existential-quality-contracts.sh "$SOURCE_FILE" >/dev/null 2>&1 || { echo "ERROR: Baseline existential quality check failed"; exit 1; }
+bash tests/test-tdd-team-zero-defect-codegen-contracts.sh "$SOURCE_FILE" >/dev/null 2>&1 || { echo "ERROR: Baseline zero-defect codegen check failed"; exit 1; }
 echo "   Baseline verification passed 100%."
 
 echo "2. Injecting and Evaluating Code Mutations:"
@@ -105,6 +107,41 @@ run_mutation_test "Mutate 12-Dimension Anti-AI-Review Checklist to Standard Revi
 M12="$SANDBOX/m12.md"
 sed '/Do not introduce high-severity AI review vulnerabilities/d' "$SOURCE_FILE" > "$M12"
 run_mutation_test "Remove high-severity AI review vulnerability negative constraint" "tests/test-tdd-team-principal-coding-review-contracts.sh" "$M12"
+
+# Mutant 13: Remove Existential Zero-Defect Survival Mandate header
+M13="$SANDBOX/m13.md"
+sed '/Existential Zero-Defect Survival Mandate/d' "$SOURCE_FILE" > "$M13"
+run_mutation_test "Remove Existential Zero-Defect Survival Mandate header" "tests/test-tdd-team-existential-quality-contracts.sh" "$M13"
+
+# Mutant 14: Mutate death penalty with no exceptions to team warning
+M14="$SANDBOX/m14.md"
+sed 's/death penalty/informal team warning/g' "$SOURCE_FILE" > "$M14"
+run_mutation_test "Mutate death penalty to informal team warning" "tests/test-tdd-team-existential-quality-contracts.sh" "$M14"
+
+# Mutant 15: Remove Negative Constraint against quality defect leakage
+M15="$SANDBOX/m15.md"
+sed '/Do not tolerate quality issues or defect leakage/d' "$SOURCE_FILE" > "$M15"
+run_mutation_test "Remove defect leakage negative constraint" "tests/test-tdd-team-existential-quality-contracts.sh" "$M15"
+
+# Mutant 16: Mutate Design by Contract preconditions in Core Directives
+M16="$SANDBOX/m16.md"
+sed 's/Design by Contract/Arbitrary Implementation/g' "$SOURCE_FILE" > "$M16"
+run_mutation_test "Mutate Design by Contract preconditions in Core Directives" "tests/test-tdd-team-zero-defect-codegen-contracts.sh" "$M16"
+
+# Mutant 17: Remove Non-Vacuous Assertions requirement in Core Directives
+M17="$SANDBOX/m17.md"
+sed '/Non-Vacuous Assertions & Mutation Resistance/d' "$SOURCE_FILE" > "$M17"
+run_mutation_test "Remove Non-Vacuous Assertions in Core Directives" "tests/test-tdd-team-zero-defect-codegen-contracts.sh" "$M17"
+
+# Mutant 18: Mutate 14-Dimension Verification Checklist
+M18="$SANDBOX/m18.md"
+sed 's/14 Dimensions/10 Dimensions/g' "$SOURCE_FILE" > "$M18"
+run_mutation_test "Mutate 14-Dimension Checklist to 10 Dimensions" "tests/test-tdd-team-zero-defect-codegen-contracts.sh" "$M18"
+
+# Mutant 19: Remove Negative Constraint against generating code without DbC
+M19="$SANDBOX/m19.md"
+sed '/Do not generate code without Design-by-Contract/d' "$SOURCE_FILE" > "$M19"
+run_mutation_test "Remove Negative Constraint against code without DbC" "tests/test-tdd-team-zero-defect-codegen-contracts.sh" "$M19"
 
 echo "=== Mutation Analysis Results ==="
 echo "Total Mutants Evaluated: $TOTAL_MUTANTS"

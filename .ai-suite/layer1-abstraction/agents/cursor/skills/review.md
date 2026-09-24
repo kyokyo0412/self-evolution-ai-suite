@@ -1,26 +1,21 @@
 ---
 name: review
-description: Review code changes with the Bugbot or Security Review subagent. Use when interacting with this skill.
+description: Review code changes with Bugbot or Security Review subagents. Use when choosing between bug or security reviews.
 disable-model-invocation: true
 triggers:
   - review
 ---
 # Review
 
-Ask the user which review to run with the AskQuestion tool. If the AskQuestion tool is not available, ask the user directly. Provide exactly one single-select question with two options:
-
+Ask the user which review subagent to run using `AskQuestion` (or prompt directly if unavailable). Single-select options:
 - `bugbot`: Bugbot (`/review-bugbot`)
 - `security`: Security Review (`/review-security`)
 
-After the user chooses, run the matching review once:
-
-- Bugbot: follow the `/review-bugbot` instructions.
-- Security Review: follow the `/review-security` instructions.
+Upon selection, invoke the matching review workflow once.
 
 ## Instructions
-
-Follow the standard instructions for this skill.
+Execute the selected review workflow following `/review-bugbot` or `/review-security`.
 
 ## Negative Constraints (Must NOT)
-
-- Do not break established workflows.
+- [X] Do not run reviews without user selection if choice is ambiguous.
+- [X] Do not modify reviewed code during the review phase.

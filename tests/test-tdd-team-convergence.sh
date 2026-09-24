@@ -94,6 +94,14 @@ check_step "Cursor Adapter Pruning Contracts" bash tests/test-cursor-adapter-ena
 check_step "Principal Coding Engineer Contracts" bash tests/test-tdd-team-principal-coding-review-contracts.sh
 check_step "Principal Coding Engineer EUT" bash tests/test-tdd-team-principal-coding-review-eut.sh
 
+# 12. Existential Zero-Defect Survival Mindset & Collective Liability Contracts & EUT
+check_step "Existential Zero-Defect Survival Contracts" bash tests/test-tdd-team-existential-quality-contracts.sh
+check_step "Existential Zero-Defect Survival EUT" bash tests/test-tdd-team-existential-quality-eut.sh
+
+# 13. Zero-Defect Code Generation & Formal Invariants Contracts & EUT
+check_step "Zero-Defect Code Generation Contracts" bash tests/test-tdd-team-zero-defect-codegen-contracts.sh
+check_step "Zero-Defect Code Generation EUT" bash tests/test-tdd-team-zero-defect-codegen-eut.sh
+
 echo "=================================================================="
 echo " Formal Convergence Summary: $PASS_COUNT passed, $FAIL_COUNT failed"
 echo "=================================================================="

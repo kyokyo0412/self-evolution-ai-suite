@@ -68,6 +68,10 @@ else
   bash "$REPO_ROOT/tests/test-evolutionary-validation-structural-contracts.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/tests/test-tdd-team-principal-coding-review-contracts.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/tests/test-tdd-team-principal-coding-review-eut.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-tdd-team-existential-quality-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-tdd-team-existential-quality-eut.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-tdd-team-zero-defect-codegen-contracts.sh" >/dev/null 2>&1 || true
+  bash "$REPO_ROOT/tests/test-tdd-team-zero-defect-codegen-eut.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/tests/test-cross-module-regression-closure.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/tests/test-safety-limits-and-portability.sh" >/dev/null 2>&1 || true
   bash "$REPO_ROOT/.ai-suite/layer4-evolutionary/validation/validate-requirements.sh" >/dev/null 2>&1 || true

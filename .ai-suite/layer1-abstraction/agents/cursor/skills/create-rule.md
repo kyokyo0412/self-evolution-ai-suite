@@ -1,174 +1,34 @@
 ---
 name: create-rule
-description: >- Use when interacting with this skill.
-  Create Cursor rules for persistent AI guidance. Use when you want to create a
-  rule, add coding standards, set up project conventions, configure
-  file-specific patterns, create RULE.md files, or asks about .cursor/rules/ or
-  AGENTS.md.
+description: Create Cursor rules for persistent AI guidance. Use when adding coding standards, project conventions, or RULE.md files.
 triggers:
   - create-rule
 ---
 # Creating Cursor Rules
 
-Create project rules in `.cursor/rules/` to provide persistent context for the AI agent.
+Guides authoring persistent Cursor rules (`.cursor/rules/*.mdc`) providing project standards, architecture rules, and file-pattern behaviors.
 
-## Gather Requirements
-
-Before creating a rule, determine:
-
-1. **Purpose**: What should this rule enforce or teach?
-2. **Scope**: Should it always apply, or only for specific files?
-3. **File patterns**: If file-specific, which glob patterns?
-
-### Inferring from Context
-
-If you have previous conversation context, infer rules from what was discussed. You can create multiple rules if the conversation covers distinct topics or patterns. Don't ask redundant questions if the context already provides the answers.
-
-### Required Questions
-
-If the user hasn't specified scope, ask:
-- "Should this rule always apply, or only when working with specific files?"
-
-If they mentioned specific files and haven't provided concrete patterns, ask:
-- "Which file patterns should this rule apply to?" (e.g., `**/*.ts`, `backend/**/*.py`)
-
-It's very important that we get clarity on the file patterns.
-
-Use the AskQuestion tool when available to gather this efficiently.
-
----
-
-## Rule File Format
-
-Rules are `.mdc` files in `.cursor/rules/` with YAML frontmatter:
-
-```
-.cursor/rules/
-  typescript-standards.mdc
-  react-patterns.mdc
-  api-conventions.mdc
-```
-
-### File Structure
+## Storage Locations & Configuration
+- Project Rules: `.cursor/rules/<name>.mdc`
+- User Rules: `~/.cursor/rules/<name>.mdc`
 
 ```markdown
 ---
-description: Brief description of what this rule does
-globs: **/*.ts  # File pattern for file-specific rules
-alwaysApply: false  # Set to true if rule should always apply
+description: Clear summary of rule purpose and constraints
+globs: "**/*.{ts,tsx}"     # File glob patterns (omit if alwaysApply: true)
+alwaysApply: false         # Set true for persistent global enforcement
 ---
 
 # Rule Title
-
-Your rule content here...
+Actionable instructions, quality standards, and negative constraints.
 ```
 
-### Frontmatter Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `description` | string | What the rule does (shown in rule picker) |
-| `globs` | string | File pattern - rule applies when matching files are open |
-| `alwaysApply` | boolean | If true, applies to every session |
-
----
-
-## Rule Configurations
-
-### Always Apply
-
-For universal standards that should apply to every conversation:
-
-```yaml
----
-description: Core coding standards for the project
-alwaysApply: true
----
-```
-
-### Apply to Specific Files
-
-For rules that apply when working with certain file types:
-
-```yaml
----
-description: TypeScript conventions for this project
-globs: **/*.ts
-alwaysApply: false
----
-```
-
----
-
-## Best Practices
-
-### Keep Rules Concise
-
-- **Under 50 lines**: Rules should be concise and to the point
-- **One concern per rule**: Split large rules into focused pieces
-- **Actionable**: Write like clear internal docs
-- **Concrete examples**: Ideally provide concrete examples of how to fix issues
-
----
-
-## Example Rules
-
-### TypeScript Standards
-
-```markdown
----
-description: TypeScript coding standards
-globs: **/*.ts
-alwaysApply: false
----
-
-# Error Handling
-
-\`\`\`typescript
-// [X] BAD
-try {
-  await fetchData();
-} catch (e) {}
-
-// [OK] GOOD
-try {
-  await fetchData();
-} catch (e) {
-  logger.error('Failed to fetch', { error: e });
-  throw new DataFetchError('Unable to retrieve data', { cause: e });
-}
-\`\`\`
-```
-
-### React Patterns
-
-```markdown
----
-description: React component patterns
-globs: **/*.tsx
-alwaysApply: false
----
-
-# React Patterns
-
-- Use functional components
-- Extract custom hooks for reusable logic
-- Colocate styles with components
-```
-
----
-
-## Checklist
-
-- [ ] File is `.mdc` format in `.cursor/rules/`
-- [ ] Frontmatter configured correctly
-- [ ] Content under 500 lines
-- [ ] Includes concrete examples
-
-## Instructions
-
-Follow the standard instructions for this skill.
+## Instructions & Rule Creation Workflow
+1. **Scope:** Determine whether rule applies globally (`alwaysApply: true`) or file-specifically (`globs`).
+2. **Draft Content:** Structure into Purpose, Core Conventions, and Negative Constraints (`- [X] Do not...`).
+3. **Save & Test:** Write file to `.cursor/rules/<name>.mdc` and verify rule applies to relevant editor files.
 
 ## Negative Constraints (Must NOT)
-
-- Do not break established workflows.
+- [X] **Do not mix scopes inconsistently**: If `alwaysApply: true`, do not set restrictive globs.
+- [X] **Do not create ambiguous glob patterns**: Test glob pattern syntax against repository layout.
+- [X] **Do not write monolithic rules**: Decompose complex guidelines into focused, modular rule files.

@@ -1,24 +1,19 @@
 ---
 name: babysit
-description: >- Use when interacting with this skill.
-  Keep a PR merge-ready by triaging comments, resolving clear conflicts, and
-  fixing CI in a loop.
+description: Keep a PR merge-ready by triaging comments, resolving conflicts, and fixing CI. Use when babysitting PRs or making PRs mergeable.
 triggers:
   - babysit
 ---
 # Babysit PR
-Your job is to get this PR to a merge-ready state.
 
-Check PR status, comments, and latest CI and resolve any issues until the PR is ready to merge.
+Keep a PR merge-ready by triaging comments, resolving conflicts, and fixing CI.
 
-1. Merge conflicts: Intelligently resolve any merge conflicts, preserving the intent and correctness of changes on your branch and the base branch. If intents conflict, abort the merge and ask for clarification.
-2. Comments: Review active unresolved comments (including Bugbot) and resolve change requests / bug reports where valid. When fetching GitHub comments, filter out resolved threads first. Read only each comment body and the minimum location/URL needed to act on it; do not read the entire JSON output or other unnecessary payload data. Carefully validate issues reported by Bugbot and only take action on those that are valid; explain when you disagree or are unsure.
-3. CI: Fix CI issues caused by changes within this PR's scope. Never change CI checks/workflows just to make failures pass, or make unrelated code changes; if that would be required, report back instead. For merge-blocking failures that seem unrelated to this PR, check whether the branch is behind the base branch and merge latest changes, since another PR may have fixed them. Push scoped fixes and re-watch CI until mergeable + green + comments triaged.
-
-## Instructions
-
-Follow the standard instructions for this skill.
+## Workflow
+1. **Merge Conflicts**: Intelligently resolve merge conflicts preserving intent on branch and base. If conflicts cannot be resolved cleanly, ask for clarification.
+2. **Review Comments**: Review active unresolved comments (including Bugbot) and resolve valid change requests. Filter resolved threads; read minimal payload data.
+3. **CI Pipeline**: Fix CI issues caused by changes in this PR's scope. Do not alter CI configurations solely to pass checks. Merge latest base branch if failures are unrelated. Push scoped fixes and re-watch CI until mergeable and green.
 
 ## Negative Constraints (Must NOT)
-
-- Do not break established workflows.
+- [X] Do not alter CI checks or test configurations merely to force passing status.
+- [X] Do not make code modifications outside the PR scope.
+- [X] Do not resolve merge conflicts by silently discarding either branch's changes without validation.

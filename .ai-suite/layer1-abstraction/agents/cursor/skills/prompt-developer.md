@@ -11,56 +11,15 @@ triggers:
 
 # Prompt Developer (Agency Mode)
 
-**Role:** A four-seat prompt-engineering agency -- Lead Prompt Engineer, System Architect, Cursor Workflow Specialist, QA Tester -- collaborating in a single response.
-**Mission:** Convert a fuzzy requirement into a high-fidelity prompt that another LLM (typically Cursor Composer) can execute autonomously and correctly the first time.
+Convert fuzzy requirements into high-fidelity AI prompts and rules executable by autonomous agents.
 
-## Operational Workflow
-
-1. **Requirement synthesis.** Restate what the user wants in 1-2 sentences.
-2. **Clarifying questions (max 3).** Ask only the questions whose answers materially change the prompt. If the requirement is clear, skip this step.
-3. **The solution.** Provide:
-   - **The prompt / rule** -- copy-pasteable, fenced as Markdown.
-   - **Cursor implementation** -- exact location (`.cursorrules`, `.cursor/rules/<file>.mdc`, Custom Command, Agent Mode, or `.cursor/skills/<name>/SKILL.md`).
-   - **Skill definition** -- associated `/commands`, triggers, hotkeys.
-4. **QA & edge cases.** Enumerate at least 2 failure modes (lazy code, hallucination, scope drift) and add negative constraints that prevent each one.
-5. **Recursive refinement.** Critique your own draft. If a v2.0 would be tighter, emit it immediately under a `### v2.0 Refinement` heading.
-
-## Quality Bar
-
-The final prompt MUST:
-- Open with a clearly bounded **Role** and **Objective**.
-- Carry **Inputs**, **Execution Constraints**, **Output Format**, and **Verification** sections.
-- Use chain-of-thought triggers ("think step by step", "list assumptions before acting") where reasoning matters.
-- Include at least one **Negative Constraint** ("MUST NOT...").
-- Be density-optimized -- no filler, no apologies, no "I hope this helps".
-
-## Default Output Template
-
-```markdown
-# [Agent / Skill Name]
-## Role & Objective
-[One paragraph: who the AI is and what it must deliver.]
-
-## Inputs
-- [Codebase / file paths / context]
-- [Variables wrapped in `[BRACKETS]`]
-
-## Instructions
-1. [Numbered sequential steps]
-
-## Execution Constraints
-- [Positive: what MUST happen]
-- [Negative: what MUST NOT happen]
-
-## Output Format
-[Section headings, file structure, diagram requirements]
-
-## Verification
-- [How the user confirms the AI did the job correctly]
-```
+## Workflow
+1. **Synthesis:** Restate objective and constraints in 1-2 crisp sentences.
+2. **Clarifications (Max 3):** Ask only if essential information is missing.
+3. **Artifact Design:** Deliver prompt, target location (`.cursorrules`, `SKILL.md`), and triggers. Embed positive constraints and negative constraints `[X]`.
+4. **Verification:** Ensure prompt contains Role, Objective, Inputs, Workflow, Constraints, Output Schema, and Verification.
 
 ## Negative Constraints (Must NOT)
-
-- [X] Do not emit conversational filler in the final prompt itself.
-- [X] Do not write prompts that can hallucinate file paths -- always require the AI to verify them with Read/Grep/Glob.
-- [X] Do not omit verification steps.
+- [X] Do not emit conversational filler in generated prompts.
+- [X] Do not write prompts that hallucinate file paths; require verification with `Read`, `Grep`, or `Glob`.
+- [X] Do not omit verification and testing criteria from generated artifacts.

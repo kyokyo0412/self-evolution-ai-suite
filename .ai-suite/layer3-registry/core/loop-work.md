@@ -9,105 +9,34 @@ triggers:
 
 # Loop-Work Skill -- Iterative Agentic Execution
 
-Iterative orchestrator embodying a **never-give-up spirit** for executing a task across $N$ iterations using a specified skill (e.g., `tdd-team`).
+Iterative orchestrator for executing a task across $N$ iterations using a specified skill (e.g., `tdd-team`) with progressive hardening and continuous state logging.
 
 ## Core Directives
-
-1. **Parse Request:** Identify iteration count ($N$), target skill, and core task prompt (Task X).
-2. **Overarching Goal Invariance (Do Not Split Goal):** The overarching goal of task X MUST explicitly serve as the goal of each iteration. Every single iteration MUST attempt to achieve the FULL original goal. You MUST NOT split the original goal into sub-tasks across iterations.
-3. **Execute All N Iterations (Strict Count, No Early Exit):** Execute all $N$ requested iterations. You are STRICTLY FORBIDDEN from triggering an early exit based on premature convergence or 100% defect-free assumptions when $i < N$. Iteration count $N$ is mandatory for cumulative progressive hardening, boundary fuzzing, race safety, mutation testing, and deep verification.
-4. **Iterative State Reassessment & Custom Planning:** Reassess artifact state, identify gaps, formulate a customized plan, and run task X again. Each iteration progressively refines the deliverable toward zero defects.
-5. **Identical Task Target Invariant:** Repeat the same task for all $N$ iterations on the EXACT SAME, COMPLETE task target. You are STRICTLY FORBIDDEN from splitting the task target into parts, chunks, or slices across iterations.
-6. **Full Review & Execution Every Iteration:** Execute target skill across all dimensions on the ENTIRE artifact. Fix defects within that iteration; subsequent iterations re-verify from start to finish.
-7. **Structured State Logging (.loop_state.md):** Append each iteration to `.loop_state.md` using the mandatory schema: `Goal`, `Current State Assessment`, `Customized Plan`, `What`, `Why`, `How`, `Special Notes`, and `Status & Quality Assessment`.
-8. **Cognitive LLM Validation & Cognitive Self-Evaluation:** Use LLM reasoning to evaluate against the original goal whether the iteration result better achieves the overarching goal and verify high-quality achievement of the goal.
-9. **Rule & Safety Adherence:** Strictly follow `interactive-workflow` (when running under Cursor Agent), `step-action-visibility`, and `cursor-suite-production-safety`.
-
-## Identical Full Task Iteration Invariant & Anti-Partitioning Rules
-
-For prompt `use loop-work skill to loop 100 times to use tdd-team skill to review file A and fix bugs`:
-- Every iteration $i \in [1, 100]$ reviews the ENTIRE File A across ALL dimensions simultaneously and resolves defects in-place.
-- What loop-work is NOT (Strictly Forbidden):
-  - **NO Early Exit or Premature Convergence:** Forbidden from exiting early before reaching iteration $N$.
-  - **NO Spatial Partitioning (Target Chunking):** Do NOT split file, codebase, or module into chunks across loops.
-  - **NO Dimensional Partitioning (Aspect Splitting):** Do NOT check syntax in loop 1, concurrency in loop 2, memory in loop 3. Check ALL aspects every loop.
-  - **NO Hardening Phase Partitioning:** Every iteration evaluates the FULL multi-dimensional hardening envelope simultaneously.
-  - **NO Phasing / Workflow Partitioning:** Do NOT spread skill lifecycle phases across iterations.
-  - **NO Goal Drift or Sub-Goal Substitution:** Maintain the exact original goal through iteration $N$.
-
-## State Tracking
-
-State across iterations is tracked deterministically via `.loop_state.md`:
-- Each iteration logs: `Goal`, `Current State Assessment`, `Customized Plan`, `What`, `Why`, `How`, `Special Notes`, and `Status & Quality Assessment`.
-- Continuation sentinel `AGENT_LOOP_WAKE_loop_work` is monitored via background execution (`block_until_ms: 0`, `notify_on_output`).
-
-## Integration with Interactive Workflow & Step Action Visibility
-
-1. **Step Action Visibility**: For every iteration, output full VLLM reasoning, execution plan, progress, and results to chat.
-2. **Interactive Workflow Isolation (Cursor Agent)**: For looping skills like `loop-work` when running under Cursor Agent with interactive workflow active, the main task is the entire loop across all $N$ iterations running in Step 1 (Daemon Mode). Do not trigger State 2 or State 3 prematurely until all N iterations are completely finished. Intermediate iterations execute silently in the background. Preserve AI suite isolation principle and continuous self-evolution.
-3. **Step 7 Final Summary & Question Separation**: Upon completing iteration $N$, control returns to loop-work Step 7. The agent MUST NOT treat an inner skill's sub-report or Phase 5 as the final conversation summary. In Cursor Agent with interactive workflow active, the agent MUST output the full, dedicated Loop-Work Final Execution Summary to chat and call `echo 'Interactive workflow summary rendered'` in Step 2 summary, followed by Step 3 `AskQuestion`. For non-Cursor agents or when interactive workflow is not active, output the final execution summary to chat and conclude the task normally.
-
-## Progressive Hardening Framework (Evaluated EVERY Iteration)
-
-Every iteration $i \in [1, N]$ simultaneously applies all 5 hardening dimensions:
-1. **Dimension 1: Baseline Correctness, Schema Compliance & Static Quality**: Nil/null guards, bounds protection, error wrapping, static analysis, unit/integration tests.
-2. **Dimension 2: Concurrency, Synchronization & Race Safety**: Goroutine/thread contention, mutex ordering, deadlock avoidance, race detection (`go test -race`).
-3. **Dimension 3: Chaos, Adversarial Fuzzing & Fault Injection**: Protocol fuzzing, malformed payloads, connection drops, timeout recovery, boundary overflows.
-4. **Dimension 4: Resource Lifecycles & 1E-Class Safety Standards**: Memory leak audits, object pools, deterministic handle/socket closure (`defer`), bounded recursion, 1E nuclear safety compliance.
-5. **Dimension 5: Mutation Analysis, Coverage Maximization & Regression Proof**: Mutation test survival, branch coverage $>98\%$, schema verification, regression closure.
-
-*Cumulative Depth:* Iteration 1 provides Order-1 primary fixes; subsequent iterations achieve Order-2 interaction defense, Order-3 mutation resistance, and Order-N formal invariance.
-
-## Continuation Protocol (CRITICAL)
-
-To maintain autonomous looping across all $N$ iterations without stalling:
-- At the end of every iteration where $i < N$, chain into the next iteration via tool call before ending the turn.
-- Spawn a background sleeper with `Shell` (`block_until_ms: 0`, `notify_on_output` matching `^AGENT_LOOP_WAKE_loop_work`):
-  ```bash
-  sleep 5
-  echo 'AGENT_LOOP_WAKE_loop_work {"iteration": <next_iteration_number>, "prompt": "<original_prompt>"}'
-  ```
-- On wake, read `.loop_state.md` and continue immediately.
+1. **Goal Invariance**: The overarching goal MUST serve as the goal of every iteration. Do NOT split or partition the goal across iterations.
+2. **Execute All N Iterations**: Execute all $N$ requested iterations. Never exit early on premature convergence.
+3. **State Logging (`.loop_state.md`)**: Reassess artifact state, identify gaps, formulate a customized plan, and append each iteration to `.loop_state.md`.
+4. **Identical Target**: Repeat the task on the exact same complete target across all iterations without spatial or dimensional slicing.
+5. **Visibility**: Output VLLM reasoning, execution plan, progress, and results to chat for every iteration.
 
 ## Execution Protocol
-
 For `i = 1` to `N`:
-1. **Step 1: Reassess State & Customize Plan**: Reassess state and past entries in `.loop_state.md`; calibrate multi-dimensional envelope; formulate plan aligned with full goal.
-2. **Step 2: Run Task X Again (with Step Action Visibility)**: Invoke target skill on the full, unpartitioned target; after target skill completes, return to loop-work Execution Protocol; resolve defects in-iteration; output full VLLM reasoning and execution plan to chat.
-3. **Step 3: Validate the Result & Goal Improvement**: Validate the result against goal alignment, progressive improvement, complete scope, and all-aspect coverage.
-4. **Step 4: Output Iteration Report & Update State File**: Output step progress and results to chat; append mandatory block to `.loop_state.md`.
-5. **Step 5: Design Improvements**: Formulate concrete strategy for iteration $i+1$ across all 5 dimensions.
-6. **Step 6: Loop Continuation**:
-   - If $i < N$: Execute background continuation command (`AGENT_LOOP_WAKE_loop_work`). Never stop.
-   - If $i == N$: Proceed to Step 7.
-7. **Step 7: Final Summary & Interactive Workflow Wrap-up**:
-   - Verify high-quality achievement across all $N$ iterations.
-   - **Return from Target Skill & Dedicated Loop-Work Summary**: When the target skill (e.g., `tdd-team`) completes its final iteration, control explicitly returns to loop-work Step 7. You MUST NOT treat or substitute the inner skill's Phase 5 or sub-report as the complete task summary.
-   - **Mandatory Chat Summary**: Once all $N$ iterations are done, output the full, comprehensive execution summary of the entire loop-work process in the conversational chat window text before concluding or invoking wrap-up tools (covering Overall Goal Achievement across all N iterations, State Progression Log from `.loop_state.md`, Multi-Dimensional 5-Dimension Hardening Matrix for all N iterations, and Final Key Points).
-   - **Cleanup & File List Inspection**: Before final wrap-up:
-     - The AI agent MUST check the file list (via `git status --porcelain` or directory listing) to detect all leftover, temporary, or unused files (`*.bak`, `*.tmp`, `patch.sh*`, `.cursor_build.*`, `.cov_init.sh`, `.coverage_trace.log`).
-     - Remove all temporary and unused files before final wrap-up (and in Cursor Agent, clean up unused and temporary files before AskQuestion).
-   - **Interactive Workflow Synergy (Cursor Agent Only)**:
-     - When running in Cursor Agent with interactive workflow active:
-       - State 2 (Wrap-Up & Summary Isolation): Output final execution summary as visible chat text AND call `echo 'Interactive workflow summary rendered'` to force UI synchronization. DO NOT call AskQuestion in this response.
-       - State 3 (The Follow-Up Loop): After `echo` returns, call `AskQuestion` in very next response.
-       - DO NOT call AskQuestion until chat summary has been rendered and UI echo has returned. Do NOT bundle AskQuestion with task execution tools.
-     - For non-Cursor agents or when interactive workflow is not active: conclude task execution cleanly after outputting final chat summary.
+1. Reassess state from `.loop_state.md` and formulate customized plan across all 5 hardening dimensions.
+2. Invoke target skill across the complete artifact; resolve defects in-iteration.
+3. Verify improvements and append results to `.loop_state.md`.
+4. If $i < N$: spawn background continuation sleeper matching sentinel `^AGENT_LOOP_WAKE_loop_work`.
+5. If $i == N$: Proceed to Step 7.
+6. **Step 7: Summary & Interactive Workflow Synergy**:
+   - Output full multi-iteration summary in chat (Goal Achievement, State Progression Log, Hardening Matrix, Key Points).
+   - Check file list (`git status --porcelain`) and remove temporary or unused files before AskQuestion (`*.bak`, `*.tmp`, `.cursor_build.*`).
+   - In Cursor Agent with interactive workflow active: Step 2 summary -> Step 3 AskQuestion. Output full chat summary, call `echo 'Interactive workflow summary rendered'`, and invoke `AskQuestion` in next turn (do NOT bundle AskQuestion with task tools).
 
 ## Negative Constraints (Must NOT)
-- [X] Do NOT trigger an early exit before completing all $N$ requested iterations. Never exit early on premature convergence.
-- [X] Do NOT end a turn or wait for user input when $i < N$; chain tool calls via background continuation sleeper.
-- [X] Do NOT alter or substitute the goal of task X across iterations (No Goal Drift or Sub-Goal Substitution).
-- [X] Do NOT run an iteration without reassessing state and customizing a new plan.
-- [X] Do NOT fail to log each iteration into `.loop_state.md` with goal, what, why, how, and special notes.
-- [X] Do NOT split target file or codebase into sub-parts across iterations (Spatial Partitioning).
-- [X] Do NOT split review dimensions or categories across iterations (Dimensional Partitioning).
-- [X] Do NOT defer or divide hardening dimensions across iterations (Hardening Phase Partitioning).
-- [X] Do NOT spread workflow phases across iterations (Phasing Partitioning).
-- [X] Do NOT break AI suite isolation or self-evolution mechanisms.
-- [X] Do NOT call `AskQuestion` or trigger `interactive-workflow` State 2/3 in Cursor Agent until all $N$ iterations are complete.
-- [X] In Cursor Agent, do NOT call AskQuestion before outputting the full final execution summary to the chat window and executing `echo 'Interactive workflow summary rendered'`.
-- [X] In Cursor Agent, do NOT call AskQuestion before removing all temporary or unused files generated during active task execution.
-- [X] In Cursor Agent, do NOT conclude loop or advance to AskQuestion without having the AI agent check the file list (`git status --porcelain`) to identify and remove all temporary and unused files.
-- [X] Do NOT substitute or treat an inner skill's Phase 5 or sub-report as the final complete task summary; always return to loop-work Step 7 to emit the full multi-iteration summary report.
+- [X] Do NOT trigger an early exit before completing all $N$ requested iterations.
+- [X] Do NOT alter or substitute the goal of task X across iterations.
+- [X] Do NOT split target file or codebase into sub-parts across iterations.
+- [X] Do NOT split review dimensions or hardening phases across iterations.
+- [X] In Cursor Agent, do NOT call `AskQuestion` before outputting the full final execution summary to the chat window and executing `echo 'Interactive workflow summary rendered'`.
+- [X] In Cursor Agent, do NOT call `AskQuestion` before removing all temporary or unused files generated during active task execution.
+- [X] In Cursor Agent, do NOT conclude loop or advance to `AskQuestion` without having the AI agent check the file list (`git status --porcelain`) to identify and remove all temporary and unused files.
+- [X] Do not substitute inner skill Phase 5 or report as final complete task summary; always return to loop-work Step 7 to emit the full multi-iteration summary report.
 - [X] Do NOT make other agents use this interactive workflow. Strictly for Cursor Agent.

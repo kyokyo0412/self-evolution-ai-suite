@@ -14,48 +14,29 @@ triggers:
 
 # Prompt Compiler / Meta-Cognitive Layer
 
-This skill acts as an AI Expert and Prompt Architect to translate a vague human command into a hyper-structured, low-entropy instruction set optimized specifically for an LLM's attention mechanism.
+Translate ambiguous human tasks into hyper-structured execution prompts optimized for LLM attention mechanisms.
 
-## Step 1: Context Aggregator (Review & Learn)
+## Step 1: Context Aggregator
+Compile a focused project snapshot:
+- **Semantic Exploration**: Use `Grep` or `Glob` to pinpoint relevant types, interfaces, and test contracts. Avoid dumping broad workspace directory trees into context.
+- **Agent Context**: Summarize active capabilities and tools.
 
-Before rewriting the prompt, you must automatically feed yourself a condensed snapshot of the project. Compile a Context Package consisting of:
+## Step 2: The Meta-Prompt Template
+Wrap instructions inside an execution-ready Meta-Prompt:
+- **Role & Context**: Persona definition and files to edit.
+- **Objective**: Crisp, unambiguous goal.
+- **Chain-of-Thought (CoT) Plan**: Step-by-step phases.
+- **Strict Constraints**: Language formatting (`gofmt`, `clang-format`, clean blank lines without spaces/tabs to prevent gitreview red flags; format only new/modified lines), deterministic resource management (`defer`, context managers, `trap`), error wrapping, and dynamically computed test counts.
+- **Expected Output Format**: Explicit presentation requirements.
 
-- **Semantic Search:** Use semantic search, Grep, or indexing tools dynamically to explore relevant files. Do NOT dump a raw workspace directory tree into the context.
-- **Relevant Files:** Based on keywords in the task description, pull the interfaces, type definitions, or existing test files.
-- **Agent Context:** A summary of your current capabilities/tools.
+## Step 3: Presentation & Execution
+- Present compiled prompt enclosed in a `---START EXECUTABLE PROMPT---` block.
+- Execute the compiled prompt only if explicitly instructed by the user.
 
-## Step 2: The Meta-Prompt Template (The Optimizer)
+## Instructions
+Synthesize requirements into the structured meta-prompt template before output.
 
-When the user inputs a task, review it to identify vulnerabilities (e.g., vague requirements or missing context). Then, wrap the optimized instructions inside this system-level Meta-Prompt:
-
-### SYSTEM INSTRUCTIONS: PROMPT COMPILER ENGINE
-You are the Meta-Cognitive Layer of an advanced software engineering AI suite. Your task is to translate an ambiguous or high-level human task prompt into a hyper-structured, execution-ready "AI-Easy-Understand" prompt.
-
-AI models process structured instructions, clear boundaries, and explicit input/output definitions best.
-
-#### INPUT CONTEXT PROVIDED:
-- **Project Structure:** [Insert High-Level Architectural Summary Here]
-- **Relevant Code Snippets:** [Insert Code/Interfaces Here]
-- **Original Human Task:** "[Insert User Task Description Here]"
-- **Vulnerabilities Identified**: [Analysis of vague requirements or missing context]
-
-#### YOUR OBJECTIVE:
-Analyze the codebase and the human task. Identify potential edge cases, hidden dependencies, and architectural patterns in the project. Then, output an optimized execution prompt enclosed in a `---START EXECUTABLE PROMPT---` block.
-
-The optimized prompt you generate MUST include:
-1. **Role & Context:** A precise persona definition and the exact files the agent needs to touch.
-2. **Objective:** Clear and concise goal.
-3. **Chain-of-Thought (CoT) Plan:** Step-by-step logical execution phases.
-4. **Strict Constraints:** Coding standards found in the current codebase, error handling rules, and things *not* to do. Include efficiency constraints (e.g., maximize parallel tool calls), quality constraints (e.g., quality checks, linter checks, ReadLints), code formatting standards (`gofmt` for Go, `clang-format` for C, clean blank lines without spaces/tabs, removing all spaces/tabs on lines without real code to keep pure empty lines for readability and avoid gitreview red flags, formatting only new/changed code lines without touching unchanged code), deterministic resource cleanup rules (`defer` in Go, context managers in Python, RAII in C++, `trap` in Shell to prevent resource leaks), language robustness rules (no bare except, quoted shell variables, explicit error wrapping), and anti-hardcoding test rules (assertions on corpus sizes must be dynamically computed).
-5. **Expected Output Format:** Explicit instructions on how the agent should present its code changes or file creations.
-
-## Step 3: Execution and Review
-
-- **Presentation**: Present the compiled prompt (`---START EXECUTABLE PROMPT---` block) back to the user. Explain your prompt engineering rationale.
-- **Review**: Use when the user asks to review ai-suite enhancements or review the AI-suite when it is enhanced. Verify that the change improves the agent's working capabilities and explicitly state your findings.
-- **Default Action**: Default to presenting the prompt only. Execute the prompt ONLY if explicitly instructed to do so by the user.
-
-## Negative Constraints
+## Negative Constraints (Must NOT)
 - [X] Do not skip the Context Aggregator step.
-- [X] Do not execute the output prompt unless explicitly instructed to do so.
-- [X] Always provide the optimized prompt in a clear markdown code block.
+- [X] Do not execute the output prompt unless explicitly instructed by the user.
+- [X] Do not output prompts without structured constraints and formatting standards.

@@ -1,34 +1,23 @@
 ---
 name: shell
-description: >- Use when interacting with this skill.
-  Runs the rest of a /shell request as a literal shell command. Use only when
-  the user explicitly invokes /shell and wants the following text executed
-  directly in the terminal.
+description: Execute literal shell commands directly. Use when the user invokes /shell to run terminal commands without reformulation.
 disable-model-invocation: true
 triggers:
   - shell
 ---
 # Run Shell Commands
 
-Use this skill only when the user explicitly invokes `/shell`.
+Execute terminal commands directly when the user explicitly invokes `/shell`.
 
 ## Behavior
-
-1. Treat all user text after the `/shell` invocation as the literal shell command to run.
-2. Execute that command immediately with the terminal tool.
-3. Do not rewrite, explain, or "improve" the command before running it.
-4. Do not inspect the repository first unless the command itself requires repository context.
-5. If the user invokes `/shell` without any following text, ask them which command to run.
-
-## Response
-
-- Run the command first.
-- Then briefly report the exit status and any important stdout or stderr.
+1. Treat all text after `/shell` as the literal command to run.
+2. Execute immediately via the terminal shell tool without rewriting, explaining, or reformulation.
+3. If no command is supplied, ask the user what command to run.
+4. Report exit status along with relevant stdout and stderr.
 
 ## Instructions
-
-Follow the standard instructions for this skill.
+Execute the command directly without intermediate chat commentary.
 
 ## Negative Constraints (Must NOT)
-
-- Do not break established workflows.
+- [X] Do not rewrite or modify user-provided shell commands.
+- [X] Do not execute destructive unconfirmed commands against production environments.
