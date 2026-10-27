@@ -1,6 +1,6 @@
 ---
 name: testbed-setup
-description: Build and verify remote SSH testbeds via Idempotent Discovery-Execute-Debug-Verify loops. Use when setting up testbeds, configuring remote host environments, or provisioning Docker labs.
+description: Provision and verify an authorized non-production SSH testbed. Use when setting up a testbed, configuring a remote lab, or provisioning Docker lab environments.
 triggers:
   - set up a testbed
   - configure a remote environment
@@ -8,32 +8,30 @@ triggers:
   - create a testbed for a specific area
 ---
 
-# Autonomous Testbed Engineer
+# Testbed Setup
 
-Provisions, configures, and validates remote SSH testbeds by executing sequential commands against the target host following an idempotent **Discovery -> Execute -> Debug -> Verify** operational loop.
+## Inputs and mandatory safety preflight
 
-## Hard Safety Preflight (Mandatory)
-Before establishing SSH connections, confirm with the user all four items:
-1. Target Hostname/IP.
-2. Explicit confirmation host is non-production (lab/testbed/dev).
-3. Granted privilege level (sudo/root).
-4. State snapshot/backup readiness.
+Establish the target hostname/IP, explicit non-production authorization, allowed privilege level, requested changes, authentication provider/key reference, and snapshot/rollback readiness before SSH. Reuse explicit session evidence; request only missing required information. Never solicit passwords or tokens in chat, reports, or process arguments. A hostname pattern cannot prove a host is non-production.
 
-Execute `.ai-suite/layer4-evolutionary/validation/testbed-setup-preflight.sh <host>` to reject production patterns (`*prod*`, `*production*`, `*-pr-*`), probe reachability, and snapshot OS baseline to timestamped file in `testbed-state/`.
+Inspect the supported `.ai-suite/layer4-evolutionary/validation/testbed-setup-preflight.sh` interface before invoking it: it is a real-host operational tool, not an offline test. It rejects known production patterns, probes reachability, and records an OS baseline under `testbed-state/`; execute only after the required authorization. Verify the host identity and approved change scope against the observed baseline.
 
-## Operational Protocol & Execution Loop
-For each setup task:
-1. **Discovery:** SSH to host; inspect OS, kernel, ports, packages. Cache state in `testbed-state/<host>-<ts>.json`.
-2. **Sequential Execution:** Run commands sequentially. Advance only when exit code is `0`. Prefer idempotent forms (`apt-get install -y --no-upgrade`, `systemctl enable --now`).
-3. **Active Debugging:** On failure, inspect stderr, `/var/log/syslog`, `journalctl -xe`, and resolve root cause.
-4. **Verification:** Probe service functionality after each step (`systemctl is-active`, curl health checks).
+## Operational protocol
 
-## Handover Artifacts
-Emit Validation Report, Change Summary, and Rollback Recipe.
+1. **Discovery:** Inspect OS/kernel, service health, ports, packages, and existing state read-only. Record the minimum masked baseline and rollback instructions needed for the requested changes.
+2. **Plan:** Compare desired and existing state. Prefer idempotent, verified package/configuration operations. Explain material state changes and rollback before performing them; use a supported dry-run where applicable and obey host/VIB-specific approval gates.
+3. **Execute:** Apply dependent commands sequentially with verified exit statuses; parallelize only independent read-only checks. Use a bounded timeout and deterministic cleanup for each connection, subprocess, and temporary fixture.
+4. **Debug:** On failure, inspect relevant stderr, service logs, and current state before retrying. Never repeat a failing command more than three times. Reassess once with a bounded alternative; if the cause remains external or unsafe, checkpoint and report the blocker.
+5. **Verify:** Test requested service functionality and relevant negative/recovery cases. Service-active status alone is insufficient proof of the mission objective. Compare observed changes with the plan and preserve baseline/rollback evidence.
+
+## Handover
+
+Return a Validation Report with actual commands/statuses, observed behavior, failed or unavailable checks; a Change Summary; and a Rollback Recipe tied to the saved baseline. Retain user-facing recovery evidence and remove only task-created disposable files. Stop on identity mismatch, unapproved production risk, missing rollback prerequisite, or failed required verification.
 
 ## Negative Constraints (Must NOT)
-- [X] **Do not connect without safety preflight confirmation**: Explicit user authorization required.
-- [X] **Do not run destructive deletion commands**: Forbid `rm -rf /`, `dd if=/dev/zero`, `mkfs.*`, `:(){:|:&};:`.
-- [X] **Do not install unpinned third-party packages or VIBs**: Require verified path or hash.
-- [X] **Do not leak credentials in shell history**: Use environment variables or stdin piping; export `HISTFILE=/dev/null`.
-- [X] **Do not retry failing commands more than 3 times**: Execute active debugging between retries.
+
+- [X] Do not connect before the required safety preflight information and authorization are established.
+- [X] Do not execute destructive production operations or treat this skill as permission for unrelated changes.
+- [X] Do not install unverified third-party packages or VIBs; require a trusted source and applicable version/hash evidence.
+- [X] Do not expose credentials in chat, shell history, command arguments, logs, or reports; use configured credential providers, key references, or protected input.
+- [X] Do not claim setup success from partial command completion or retry failures indefinitely.

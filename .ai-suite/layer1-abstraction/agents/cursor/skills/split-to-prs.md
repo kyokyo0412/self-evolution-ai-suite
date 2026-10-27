@@ -6,19 +6,20 @@ triggers:
 ---
 # Split to PRs
 
-Split a accumulated set of changes into small, reviewable pull requests.
+Prepare independent, reviewable slices and a concrete manual PR publication plan.
 
 ## Workflow
-1. **Analyze Working Tree**: Compare against default branch (`main`). Identify natural slices by directory, component, or `CODEOWNERS` boundaries.
-2. **Snapshot Working State**: Create a recoverable backup ref (`git stash create`, `git update-ref refs/backup/pre-split-...`).
-3. **Propose Plan**: Present slice boundaries with branch names, target diff scopes, and dependency sequence. Await user confirmation before mutating git state.
-4. **Execute**: Create feature branches, stage and commit specific paths per slice, push, and open PRs.
-5. **Report**: Summarize branch names, PR URLs, and remaining local files.
+1. **Analyze Working Tree**: Discover the actual default branch and base/head revisions; do not assume `main`. Inspect staged, unstaged, and untracked work and identify slices by behavior and dependency boundaries.
+2. **Preserve State**: Record the starting status and preserve user edits and staging. Use isolated worktrees or named patch artifacts for slices; do not auto-stash, switch branches, or create backup refs in the user's working tree.
+3. **Prepare Slices**: Build the requested local artifacts with explicit paths and dependency order. For a review-only request, provide the plan without editing. Clarify only scope decisions that cannot be inferred from the request or code.
+4. **Validate**: Run relevant verification for each slice against its prerequisites and check the combined result. Disclose a slice that cannot stand alone.
+5. **Report**: Provide slice contents, base revisions, evidence, and manual branch/stage/commit/push/PR commands. Report PR URLs only when they actually exist.
 
 ## Instructions
 Follow the phased split workflow, validating state at each slice.
 
 ## Negative Constraints (Must NOT)
-- [X] Do not create branches, commit, push, or open PRs without prior user approval of the plan.
+- [X] Never execute `git commit` or `git push`; leave publication to the user. Plan approval does not override this boundary.
+- [X] Do not open PRs or post externally without explicit authorization.
 - [X] Do not discard uncommitted work or execute destructive git operations (`reset --hard`, `clean -fdx`).
 - [X] Do not run blanket staging commands like `git add .` or `git add -A`; stage only named files.

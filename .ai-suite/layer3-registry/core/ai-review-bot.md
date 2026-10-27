@@ -1,6 +1,6 @@
 ---
 name: ai-review-bot
-description: Autonomous multi-agent code reviewer conducting deep reviews on diffs and PRs with zero false positives. Use when reviewing code changes, git diffs, pull requests, or evaluating code quality.
+description: Review a requested diff or pull request with evidence-grounded findings. Use when reviewing code changes, staged files, git diffs, pull requests, or commit messages.
 triggers:
   - ai review
   - ai-review-bot
@@ -10,56 +10,45 @@ triggers:
   - senior engineer review
 ---
 
-# AI Review Bot -- Autonomous Multi-Agent Code Reviewer
+# AI Review Bot
 
-Orchestrates reviewer personas (`Senior Engineer`, `Commit Message Reviewer`, `GitHub Workflow Reviewer`, `Accessibility Reviewer`, `CL Summarizer`) for deep reviews with zero false positives.
+## Inputs and authority
 
-## 1. Review Personas
-- **Senior Engineer:** Correctness, security, race conditions, runtime crashes, boundaries, and separation of concerns.
-- **Commit Message Reviewer:** Enforces conventional prefix (`feat:`, `fix:`), 50-char limit, and diff alignment.
-- **GitHub Workflow Reviewer:** Prevents runner pool exhaustion and long sleep loops in CI workflows.
-- **Accessibility Reviewer:** WCAG 2.1 AA compliance, ARIA attributes, semantic HTML.
-- **CL Summarizer:** Concise 3-4 sentence summary of what changed and why.
+Resolve the requested repository, diff or revision, and review question first. The user's selected target takes precedence over a default diff. Review is read-only: do not modify source, the index, commits, or remote reviews. Run fault experiments only in disposable fixtures. Use `ai-review-fix` or the applicable delivery workflow when fixes are explicitly requested.
 
-## 2. Review Workflow & Detection Rules
+## Review Workflow
 
-```
-[Discovery & Filter] --> [Context Resolution] --> [Persona Review] --> [Itemized Output]
-```
+1. Inspect workspace status and project instructions. Select one comparison and record its base/head or working-tree scope:
 
-### Step 1: Target Discovery & Filtering
-- Discover targets via `git diff HEAD`, `git diff --cached`, or `git diff main...HEAD`.
-- Respect `.gitignore`, `.cursorignore`. Skip lockfiles (`go.sum`, `*.lock`, `package-lock.json`), generated files, and vendor directories.
+   | Requested target | Comparison |
+   | --- | --- |
+   | Staged changes | `git diff --cached` |
+   | Unstaged tracked changes | `git diff` |
+   | All tracked working changes | `git diff HEAD` |
+   | Branch or pull request | `git diff <verified-base>...<verified-head>` |
 
-### Step 3: Context Resolution & Anti-False-Positive Invariants
-- **Precedence:** Project rules in `AGENTS.md` and `.cursorrules` strictly override general standards.
-- **Scope Guard:** Read-only context files outside the diff must never be flagged with findings.
-- **Context Depth:** Always verify symbol definitions across project imports before flagging undefined references.
+   Honor explicit file filters. For an unspecified comparison, inspect status and available branch metadata; state a defensible selection or ask when multiple targets materially differ. Identify untracked requested files separately. Never assume `main` exists.
+2. Resolve definitions, callers, tests, configuration, and relevant history before reporting. Read-only context can establish impact but findings must identify a regression in the requested target. Respect designated exclusions; inspect lockfiles, generated files, and vendor changes when they are explicit targets or necessary to verify dependency, provenance, or security effects.
+3. Apply relevant personas, using actual independent agents only when supported; otherwise conduct clearly labeled review passes:
+   - **Senior Engineer:** State integrity, boundaries, resource cleanup, injection, race conditions, error paths, and compatibility.
+   - **Commit Message Reviewer:** Match the project's conventions and the diff; do not invent length or prefix requirements.
+   - **GitHub Workflow Reviewer:** Permissions, dependency provenance, runner usage, failure propagation, and bounded retries.
+   - **Accessibility Reviewer:** Affected interfaces, keyboard access, semantics, and the project's accessibility target.
+   - **CL Summarizer:** Explain the concrete behavior change and reason briefly.
+4. Test a suspected failure with the smallest safe reproducer or code trace. Security checks are contextual: compare DNS names case-insensitively when their protocol requires it, preserving case-sensitive payloads; trace timing attack oracles through the authentication flow; verify required class guards and credential sources. A rule of thumb alone is insufficient evidence.
+5. Perform a final challenge pass: confirm Diff Direction, reachability, user intent, existing protections, and reproducible impact. Removed lines explain context; anchor findings to the changed behavior that remains. Mark unavailable verification rather than inventing results.
 
-### Step 4: Persona Review & Defect Detection Rules
-- **Diff Direction:** Lines starting with `-` are removed; never flag issues on `-` lines or removed code.
-- **Runtime Crashes & Bounds:** Flag division by zero, `None`/`nil` dereference, slice bounds errors, invalid key lookups.
-- **Race Conditions:** Flag non-atomic mutation of shared state, counters, or maps under concurrent access.
-- **Class Guards:** Ensure class input validation methods are explicitly invoked on untrusted data.
-- **Case-Insensitive Identifiers:** Mandatory lowercase normalization (`.lower()`) on FQDN, hostname, or DNS records before comparison (`==`), map key lookups, or membership checks (`in`).
-- **Secret Protection:** Flag logging, prints, or traces outputting unmasked credentials, tokens, or private keys.
-- **Timing Attacks:** Forbid conditional early returns that skip expensive authentication hash checks (`bcrypt`, `argon2`).
-- **Security Sanitization:** Flag shell injection, unquoted variables, SQL injection, and path traversal vulnerabilities.
+## Output and recovery
 
-## 3. Output Formatting
+Give prioritized verified findings with file/line, triggering input or state, observable impact, supporting evidence, and a focused remedy. State comparison scope, commands/results, baseline failures, and verification limits. If no verified finding remains, say so and disclose what could not be checked; do not certify defect freedom.
 
-```markdown
-### `<file-path>` (Lines <start>-<end>)
-**<Severity>**: <Crisp 1-3 sentence explanation.>
+Example: trace a newly logged value to its source. Report credential exposure only if it can contain a secret; omit a finding for a public identifier. Keep secrets masked in all evidence.
 
-```suggestion
-<Exact replacement snippet if < 5 lines>
-```
-```
+If the target, access, or essential source is missing, complete independent inspection, then report the exact blocker and needed input. Do not broaden scope or repeatedly retry an inaccessible service.
 
 ## Negative Constraints (Must NOT)
-- [X] **DO NOT** comment on removed/deleted lines (`-`).
-- [X] **DO NOT** generate speculative, hypothetical, or vague comments (e.g. "Consider if...").
-- [X] **DO NOT** praise correct code or add conversational filler.
-- [X] **DO NOT** flag reference-only context files outside the target diff.
-- [X] **DO NOT** auto-commit changes or mutate repositories autonomously.
+
+- [X] Do not mutate repositories, post review comments, commit, or push during a review.
+- [X] Do not mix staged and unstaged changes without an explicit all-changes scope.
+- [X] Do not report speculative defects, removed code as live behavior, or unrelated pre-existing findings as introduced regressions.
+- [X] Do not treat heuristic violations or a passing test as proof of a vulnerability or defect-free software.

@@ -1,9 +1,9 @@
 ---
 name: ai-suite-architect
-description: Generate production-ready AI artifacts (prompts, skills, rules, MCP tools) from technical briefs. Use when designing or hardening prompts, agent rules, skills, or tool schemas.
+description: Design AI Suite artifact placement and integration. Use when choosing capability tiers or integrating skills, rules, directives, and tool schemas into the suite; use prompt-compiler for standalone prompt writing.
 triggers:
-  - design a prompt
-  - design an agent
+  - design suite artifacts
+  - choose a capability tier
   - write a .cursorrules
   - create a Cursor skill
   - create a slash command
@@ -22,7 +22,7 @@ Convert technical requirements into modular, production-ready AI artifacts (prom
   - General to all agents / SWE procedure -> `.ai-suite/layer3-registry/core/`
   - Agent-specific -> `.ai-suite/layer1-abstraction/agents/<agent>/skills/`
   - Domain-specific -> `.ai-suite/layer3-registry/domains/<domain>/skills/`
-- **Invariants**: YAML frontmatter (`name:`, `description:` with `"Use when"`, `triggers:` array). Body <= 600 lines. Instruct downstream agents to use native file tools (`Read`, `Write`, `StrReplace`, `Shell`, `Grep`, `Glob`).
+- **Invariants**: YAML frontmatter (`name:`, `description:` with `"Use when"`, nonempty string `triggers:` array). Body <= 600 lines. Use native file tools exposed by the active host and equivalent supported fallbacks; do not assume particular tool names.
 
 ## Negative Constraints (Must NOT)
 - [X] Do not place general skills in agent-specific directories or vice-versa.

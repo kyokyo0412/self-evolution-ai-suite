@@ -16,7 +16,7 @@ Guides authoring live, interactive React apps rendered beside chat as standalone
 - **Do NOT Use:** Targeted code edits, brief answers, single-command outputs, or plain markdown deliverables.
 
 ## File Specifications
-- **Target Path:** `/Users/<user>/.cursor/projects/<workspace>/canvases/<name>.canvas.tsx`.
+- **Target Path:** Resolve the actual canvas directory exposed by the current Cursor workspace. Verify the host supports canvas artifacts before writing; if unavailable, provide an equivalent artifact in an authorized project location and disclose the limitation.
 - **Imports:** Import exclusively from `cursor/canvas`. No relative imports or external npm modules.
 - **Structure:** Exactly one self-contained file with a default-exported React component.
 - **Data:** Embed all data inline. Zero `fetch()` or network calls.
@@ -26,7 +26,7 @@ Guides authoring live, interactive React apps rendered beside chat as standalone
 
 1. **Verification of Need:** Confirm deliverable represents a standalone analytical or visual artifact.
 2. **Path Resolution:** Locate project canvases directory and format kebab-case filename ending in `.canvas.tsx`.
-3. **Component Implementation:** Author React component using `cursor/canvas` primitives with inline data.
+3. **Component Implementation:** Inspect the bundled `scripts/sdk/` type declarations and the current host API before using `cursor/canvas` primitives with inline data. Treat unresolved APIs as UNVERIFIED.
 4. **Validation:** Ensure every chart has clear titles, axis units, and legends. Omit empty states completely.
 
 ## Negative Constraints (Must NOT)

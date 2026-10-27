@@ -1,22 +1,15 @@
-# Template: Engage the `codebase-deepdoc` Skill (Brief Form)
+# Template: Engage Codebase Deep Documentation
 
-**Purpose:** A short trigger brief for when you want to explicitly invoke the `codebase-deepdoc` skill on a specific scope (subdir, language layer, or whole repo). The full instruction set lives in `.ai-suite/layer3-registry/core/codebase-deepdoc.md` (or deployed to `~/.cursor/skills/codebase-deepdoc/SKILL.md`) -- this template just sets the scope and any deviations.
+**Purpose:** Select the scope and audience for the available `codebase-deepdoc` skill. Read its active installed instructions or canonical registry source; do not assume a particular agent's home layout.
 
-Paste this into Cursor (Agent Mode), fill the `[BRACKETS]`, and submit.
+Use **`codebase-deepdoc`** with:
 
----
+- **Repository/revision:** `[verified repository and revision]`
+- **Scope and exclusions:** `[whole repository or named subtree/components]`
+- **Audience:** `[operators, architects, contributors, or onboarding; prioritize relevant readers]`
+- **Output root:** `[project-relative aigen_doc/ unless explicitly overridden]`
+- **Special focus:** `[state/recovery, interfaces, security, extension points, or other relevant concerns]`
 
-Use the **`codebase-deepdoc`** skill on `@codebase` (or restrict to `@[SCOPE_PATH]`).
+Execute the scoped phases without routine continuation prompts. Preserve existing user documentation. For a large codebase, prioritize inventory, system boundaries, critical components, and supporting modules while maintaining a coverage ledger.
 
-**Scope:** `[whole repo | path/to/subtree | specific module name]`
-**Audience priority:** `[non-tech onboarding | architects | new engineers | operators]` (skill will cover all five, but prioritize this one if context tightens)
-**Output directory:** `aigen_doc/`
-**Special instructions (optional):** `[e.g. "skip the legacy module under crx/old/", "emphasize the dataplane components", "all Mermaid diagrams in C4 notation"]`
-
-Begin Phase 0 immediately. Do not pause between phases. If the codebase is huge, prioritize: inventory -> Layer 1 -> critical-path components -> support components.
-
-When done, confirm completeness with:
-```bash
-ls aigen_doc/docs/components/*/ | xargs -I{} ls {}/0{1,2,3,4,5}_*.md
-find aigen_doc -name '*.md' -size -200c
-```
+Verify completeness by mapping each included inventory component to an existing documented artifact and checking source citations, local links, navigation, and available documentation/diagram builds. Report actual checks and unresolved components. A fixed filename pattern or file-size threshold is not evidence of completeness.

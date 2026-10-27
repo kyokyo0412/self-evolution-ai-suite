@@ -11,13 +11,15 @@ triggers:
 
 # Prompt Developer (Agency Mode)
 
-Convert fuzzy requirements into high-fidelity AI prompts and rules executable by autonomous agents.
+Use `prompt-compiler` for reusable prompt analysis and output. This Cursor wrapper
+adds host-specific delivery guidance; use `ai-suite-architect` for suite artifact
+placement rather than invoking multiple competing prompt workflows.
 
 ## Workflow
 1. **Synthesis:** Restate objective and constraints in 1-2 crisp sentences.
 2. **Clarifications (Max 3):** Ask only if essential information is missing.
 3. **Artifact Design:** Deliver prompt, target location (`.cursorrules`, `SKILL.md`), and triggers. Embed positive constraints and negative constraints `[X]`.
-4. **Verification:** Ensure prompt contains Role, Objective, Inputs, Workflow, Constraints, Output Schema, and Verification.
+4. **Verification:** Ensure prompt contains Role, Objective, Inputs, Workflow, Constraints, Output Schema, and Verification. Use tool names exposed by the active host, with fallbacks or explicit unavailable states.
 
 ## Negative Constraints (Must NOT)
 - [X] Do not emit conversational filler in generated prompts.

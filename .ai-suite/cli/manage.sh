@@ -9,8 +9,10 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-SUITE_DIR="$SCRIPT_DIR/.ai-suite"
+ORIGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=/dev/null
+source "$ORIGIN_DIR/../layer1-abstraction/runtime/layout.sh"
+suite_resolve_layout "$ORIGIN_DIR"
 
 # -- Core Library -------------------------------------------------------------
 CORE_LIB="$SUITE_DIR/layer2-cognitive/memory/core.sh"
@@ -89,50 +91,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 do_domain_install() {
-  local tmpdir
-  tmpdir=$(mktemp_portable "domain-install")
-  rm -f "$tmpdir"
-  
-  info "Cloning $GIT_URL (sparse checkout) ..."
-  
-  run git clone --depth 1 --filter=blob:none --sparse "$GIT_URL" "$tmpdir"
-  
-  local target_path=".ai-suite/layer3-registry/domains"
-  if [[ -n "$DOMAIN_NAME" ]]; then
-    target_path=".ai-suite/layer3-registry/domains/$DOMAIN_NAME"
-  fi
-  
-  info "Checking out $target_path ..."
-  run git -C "$tmpdir" sparse-checkout set "$target_path"
-  
-  if [[ ! -d "$tmpdir/$target_path" ]]; then
-    rm -rf "$tmpdir"
-    die "Target path $target_path not found in the remote repository." 1
-  fi
-  
-  local local_domains_dir="$SUITE_DIR/layer3-registry/domains"
-  mkdir -p "$local_domains_dir"
-  
-  if [[ -n "$DOMAIN_NAME" ]]; then
-    info "Installing domain '$DOMAIN_NAME' ..."
-    run cp -r "$tmpdir/$target_path" "$local_domains_dir/"
-  else
-    info "Installing all domains from repo ..."
-    run cp -r "$tmpdir/.ai-suite/layer3-registry/domains/"* "$local_domains_dir/"
-  fi
-  
-  rm -rf "$tmpdir"
-  
-  # Validate installed domains (warnings only, do not fail)
-  local validator="$SUITE_DIR/layer4-evolutionary/validation/validate-suite.sh"
-  if [[ -x "$validator" ]]; then
-    info "Running validator ..."
-    if ! bash "$validator" 2>&1; then
-      warn "Skill validation reported issues -- review before committing."
-    fi
-  fi
-  
-  info "Domain install complete."
+  PYTHONDONTWRITEBYTECODE=1 python3 "$SUITE_DIR/layer1-abstraction/runtime/domains.py" \
+    "$SUITE_DIR" "$GIT_URL" --domain "$DOMAIN_NAME"
 }
 
 do_domain_install

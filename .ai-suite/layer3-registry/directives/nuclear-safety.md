@@ -1,22 +1,24 @@
 # 1E-Class Security Standards
 
-Mandatory security and quality standards universally required for all generated code.
+## Applicable Scope
 
-## 1. Code Quality & Implementation Standards
-- **Deterministic Execution**: Avoid unbounded loops, recursion without strict depth limits, and non-deterministic algorithms.
-- **Memory Management**: NO dynamic memory allocation post-initialization. Static allocation prevents leaks and fragmentation.
-- **Defensive Programming**: Validate inputs against boundary conditions. Safe fallbacks for all error paths.
-- **Resource Lifecycle Determinism**: All resources, handles, sockets, and child processes MUST have bounded lifetimes and deterministic deallocation guarantees.
+Use this specialist profile only when the user, product requirements, or applicable safety standard establishes a safety-critical or constrained real-time component. General scripts, documentation tools, and agent workflows use proportionate bounds and verification; they do not require certification or allocation-free operation.
 
-## 2. Testing & Validation Standards
-- **MC/DC Coverage**: Tests MUST achieve 100% Modified Condition/Decision Coverage (MC/DC) for safety-critical logic.
-- **Boundary & Equivalence**: Rigorous Boundary Value Analysis (BVA) and Equivalence Partitioning on all inputs and states.
-- **Fault Injection & Negative Paths**: Comprehensive fault injection and negative path testing ensuring safe failure under adverse conditions.
-- **Traceability**: Documented traceability from requirements through design, implementation, and test cases.
+## Code Quality and Implementation
 
-## Negative Constraints (Must NOT)
-- [X] **Do not use non-deterministic algorithms**: All code execution paths and time must be deterministic.
-- [X] **Do not perform unbounded dynamic memory allocation**: Post-initialization memory allocation must be strictly bounded.
-- [X] **Do not allow unbounded recursion or infinite loops**: Strict depth limits and timeout barriers are mandatory.
-- [X] **Do not leave unverified failure states**: All error conditions must have explicit safe fallbacks.
-- [X] **Do not leak system resources**: All handles, sockets, and subprocesses must be strictly deallocated.
+- Validate external inputs, state transitions, and explicit resource bounds.
+- Give handles, sockets, locks, and subprocesses bounded lifetimes and deterministic cleanup.
+- Apply allocation-free post-initialization paths only where the selected safety profile requires them; document the scope and verify the bound.
+- Bound recursion, retries, buffers, execution time, and recovery behavior.
+
+## Testing and Validation
+
+- Apply MC/DC coverage only to safety-critical logic where the applicable standard requires it. Record measured coverage, tool limitations, and untested paths.
+- Use boundary value analysis, equivalence partitioning, fault injection, and negative-path checks appropriate to the component.
+- Trace applicable requirements to design, implementation, and executable checks. Passing tests are evidence, not certification.
+
+## Negative Constraints
+
+- [X] Do not claim compliance, certification, 100% coverage, or absence of defects without evidence and the applicable assessment process.
+- [X] Do not impose safety-critical allocation or MC/DC requirements on unrelated scripts or UI work.
+- [X] Do not leak resources, allow unbounded recursion or retries, or leave failure states unverified.

@@ -33,12 +33,14 @@
 #   -h | --help       Print this help.
 #
 # Portability: macOS (BSD tools) and Linux (GNU tools). Helpers in
-# .ai-suite/layer4-evolutionary/validation/_portable.sh handle the BSD/GNU sed and mktemp differences.
+# .ai-suite/layer1-abstraction/_portable.sh handles BSD/GNU tool differences.
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-SUITE_DIR="$SCRIPT_DIR/.ai-suite"
+ORIGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=/dev/null
+source "$ORIGIN_DIR/../layer1-abstraction/runtime/layout.sh"
+suite_resolve_layout "$ORIGIN_DIR"
 META_DIR="$SUITE_DIR/layer4-evolutionary/validation"
 
 # -- Core Library -------------------------------------------------------------
@@ -67,10 +69,7 @@ SHELL_TARGETS="auto"
 UNINSTALL=0
 SYNC="rsync"
 
-HOOK_MARK_START="### AI SUITE AUTO-ENABLE HOOK START ###"
-HOOK_MARK_END="### AI SUITE AUTO-ENABLE HOOK END ###"
-
-usage() { sed -n '2,26p' "$0"; exit "${1:-0}"; }
+usage() { sed -n '2,36p' "$0"; exit "${1:-0}"; }
 
 # -- Parse flags --------------------------------------------------------------
 while [[ $# -gt 0 ]]; do
@@ -156,59 +155,12 @@ resolve_shell_targets() {
 
 install_hook_in() {
   local shell_kind="$1" rc_file="$2"
-  if [[ ! -f "$rc_file" ]]; then warn "$rc_file not found; creating it"; run touch "$rc_file"; fi
-  if grep -Fq "$HOOK_MARK_START" "$rc_file" 2>/dev/null; then
-    log "auto-enable hook already in $rc_file -- skipping"; return 0
+  if [[ "$AI_SUITE_DRY_RUN" == 1 ]]; then
+    printf '[dry-run] would install %s hook in %s\n' "$shell_kind" "$rc_file"
+    return 0
   fi
-  [[ "$AI_SUITE_DRY_RUN" == "1" ]] && { printf '[dry-run] would append %s hook to %s\n' "$shell_kind" "$rc_file"; return 0; }
-  local suite_root_literal="$SCRIPT_DIR"
-  case "$shell_kind" in
-    zsh)
-      cat <<EOF >> "$rc_file"
-
-$HOOK_MARK_START
-# Auto-enable .ai-suite in any git repo entered via cd (zsh chpwd hook).
-__ai_suite_chpwd() {
-  [[ -d ./.git ]] || return 0
-  [[ -d ./.ai-suite ]] && return 0
-  [[ -f ./ai-suite ]] && return 0
-  if [[ -x "$suite_root_literal/ai-suite" ]]; then
-    bash "$suite_root_literal/ai-suite" enable --scope project --project "\$PWD" >/dev/null 2>&1 \
-      && printf '[ai-suite] enabled in %s\n' "\$PWD"
-  fi
-}
-typeset -ga chpwd_functions
-chpwd_functions+=(__ai_suite_chpwd)
-$HOOK_MARK_END
-EOF
-      ;;
-    bash)
-      cat <<EOF >> "$rc_file"
-
-$HOOK_MARK_START
-# Auto-enable .ai-suite in any git repo entered via cd (bash PROMPT_COMMAND hook).
-__ai_suite_chpwd() {
-  [[ -d ./.git ]] || return 0
-  [[ -d ./.ai-suite ]] && return 0
-  [[ -f ./ai-suite ]] && return 0
-  if [[ -x "$suite_root_literal/ai-suite" ]]; then
-    command bash "$suite_root_literal/ai-suite" enable --scope project --project "\$PWD" >/dev/null 2>&1 \
-      && printf '[ai-suite] enabled in %s\n' "\$PWD"
-  fi
-}
-__ai_suite_prompt() {
-  if [[ "\$PWD" != "\${__AI_SUITE_LAST_PWD:-}" ]]; then
-    __AI_SUITE_LAST_PWD="\$PWD"
-    __ai_suite_chpwd
-  fi
-}
-PROMPT_COMMAND="__ai_suite_prompt\${PROMPT_COMMAND:+; \$PROMPT_COMMAND}"
-$HOOK_MARK_END
-EOF
-      ;;
-    *) die "unknown shell_kind: $shell_kind" 1 ;;
-  esac
-  log "installed $shell_kind auto-enable hook in $rc_file"
+  PYTHONDONTWRITEBYTECODE=1 python3 "$SUITE_DIR/layer1-abstraction/runtime/hooks.py" \
+    install "$shell_kind" "$rc_file" "$SCRIPT_DIR/ai-suite"
 }
 
 if [[ "$INSTALL_HOOK" == "1" ]]; then
@@ -235,10 +187,11 @@ do_install_for_agent() {
         target="$(cd "$PROJECT_PATH" && pwd)"
       else
         target="$SCRIPT_DIR"
+        [[ "$SUITE_DIR" != "$SCRIPT_DIR" ]] || target="$PWD"
       fi
       
       # Isolation check: Do not install into the AI suite source repository itself
-      if [[ -d "$target/.ai-suite/layer4-evolutionary" ]]; then
+      if [[ -d "$target/.ai-suite/layer4-evolutionary" || ( -d "$target/cli" && -f "$target/layer2-cognitive/memory/core.sh" ) ]]; then
         die "Cannot install --scope project into the AI suite source repository itself. Use --scope global for development, or use scripts/clean_dev_env.sh to clean up." 1
       fi
 
@@ -262,70 +215,23 @@ do_install_for_agent() {
 
 # -- Validate + post-install --------------------------------------------------
 do_validate() {
-  run chmod +x "$META_DIR/validate-suite.sh"
   log "running validator ..."
-  if bash "$META_DIR/validate-suite.sh" >/dev/null 2>&1; then
-    log "validation passed."
-  else
-    warn "validation FAILED. Run: bash $META_DIR/validate-suite.sh"
-  fi
+  bash "$META_DIR/validate-suite.sh" >/dev/null || return 1
+  log "validation passed."
 }
 
 # -- Remote scope (agent-agnostic: rsync the whole suite then run enable) -----
 do_remote_scope() {
   [[ -n "$HOST" ]] || die "--scope remote requires --host USER@HOST" 1
-  command -v ssh >/dev/null || die "ssh not found in PATH" 1
-
-  if [[ -z "${SYNC:-}" ]]; then
-    command -v rsync >/dev/null && SYNC="rsync" || SYNC="scp"
-  fi
-
-  log "scope=remote agent=$AGENT host=$HOST remote-path=$REMOTE_PATH remote-scope=$REMOTE_SCOPE"
-
-  if [[ "$REMOTE_PATH" == '$HOME/.ai-suite-deploy' ]]; then
-    run ssh "$HOST" 'if [ -d "$HOME/.ai-suite/.ai-suite" ] && [ ! -d "$HOME/.ai-suite/.git" ]; then echo "Cleaning up old deployment directory $HOME/.ai-suite..."; rm -rf "$HOME/.ai-suite"; fi'
-  fi
-
-  run ssh "$HOST" "mkdir -p \"$REMOTE_PATH\""
-
-  if [[ "$SYNC" == "rsync" ]]; then
-    run rsync -az --delete \
-        "$SUITE_DIR" \
-        "$SCRIPT_DIR/ai-suite" \
-        "$HOST:\"$REMOTE_PATH\"/"
-  else
-    run scp -r \
-        "$SUITE_DIR" \
-        "$SCRIPT_DIR/ai-suite" \
-        "$HOST:\"$REMOTE_PATH\"/"
-  fi
-
+  # shellcheck source=/dev/null
+  source "$SUITE_DIR/layer1-abstraction/runtime/transport.sh"
+  suite_validate_host "$HOST" && suite_validate_remote_path "$REMOTE_PATH" || return 1
   local remote_cmd
-  case "$REMOTE_SCOPE" in
-    project)
-      if [[ -n "$PROJECT_PATH" ]]; then
-        local q_proj
-        q_proj="'$(printf '%s' "$PROJECT_PATH" | sed "s/'/'\\\\''/g")'"
-        remote_cmd="bash \"$REMOTE_PATH/ai-suite\" enable --scope project --project $q_proj --agent $AGENT"
-      else
-        remote_cmd="bash \"$REMOTE_PATH/ai-suite\" enable --scope project --agent $AGENT"
-      fi
-      ;;
-    global)
-      remote_cmd="bash \"$REMOTE_PATH/ai-suite\" enable --scope global --agent $AGENT"
-      ;;
-    *) die "invalid --remote-scope: $REMOTE_SCOPE (project|global)" 1 ;;
-  esac
-  
-  if [[ -n "${AI_SUITE_DOMAIN:-}" ]]; then
-    local q_dom
-    q_dom="'$(printf '%s' "$AI_SUITE_DOMAIN" | sed "s/'/'\\\\''/g")'"
-    remote_cmd="$remote_cmd --domain $q_dom"
-  fi
-
-  log "ssh $HOST -> $remote_cmd"
-  run ssh "$HOST" "$remote_cmd"
-  log "done. Disable: bash $SCRIPT_DIR/ai-suite disable --scope remote --host \"$HOST\" --remote-path \"$REMOTE_PATH\""
+  remote_cmd=$(suite_remote_command "$REMOTE_PATH" enable "$REMOTE_SCOPE" "$AGENT" "$PROJECT_PATH" "${AI_SUITE_DOMAIN:-}") || return 1
+  case "$SYNC" in rsync|scp) ;; *) die "invalid --sync: $SYNC" 1 ;; esac
+  suite_registry_validate "$SUITE_DIR" "$AGENT" || return 1
+  suite_sync_deployment "$HOST" "$REMOTE_PATH" "$SUITE_DIR" "$SCRIPT_DIR/ai-suite" "$SYNC" || return 1
+  run suite_transport_exec ssh -o BatchMode=yes -o ConnectTimeout=15 "$HOST" "$remote_cmd"
 }
 
 # -- Dispatch -----------------------------------------------------------------
@@ -334,6 +240,7 @@ do_remote_scope() {
 if [[ "$SCOPE" == "remote" ]]; then
   do_remote_scope
 else
+  do_validate
   case "$AGENT" in
     cursor|claude|opencode|continue|roo-code|codex) do_install_for_agent "$AGENT" ;;
     all)
@@ -341,5 +248,4 @@ else
         do_install_for_agent "$a"
       done ;;
   esac
-  do_validate
 fi

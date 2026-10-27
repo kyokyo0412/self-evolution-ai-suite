@@ -8,42 +8,15 @@ triggers:
 
 Guides programmatic execution of Cursor agents using TypeScript (`@cursor/sdk`) or Python (`cursor-sdk`).
 
-## Core Concepts
-- **Local Runtime:** Runs against caller's local `cwd`. Reuses local tooling, environment, and credentials.
-- **Cloud Runtime:** Runs on Cursor-hosted VMs against git repositories (`autoCreatePR: true`).
-- **Authentication:** `CURSOR_API_KEY` in environment or pass `apiKey` in client configuration.
-
-## Invocation Patterns
-
-### 1. One-Shot Execution (`Agent.prompt`)
-```typescript
-import { Agent } from "@cursor/sdk";
-const result = await Agent.prompt("Refactor utils for readability", {
-  apiKey: process.env.CURSOR_API_KEY!,
-  model: { id: "composer-2.5" },
-  local: { cwd: process.cwd() },
-});
-```
-
-### 2. Durable Multi-Turn (`Agent.create` + `agent.send`)
-```typescript
-import { Agent } from "@cursor/sdk";
-await using agent = await Agent.create({
-  apiKey: process.env.CURSOR_API_KEY!,
-  model: { id: "composer-2.5" },
-  local: { cwd: process.cwd() },
-});
-const run = await agent.send({ prompt: "Analyze codebase architecture" });
-for await (const chunk of run.textStream) process.stdout.write(chunk);
-```
-
 ## Instructions & SDK Implementation Workflow
-1. **Runtime:** Select `local` for fast development loops; select `cloud` for detached CI jobs.
-2. **Deterministic Lifecycle:** Guarantee resource release using `await using` (TS) or `with` context manager (Python).
-3. **Error Handling:** Check `isRetryable` before retry loops. Log `run.id` and `agent.agentId`.
+1. Identify the requested runtime, installed SDK package and version from manifests, lockfiles and local package metadata. Inspect the installed type definitions, examples or bundled official documentation before selecting APIs. If absent, use current official documentation only when browsing is authorized; otherwise label the version/API UNVERIFIED and provide a draft rather than inventing executable calls.
+2. Verify authentication configuration, runtime side effects and model discovery against that version. Use the user-selected model or the documented default; do not embed a guessed fixed model identifier. Keep credentials in configured providers or environment variables and redact them from logs.
+3. Implement only the requested local or cloud operation. Cloud runs, repository writes and PR creation need authorization for those specific effects. Do not turn on automatic PR creation by default.
+4. Use the verified SDK disposal/context-management API, bounded request timeouts and cancellation. Retry only documented retryable failures with a finite attempt limit and backoff. Record available run/agent identifiers without assuming property names.
+5. Validate with local types, tests and mocks first. Execute remote calls only within the authorized scope, and report exact version, commands, observed outcomes and verification limits.
 
 ## Negative Constraints (Must NOT)
-- [X] **Do not leak SDK resources**: Always wrap agents in `await using` or `with` blocks for deterministic cleanup.
-- [X] **Do not hardcode fragile model IDs**: Prefer `composer-2.5` default or query `Cursor.models.list()`.
-- [X] **Do not confuse Agent ID with Run ID**: Cloud `bc-` IDs identify agents; run IDs represent specific executions.
-- [X] **Do not run uncontrolled retries**: Check `isRetryable` flag and obey rate limits before retrying failed runs.
+- [X] Do not present unverified SDK methods, configuration keys, model IDs or lifecycle APIs as established facts.
+- [X] Do not hardcode or log API credentials.
+- [X] Do not leak agents, streams or subprocesses; verify deterministic cleanup on success, failure and cancellation.
+- [X] Do not execute uncontrolled retries or create PRs without authorization.

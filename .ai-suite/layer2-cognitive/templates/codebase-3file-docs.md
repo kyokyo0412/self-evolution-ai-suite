@@ -1,22 +1,17 @@
-# Template: 3-File Architecture Documentation Suite
-**Purpose:** Compact alternative to `codebase-deepdoc`. Produces 3 Markdown documents in `/document/architecture/`.
+# Template: Three-File Architecture Documentation
 
-## 1. `01-System-Overview.md`
-- **System Purpose**: Concise explanation of problem solved.
-- **Architecture**: Macro design (Microservices, Monolith, Event-Driven, Hexagonal).
-- **Component Ecosystem**: Major components list.
-- **Interaction Flow**: Mermaid.js flowchart mapping data flow.
+**Purpose:** Produce a compact source-grounded suite in project-relative `aigen_doc/architecture/`, or an explicitly authorized output directory.
 
-## 2. `02-Component-Specs.md`
-For each major component:
-- **Function & File Paths**: Exact files and directories.
-- **Tech Stack & Logic**: Patterns, I/O data, and step-by-step processing.
-- **Sequence Diagram**: Mermaid.js sequence diagram showing cross-module calls.
+## Inputs
 
-## 3. `03-Developer-Guide-and-Function-Map.md`
-- **Design Reference**: Architecture extension patterns.
-- **Function Map**: "Where to add code" index table.
-- **Core Abstractions**: Shared interfaces and utilities.
+Resolve repository/revision, included paths, audience, and output root. Preserve relevant existing documentation and user edits. Ask for missing essential scope; mark unavailable behavior UNKNOWN instead of inventing it.
 
-## Constraints
-- Strict Markdown; Mermaid.js for diagrams; cite exact file paths and line ranges.
+## Artifacts
+
+1. `01-System-Overview.md`: Purpose, verified architecture, major components, entry points, and a Mermaid data/control-flow diagram when useful.
+2. `02-Component-Specs.md`: Each included component's exact files/symbols, interfaces, state, collaborators, error/recovery paths, and relevant sequence diagrams.
+3. `03-Developer-Guide-and-Function-Map.md`: Build/test commands verified from the repository, extension points, file/function map, and applicable coding conventions.
+
+## Verification and handoff
+
+Check source citations, local links, diagrams, and consistency with the examined revision. State scope, actual checks, excluded components, and unresolved claims. Do not modify application code/configuration or write outside the authorized output root.

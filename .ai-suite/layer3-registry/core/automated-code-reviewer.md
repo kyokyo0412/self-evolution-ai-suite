@@ -23,7 +23,8 @@ triggers:
    - Detect language robustness issues (bare excepts, unquoted shell variables, ignored errors).
    - Identify security vulnerabilities and injection risks.
    - Flag algorithmic complexity issues ($O(N^2)$ vs $O(N)$) and hardcoded testing metrics.
-4. **Report & Quality:** Return structured review report; run ReadLints to confirm standards.
+4. **Verification Gate Review:** Inspect the test runner as well as the implementation. For report-only review, do not modify the target. Use a disposable fixture to inject a failing child test and confirm the aggregate gate returns nonzero even if a later test passes. If no safe fixture is feasible, record that validation as not run. Check for suppressed statuses, lost subshell counters and unconditional pass assertions. Treat coverage and keyword checks as separate evidence from runtime test success.
+5. **Report & Quality:** Return a structured review report with actual commands, statuses, baseline failures, skips and verification limits. Use ReadLints when available or the project's available linters; never claim unavailable tools ran.
 
 ## Negative Constraints (Must NOT)
 - [X] Do not make unprompted changes to the code; only provide a review report unless explicitly asked to fix the issues.

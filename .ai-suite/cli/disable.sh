@@ -21,9 +21,10 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-SUITE_DIR="$SCRIPT_DIR/.ai-suite"
-META_DIR="$SUITE_DIR/layer4-evolutionary/validation"
+ORIGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=/dev/null
+source "$ORIGIN_DIR/../layer1-abstraction/runtime/layout.sh"
+suite_resolve_layout "$ORIGIN_DIR"
 
 # -- Core Library -------------------------------------------------------------
 CORE_LIB="$SUITE_DIR/layer2-cognitive/memory/core.sh"
@@ -48,7 +49,6 @@ UNINSTALL_HOOK=0
 SHELL_TARGETS="auto"
 
 HOOK_MARK_START="### AI SUITE AUTO-ENABLE HOOK START ###"
-HOOK_MARK_END="### AI SUITE AUTO-ENABLE HOOK END ###"
 
 usage() { sed -n '2,22p' "$0"; exit "${1:-0}"; }
 
@@ -109,15 +109,10 @@ _strip_hook_from() {
     log "no hook found in $rc_file -- skipping"; return 0
   fi
   [[ "$AI_SUITE_DRY_RUN" == "1" ]] && { printf '[dry-run] would strip hook from %s\n' "$rc_file"; return 0; }
-  local tmp
-  tmp=$(mktemp_portable "disable-hook")
-  local in_block=false
-  while IFS= read -r line || [[ -n "$line" ]]; do
-    [[ "$line" == "$HOOK_MARK_START" ]] && { in_block=true;  continue; }
-    [[ "$line" == "$HOOK_MARK_END"   ]] && { in_block=false; continue; }
-    $in_block || printf '%s\n' "$line" >> "$tmp"
-  done < "$rc_file"
-  mv "$tmp" "$rc_file"
+  local kind
+  case "$rc_file" in *.zshrc) kind=zsh ;; *) kind=bash ;; esac
+  PYTHONDONTWRITEBYTECODE=1 python3 "$SUITE_DIR/layer1-abstraction/runtime/hooks.py" \
+    remove "$kind" "$rc_file" "$SCRIPT_DIR/ai-suite"
   log "removed auto-enable hook from $rc_file"
 }
 
@@ -145,6 +140,7 @@ do_uninstall_for_agent() {
         target="$(cd "$PROJECT_PATH" && pwd)"
       else
         target="$SCRIPT_DIR"
+        [[ "$SUITE_DIR" != "$SCRIPT_DIR" ]] || target="$PWD"
       fi
       log "agent=$agent_name scope=project target=$target"
       if [[ "$AI_SUITE_DRY_RUN" == "1" ]]; then
@@ -167,28 +163,12 @@ do_uninstall_for_agent() {
 # -- Remote scope -------------------------------------------------------------
 do_remote_scope() {
   [[ -n "$HOST" ]] || die "--scope remote requires --host USER@HOST" 1
-  command -v ssh >/dev/null || die "ssh not found in PATH" 1
-  log "scope=remote agent=$AGENT host=$HOST remote-path=$REMOTE_PATH remote-scope=$REMOTE_SCOPE"
-
+  # shellcheck source=/dev/null
+  source "$SUITE_DIR/layer1-abstraction/runtime/transport.sh"
+  suite_validate_host "$HOST" && suite_validate_remote_path "$REMOTE_PATH" || return 1
   local remote_cmd
-  case "$REMOTE_SCOPE" in
-    project)
-      if [[ -n "$PROJECT_PATH" ]]; then
-        local q_proj
-        q_proj="'$(printf '%s' "$PROJECT_PATH" | sed "s/'/'\\\\''/g")'"
-        remote_cmd="bash \"$REMOTE_PATH/ai-suite\" disable --scope project --project $q_proj --agent $AGENT"
-      else
-        remote_cmd="bash \"$REMOTE_PATH/ai-suite\" disable --scope project --agent $AGENT"
-      fi
-      ;;
-    global)
-      remote_cmd="bash \"$REMOTE_PATH/ai-suite\" disable --scope global --agent $AGENT"
-      ;;
-    *) die "invalid --remote-scope: $REMOTE_SCOPE" 1 ;;
-  esac
-
-  log "ssh $HOST -> $remote_cmd"
-  run ssh "$HOST" "$remote_cmd"
+  remote_cmd=$(suite_remote_command "$REMOTE_PATH" disable "$REMOTE_SCOPE" "$AGENT" "$PROJECT_PATH") || return 1
+  run suite_transport_exec ssh -o BatchMode=yes -o ConnectTimeout=15 "$HOST" "$remote_cmd"
 }
 
 # -- Dispatch -----------------------------------------------------------------

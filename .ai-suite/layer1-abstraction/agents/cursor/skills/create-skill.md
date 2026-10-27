@@ -1,6 +1,6 @@
 ---
 name: create-skill
-description: Create Cursor Agent Skills. Use when authoring a new skill, writing hooks, or structuring SKILL.md files.
+description: Create Cursor Agent Skills. Use when authoring a new Cursor skill or structuring SKILL.md files; use create-hook for hook scripts and configuration.
 triggers:
   - create-skill
 ---
@@ -30,7 +30,7 @@ triggers:
 1. **Discovery:** Define task scope (`~/.cursor/skills/` vs `.cursor/skills/`) and trigger conditions.
 2. **Design:** Formulate skill name and high-density description with `Use when`.
 3. **Implementation:** Create `<target_dir>/<skill-name>/SKILL.md` with YAML frontmatter, workflow, and negative constraints `[X]`.
-4. **Verification:** Ensure SKILL.md <= 500 lines, zero space/tab empty lines, and run `validate-suite.sh`.
+4. **Verification:** Ensure SKILL.md <= 500 lines and zero space/tab empty lines. Resolve the suite validator from the installed meta directory or repository and run `bash <resolved-validator> <target_dir>/<skill-name>/SKILL.md`; installed identity is the containing skill directory. Verify declared resources exist. If the validator is unavailable, perform the checks directly and report that limitation.
 
 ## Negative Constraints (Must NOT)
 - [X] **Do not create skills in reserved directories**: Never write to `~/.cursor/skills-cursor/`.

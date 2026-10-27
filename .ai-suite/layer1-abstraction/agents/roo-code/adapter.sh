@@ -1,66 +1,8 @@
 #!/usr/bin/env bash
+# roo-code adapter: stable interface over the shared managed lifecycle.
 set -euo pipefail
-# .ai-suite/layer1-abstraction/agents/roo-code/adapter.sh -- VS Code Roo Code adapter for ai-suite.
-#
-# Implements the standard adapter interface.
 
-_ROO_SENTINEL_START='<!-- ai-suite:start -->'
-_ROO_SENTINEL_END='<!-- ai-suite:end -->'
-
-agent_install_project() {
-  local suite_dir="$1" project_dir="$2"
-  local file="$project_dir/.roorules"
-  local target_dir="$project_dir/.roo"
-  
-  agent_uninstall_project "$project_dir" 2>/dev/null || true
-
-  _mirror_skills "$suite_dir" "$target_dir/skills" "roo-code"
-  _mirror_meta "$suite_dir" "$target_dir/meta"
-  _mirror_templates "$suite_dir" "$target_dir/templates" "roo-code"
-  _mirror_scripts "$suite_dir" "$target_dir/scripts" "roo-code"
-
-  generate_markdown_block "$suite_dir" "$target_dir" "roo-code" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END" >> "$file"
-  printf '[roo-code-adapter] wrote ai-suite block to %s\n' "$file"
-}
-
-agent_install_global() {
-  local suite_dir="$1"
-  local dest_dir="$HOME/.roo"
-  local file="$dest_dir/.roorules"
-  mkdir -p "$dest_dir"
-
-  agent_uninstall_global 2>/dev/null || true
-
-  _mirror_skills "$suite_dir" "$dest_dir/skills" "roo-code"
-  _mirror_meta "$suite_dir" "$dest_dir/meta"
-  _mirror_templates "$suite_dir" "$dest_dir/templates" "roo-code"
-  _mirror_scripts "$suite_dir" "$dest_dir/scripts" "roo-code"
-
-  generate_markdown_block "$suite_dir" "$dest_dir" "roo-code" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END" >> "$file"
-  printf '[roo-code-adapter] wrote ai-suite block to %s\n' "$file"
-}
-
-agent_uninstall_project() {
-  local project_dir="$1"
-  local target_dir="$project_dir/.roo"
-  remove_block_from_file "$project_dir/.roorules" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END"
-  _remove_skills "$target_dir/skills"
-  _remove_meta "$target_dir/meta"
-  _remove_templates "$target_dir/templates"
-  _remove_scripts "$target_dir/scripts"
-  if [[ -d "$target_dir" ]] && [[ -z "$(ls -A "$target_dir" 2>/dev/null)" ]]; then
-    rmdir "$target_dir" 2>/dev/null || true
-  fi
-}
-
-agent_uninstall_global() {
-  local dest_dir="$HOME/.roo"
-  remove_block_from_file "$dest_dir/.roorules" "$_ROO_SENTINEL_START" "$_ROO_SENTINEL_END"
-  _remove_skills "$dest_dir/skills"
-  _remove_meta "$dest_dir/meta"
-  _remove_templates "$dest_dir/templates"
-  _remove_scripts "$dest_dir/scripts"
-  if [[ -d "$dest_dir" ]] && [[ -z "$(ls -A "$dest_dir" 2>/dev/null)" ]]; then
-    rmdir "$dest_dir" 2>/dev/null || true
-  fi
-}
+agent_install_project() { suite_agent_install "roo-code" "$1" project "$2"; }
+agent_install_global() { suite_agent_install "roo-code" "$1" global "$HOME"; }
+agent_uninstall_project() { suite_agent_uninstall "roo-code" project "$1"; }
+agent_uninstall_global() { suite_agent_uninstall "roo-code" global "$HOME"; }

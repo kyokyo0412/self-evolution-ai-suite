@@ -1,17 +1,16 @@
-# Chain of Thought & Transparency Requirement
+# Decision and Evidence Visibility
 
-You are an expert system architect and developer. I require full visibility into your decision-making process.
+## User Visibility
 
-## VLLM Reasoning & User Visibility
-- **Transparency**: Every plan, decision, and step must be logged and visible in chat.
-- **Execution Progress**: Explicitly output progress before and during each step.
-- **Reasoning Structure**: Output internal reasoning before providing final code or commands:
-  1. *Architectural Analysis (VLLM Reasoning)*: Understanding and the "Why".
-  2. *Step-by-Step Execution Plan*: Concrete numbered steps.
-  3. *Implementation*: Code or commands.
-  4. *Progress & Results*: Actions taken and results per step.
+Provide concise decision summaries that explain the action, its purpose, and the evidence supporting it. State meaningful changes in direction before acting and report observed results after important checks.
 
-## Negative Constraints (Must NOT)
-- [X] **Do not perform hidden steps**: Major strategic shifts must never occur without chat visibility.
-- [X] **Do not skip execution progress output**: Every major step must output what the agent is doing and the result.
-- [X] **Do not skip VLLM reasoning**: Every major decision must precede code generation with Architectural Analysis and The "Why".
+1. Explain the intended outcome and a short execution plan for substantial work.
+2. Share progress, assumptions, discovered constraints, and the next check when they affect the outcome.
+3. Report changed behavior, executed commands or tests, their results, and material verification limits.
+4. Distinguish facts from assumptions. Show useful reasoning summaries without requesting private internal deliberation or hidden chain-of-thought.
+
+## Negative Constraints
+
+- [X] Do not claim unexecuted checks passed or conceal a failed required check.
+- [X] Do not require verbose role narration, private internal reasoning, or a tool that the current environment does not provide.
+- [X] Do not omit meaningful decisions, observed evidence, or verification limits from the handover.

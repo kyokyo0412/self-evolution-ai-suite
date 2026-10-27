@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "directories": [
+    "layer1-abstraction",
+    "layer2-cognitive",
+    "layer3-registry/core",
+    "layer3-registry/directives",
+    "layer3-registry/safety",
+    "layer4-evolutionary/merging",
+    "cli",
+    "distribution"
+  ],
+  "files": [
+    "layer4-evolutionary/reflection/reflection-protocol.md",
+    "layer4-evolutionary/validation/validate-suite.sh"
+  ],
+  "required": [
+    "layer2-cognitive/memory/core.sh",
+    "layer2-cognitive/memory/memory.sh",
+    "layer1-abstraction/_portable.sh",
+    "layer1-abstraction/runtime/layout.sh",
+    "layer1-abstraction/runtime/execution.sh",
+    "layer1-abstraction/runtime/registry.sh",
+    "layer1-abstraction/runtime/registry-validation.sh",
+    "layer1-abstraction/runtime/mirroring.sh",
+    "layer1-abstraction/runtime/rendering.sh",
+    "layer1-abstraction/runtime/cursor.sh",
+    "layer1-abstraction/runtime/lifecycle.sh",
+    "layer1-abstraction/runtime/managed_blocks.py",
+    "layer1-abstraction/runtime/managed_artifacts.py",
+    "layer1-abstraction/runtime/stage_assets.py",
+    "layer1-abstraction/runtime/transport.sh",
+    "layer1-abstraction/runtime/process.py",
+    "layer1-abstraction/runtime/evolution.py",
+    "layer1-abstraction/runtime/domains.py",
+    "layer1-abstraction/runtime/hooks.py",
+    "layer1-abstraction/runtime/registry.py",
+    "layer1-abstraction/runtime/package.py",
+    "layer4-evolutionary/validation/validate-suite.sh",
+    "cli/enable.sh",
+    "cli/disable.sh",
+    "cli/evolve.sh",
+    "cli/workflow.sh",
+    "cli/manage.sh",
+    "cli/publish.sh"
+  ]
+}

@@ -2,36 +2,10 @@
 set -euo pipefail
 
 ORIGIN_DIR="${AI_SUITE_WORKFLOW_ORIGIN_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
-SCRIPT_DIR="$(cd "$ORIGIN_DIR/../.." 2>/dev/null && pwd || echo "$ORIGIN_DIR/../..")"
-
-if [[ -d "$SCRIPT_DIR/.ai-suite" ]]; then
-  SUITE_DIR="$SCRIPT_DIR/.ai-suite"
-elif [[ "$ORIGIN_DIR" == */meta/scripts ]]; then
-  # Running from ~/.cursor/meta/scripts
-  META_DIR="$(cd "$ORIGIN_DIR/.." && pwd)"
-  CURSOR_DIR="$(cd "$META_DIR/.." && pwd)"
-  SUITE_DIR="$CURSOR_DIR" # This is a pseudo-suite dir
-elif [[ -f "$ORIGIN_DIR/core.sh" || -f "$SCRIPT_DIR/core.sh" || -f "$(dirname "$ORIGIN_DIR")/core.sh" ]]; then
-  SUITE_DIR="$(dirname "$ORIGIN_DIR")"
-else
-  echo "Error: Cannot determine AI suite context from $SCRIPT_DIR" >&2
-  exit 2
-fi
-
-# -- Core Library -------------------------------------------------------------
-if [[ -f "$SUITE_DIR/layer2-cognitive/memory/core.sh" ]]; then
-  CORE_LIB="$SUITE_DIR/layer2-cognitive/memory/core.sh"
-elif [[ -f "$ORIGIN_DIR/core.sh" ]]; then
-  # If core.sh was copied to scripts/
-  CORE_LIB="$ORIGIN_DIR/core.sh"
-elif [[ -f "$SCRIPT_DIR/core.sh" ]]; then
-  CORE_LIB="$SCRIPT_DIR/core.sh"
-elif [[ -f "$(dirname "$ORIGIN_DIR")/core.sh" ]]; then
-  CORE_LIB="$(dirname "$ORIGIN_DIR")/core.sh"
-else
-  printf '[workflow] ERROR: core.sh not found\n' >&2
-  exit 2
-fi
+# shellcheck source=/dev/null
+source "$ORIGIN_DIR/../layer1-abstraction/runtime/layout.sh"
+suite_resolve_layout "$ORIGIN_DIR"
+CORE_LIB="$SUITE_DIR/layer2-cognitive/memory/core.sh"
 # shellcheck source=/dev/null
 source "$CORE_LIB"
 

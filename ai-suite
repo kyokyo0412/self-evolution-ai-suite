@@ -2,6 +2,14 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SUITE_CLI_DIR="$SCRIPT_DIR/.ai-suite/cli"
+if [[ ! -d "$SUITE_CLI_DIR" ]]; then
+  if [[ -d "$SCRIPT_DIR/cli" ]]; then
+    SUITE_CLI_DIR="$SCRIPT_DIR/cli"
+  elif [[ -d "$SCRIPT_DIR/../cli" ]]; then
+    SUITE_CLI_DIR="$SCRIPT_DIR/../cli"
+  fi
+fi
 
 usage() {
   cat <<'HELP'
@@ -34,22 +42,22 @@ case "$CMD" in
     exit 0
     ;;
   enable)
-    "$SCRIPT_DIR/.ai-suite/cli/enable.sh" "$@"
+    "$SUITE_CLI_DIR/enable.sh" "$@"
     ;;
   disable)
-    "$SCRIPT_DIR/.ai-suite/cli/disable.sh" "$@"
+    "$SUITE_CLI_DIR/disable.sh" "$@"
     ;;
   evolve)
-    "$SCRIPT_DIR/.ai-suite/cli/evolve.sh" "$@"
+    "$SUITE_CLI_DIR/evolve.sh" "$@"
     ;;
   workflow)
-    "$SCRIPT_DIR/.ai-suite/cli/workflow.sh" "$@"
+    "$SUITE_CLI_DIR/workflow.sh" "$@"
     ;;
   manage)
-    "$SCRIPT_DIR/.ai-suite/cli/manage.sh" "$@"
+    "$SUITE_CLI_DIR/manage.sh" "$@"
     ;;
   publish)
-    "$SCRIPT_DIR/.ai-suite/cli/publish.sh" "$@"
+    "$SUITE_CLI_DIR/publish.sh" "$@"
     ;;
   *)
     echo "Unknown command: $CMD"

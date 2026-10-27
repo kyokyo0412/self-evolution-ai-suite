@@ -1,16 +1,19 @@
-# Template: Testbed Brief (Hand-Off to `testbed-setup` Skill)
-**Purpose:** Compact hand-off brief for the `testbed-setup` skill to execute Discovery -> Execute -> Debug -> Verify autonomously.
+# Template: Testbed Brief
 
-## 1. Target Environment & Access
-- **Host(s):** `[IP or hostname]`
-- **User:** `[username]`
-- **Authentication:** `[password OR path to SSH key]`
-- **Privilege Level:** `[sudo / root]`
-- **Environment:** `[lab | dev | staging]` (MUST be non-production)
+**Purpose:** Supply the `testbed-setup` skill with explicit scope and non-production authorization before real-host operations.
 
-## 2. Mission Objective
-- **Goal:** `[e.g. "Dockerized OVS-DPDK lab with iperf3 on :5201"]`
-- **Setup steps / refs:** `[optional command list or wiki links]`
+## Target, authority, and access
 
-## 3. Operational Protocol
-1. Discovery (probe OS/kernel/deps) -> 2. Sequential execution -> 3. Active debugging (inspect syslog/journalctl) -> 4. Functional verification -> 5. Handover (Validation Report, Change Summary, Rollback Recipe).
+- **Host and expected identity:** `[hostname/IP and lab identity]`
+- **Environment confirmation:** `[explicit authorized lab/dev/testbed confirmation]`
+- **User and allowed privileges:** `[user; permitted sudo/root operations]`
+- **Authentication reference:** `[configured credential provider or SSH key reference; never paste secrets]`
+- **Snapshot/rollback readiness:** `[existing baseline/snapshot or authorized creation plan]`
+
+## Mission
+
+- **Goal and acceptance:** `[desired service behavior and observable success/failure cases]`
+- **Allowed changes and exclusions:** `[hosts, packages, services, files, and forbidden operations]`
+- **Dependencies and limits:** `[trusted package sources, versions/hashes, timeouts, attempt budget]`
+
+Reuse explicit session authorization; ask only for missing required information. Follow Discovery -> Plan/dry-run -> Sequential execution -> Debug -> Functional verification. Return actual validation results, changed state, and a rollback recipe tied to the baseline. Do not treat this blank template as authorization, expose credentials, or claim completion while required checks fail.

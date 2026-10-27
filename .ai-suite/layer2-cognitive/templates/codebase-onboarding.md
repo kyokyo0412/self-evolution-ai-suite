@@ -1,17 +1,16 @@
-# Template: Principal-Engineer Codebase Onboarding
-**Purpose:** Single response architectural overview for a new engineer. Emitted in chat without file creation.
+# Template: Codebase Onboarding
 
-## 1. High-Level Architecture & Tech Stack
-- Macro pattern (Monolith, Microservices, Event-Driven, Hexagonal).
-- Languages, frameworks, and key libraries.
+**Purpose:** Answer an onboarding request in chat without file creation unless explicitly requested.
 
-## 2. Core Modules & Execution Flow
-- Top 3-5 modules and single responsibilities.
-- Primary entry point (`main.go`, `index.ts`, CLI) and happy-path request lifecycle.
+## Inputs
 
-## 3. Data & State Management
-- Persistence, caching, central schemas, and database interaction models.
+Resolve repository/revision, audience, and relevant scope. Trace actual source and project guidance; clarify missing essential scope and label unverified behavior.
 
-## 4. Extension Guide
-- Exact files/directories to edit when adding features.
-- Coding conventions, linters, and testing requirements to uphold.
+## Answer structure
+
+1. Purpose, verified high-level architecture, languages, and relevant frameworks.
+2. Major modules and responsibilities, actual entry point, and an ordinary execution flow.
+3. State, persistence, schemas, concurrency, trust boundaries, and recovery where applicable.
+4. Extension points with exact file/symbol references and source-backed build/test commands.
+
+Keep detail proportional to the question. Cite relevant source and distinguish observation from inference. Report unavailable verification; do not invent files, runtime results, or write artifacts for a chat-only request.
