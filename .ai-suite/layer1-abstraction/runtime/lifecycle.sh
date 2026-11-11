@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 # Shared adapter lifecycle. All mutations pass through managed_artifacts.py.
 
+suite_validate_agent_root_alias() {
+  local agent="$1" scope="$2" alias_path="${3:-}"
+  [[ -n "$alias_path" ]] || return 0
+  case "$agent:$scope" in
+    cursor:global|codex:global) ;;
+    *) printf '[lifecycle] ERROR: agent root alias requires global Cursor or Codex\n' >&2; return 1 ;;
+  esac
+  [[ "$alias_path" == /* && "$alias_path" != / && "$alias_path" != *[[:cntrl:]]* ]] || {
+    printf '[lifecycle] ERROR: agent root alias requires an absolute physical directory\n' >&2; return 1;
+  }
+  case "/$alias_path/" in
+    */../*|*/./*) printf '[lifecycle] ERROR: agent root alias traversal is not allowed\n' >&2; return 1 ;;
+  esac
+}
+
 _suite_agent_layout() {
   local agent="$1" scope="$2"
   case "$agent" in
@@ -52,6 +67,9 @@ _suite_instruction() {
 
 _suite_artifact_command() {
   local action="$1" root="$2"; shift 2
+  if [[ -n "${AI_SUITE_AGENT_ROOT_ALIAS:-}" ]]; then
+    set -- --agent-root-alias "$AI_SUITE_AGENT_ROOT_ALIAS" "$@"
+  fi
   python3 -B "$_AI_SUITE_RUNTIME_DIR/managed_artifacts.py" "$action" \
     --root "$root" --manifest "$SUITE_AGENT_DIR/.ai-suite-manifest.json" \
     --start "$SUITE_BLOCK_START" --end "$SUITE_BLOCK_END" "$@"
@@ -84,6 +102,7 @@ _suite_apply_install() {
 suite_agent_install() (
   set -euo pipefail
   local agent="$1" suite="$2" scope="$3" root="$4"
+  suite_validate_agent_root_alias "$agent" "$scope" "${AI_SUITE_AGENT_ROOT_ALIAS:-}"
   command -v python3 >/dev/null || { printf '[lifecycle] ERROR: Python 3 is required\n' >&2; exit 1; }
   _suite_agent_layout "$agent" "$scope"
   if [[ "${AI_SUITE_DRY_RUN:-0}" == 1 ]]; then
@@ -104,6 +123,7 @@ suite_agent_install() (
 suite_agent_uninstall() (
   set -euo pipefail
   local agent="$1" scope="$2" root="$3"
+  suite_validate_agent_root_alias "$agent" "$scope" "${AI_SUITE_AGENT_ROOT_ALIAS:-}"
   command -v python3 >/dev/null || { printf '[lifecycle] ERROR: Python 3 is required\n' >&2; exit 1; }
   _suite_agent_layout "$agent" "$scope"
   if [[ "${AI_SUITE_DRY_RUN:-0}" == 1 ]]; then

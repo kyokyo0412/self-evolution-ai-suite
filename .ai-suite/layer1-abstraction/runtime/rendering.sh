@@ -50,6 +50,24 @@ _render_policy_directory() {
   done
 }
 
+_render_codex_directive_references() {
+  local suite="$1" target="$2" relative directory source_file filename
+  printf '### Installed Directive References\n'
+  printf 'Load the applicable installed directives from %s/directives/:\n' "$target"
+  for relative in layer3-registry/directives layer3-registry/safety \
+    "layer1-abstraction/agents/codex/directives"; do
+    directory="$suite/$relative"
+    [[ -d "$directory" ]] || continue
+    for source_file in "$directory"/*; do
+      [[ -f "$source_file" ]] || continue
+      filename=$(basename "$source_file")
+      filename=$(printf '%s' "$filename" | sed -E 's/\.(md|mdc)$/.md/')
+      printf -- '- `%s/directives/%s`\n' "$target" "$filename"
+    done
+  done
+  printf '\n'
+}
+
 _render_policies() {
   local suite="$1" agent="$2" target="$3" relative domain
   printf '## AI Suite Directives & Rules\n\n'
@@ -62,6 +80,9 @@ _render_policies() {
       _strip_rule_frontmatter "$suite/$relative"
       printf '\n'
     done
+    if [[ "$agent" == codex ]]; then
+      _render_codex_directive_references "$suite" "$target"
+    fi
   fi
   printf 'Before coding or review, load %s/meta/layer3-registry/directives/code-quality.md.\n' "$target"
   printf 'For documented safety-critical work, load %s/meta/layer3-registry/directives/nuclear-safety.md.\n' "$target"

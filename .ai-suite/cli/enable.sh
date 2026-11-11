@@ -26,6 +26,7 @@
 #
 # Common flags:
 #   --dry-run         Show what would happen; mutate nothing.
+#   --agent-root-alias PATH  Pin an existing global Cursor/Codex directory symlink.
 #   --verify          Lint all skill directories and exit.
 #   --install-hook    Install a shell auto-enable hook (~/.zshrc / ~/.bashrc).
 #   --shell SHELL     auto (default) | zsh | bash | both.
@@ -68,6 +69,7 @@ INSTALL_HOOK=0
 SHELL_TARGETS="auto"
 UNINSTALL=0
 SYNC="rsync"
+AI_SUITE_AGENT_ROOT_ALIAS=""
 
 usage() { sed -n '2,36p' "$0"; exit "${1:-0}"; }
 
@@ -85,6 +87,7 @@ while [[ $# -gt 0 ]]; do
     --verify)       VERIFY=1; shift ;;
     --install-hook) INSTALL_HOOK=1; shift ;;
     --sync)         SYNC="${2:?--sync requires rsync|scp}"; shift 2 ;;
+    --agent-root-alias) AI_SUITE_AGENT_ROOT_ALIAS="${2:?--agent-root-alias requires a physical directory}"; shift 2 ;;
     --shell)        SHELL_TARGETS="${2:?--shell requires auto|zsh|bash|both}"; shift 2 ;;
     --uninstall)    UNINSTALL=1; shift ;;
     -h|--help)      usage 0 ;;
@@ -102,6 +105,9 @@ case "$SCOPE" in
   project|global|remote) ;;
   *) die "Unsupported scope: '$SCOPE'. Valid: project | global | remote" 1 ;;
 esac
+alias_scope="$SCOPE"
+[[ "$SCOPE" != remote ]] || alias_scope="$REMOTE_SCOPE"
+suite_validate_agent_root_alias "$AGENT" "$alias_scope" "$AI_SUITE_AGENT_ROOT_ALIAS" || exit 1
 
 # -- Preflight ----------------------------------------------------------------
 [[ -d "$SUITE_DIR" ]] || die "missing $SUITE_DIR -- is .ai-suite/ next to this script?" 2
@@ -127,6 +133,7 @@ if [[ "$UNINSTALL" == "1" ]]; then
   [[ -n "$HOST" ]]             && args+=( --host "$HOST" --remote-path "$REMOTE_PATH" --remote-scope "$REMOTE_SCOPE" )
   [[ "$SHELL_TARGETS" != auto ]] && args+=( --shell "$SHELL_TARGETS" )
   [[ "$AI_SUITE_DRY_RUN" == "1" ]]          && args+=( --dry-run )
+  [[ -z "$AI_SUITE_AGENT_ROOT_ALIAS" ]] || args+=( --agent-root-alias "$AI_SUITE_AGENT_ROOT_ALIAS" )
   exec bash "$SCRIPT_DIR/ai-suite" disable "${args[@]}"
 fi
 
@@ -227,7 +234,7 @@ do_remote_scope() {
   source "$SUITE_DIR/layer1-abstraction/runtime/transport.sh"
   suite_validate_host "$HOST" && suite_validate_remote_path "$REMOTE_PATH" || return 1
   local remote_cmd
-  remote_cmd=$(suite_remote_command "$REMOTE_PATH" enable "$REMOTE_SCOPE" "$AGENT" "$PROJECT_PATH" "${AI_SUITE_DOMAIN:-}") || return 1
+  remote_cmd=$(suite_remote_command "$REMOTE_PATH" enable "$REMOTE_SCOPE" "$AGENT" "$PROJECT_PATH" "${AI_SUITE_DOMAIN:-}" "$AI_SUITE_AGENT_ROOT_ALIAS") || return 1
   case "$SYNC" in rsync|scp) ;; *) die "invalid --sync: $SYNC" 1 ;; esac
   suite_registry_validate "$SUITE_DIR" "$AGENT" || return 1
   suite_sync_deployment "$HOST" "$REMOTE_PATH" "$SUITE_DIR" "$SCRIPT_DIR/ai-suite" "$SYNC" || return 1

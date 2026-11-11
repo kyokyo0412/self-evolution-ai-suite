@@ -57,7 +57,15 @@ suite_remote_path() {
 
 suite_remote_command() {
   local path="$1" action="$2" scope="$3" agent="$4" project="${5:-}" domain="${6:-}"
+  local agent_root_alias="${7:-}"
   suite_validate_scope "$scope" && suite_validate_agent "$agent" || return 1
+  if [[ -n "$agent_root_alias" ]]; then
+    case "$scope:$agent:$agent_root_alias" in
+      global:cursor:/*|global:codex:/*) ;;
+      *) printf 'agent root alias requires global Cursor or Codex and an absolute path\n' >&2; return 1 ;;
+    esac
+    suite_validate_remote_path "$agent_root_alias" || return 1
+  fi
   case "$action" in enable|disable) ;; *) return 1 ;; esac
   printf 'bash '; suite_remote_path "$path/ai-suite" || return 1
   printf ' %s --scope %s --agent %s' "$action" "$scope" "$agent"
@@ -68,6 +76,9 @@ suite_remote_command() {
   if [[ -n "$domain" ]]; then
     [[ "$domain" =~ ^[a-z0-9][a-z0-9_-]*$ ]] || return 1
     printf ' --domain '; suite_shell_quote "$domain"
+  fi
+  if [[ -n "$agent_root_alias" ]]; then
+    printf ' --agent-root-alias '; suite_shell_quote "$agent_root_alias"
   fi
 }
 

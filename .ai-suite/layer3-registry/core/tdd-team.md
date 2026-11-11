@@ -106,6 +106,8 @@ Update affected documentation. The Technical Writer updates the primary project 
 
 Audit checklist items against evidence; leave unfinished work unchecked. Report what changed, why, how tested, findings, and verification limits. Report `git status` and a focused diff. Do not label partial work complete.
 
+When this task leaves changed files in a Git repository, provide a suggested Git commit message based only on this task's changes as the final item of the final response for the user to copy and commit manually. Exclude unrelated pre-existing changes.
+
 **Outer Orchestrator**: Under `loop-work` or another orchestrator, return iteration status and evidence to its workflow; completing Phase 5 does not replace its exact-N or summary contract.
 
 ## Negative Constraints

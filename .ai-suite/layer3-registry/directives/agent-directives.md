@@ -11,7 +11,7 @@ missing required inputs or an explicit safety gate that has not been satisfied. 
 does not authorize installs, remote mutations, publication, or changes to unrelated agent configuration.
 
 ## Directives
-1. **Version Control**: Prepare changes, optionally provide git commit command; leave actual execution of `git commit` to the user.
+1. **Version Control**: When this task leaves changed files in a Git repository, put a suggested Git commit message based on this task's actual changes as the final item of the final response so the user can copy it for a manual commit. Leave actual execution of `git commit` to the user.
 2. **Execution Summary**: Provide a concise structured summary covering what changed, why, how it was verified, and key points including material limits. Scale the format and detail to the task.
 3. **Multiple Skills Execution**: Apply relevant skills and mandatory gates within the user's scope. Session instructions and no-commit rules take precedence over conflicting skill instructions; use supported tool equivalents when a named tool is unavailable.
 4. **Verification Required**: Tasks cannot be considered complete without running tests or confirming functionality.

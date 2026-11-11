@@ -18,6 +18,7 @@
 #       Remove the auto-enable hook from ~/.zshrc and/or ~/.bashrc.
 #   --shell SHELL  auto | zsh | bash | both  (default auto).
 #   --dry-run      Preview only.
+#   --agent-root-alias PATH  Pin an existing global Cursor/Codex directory symlink.
 
 set -euo pipefail
 
@@ -47,6 +48,7 @@ REMOTE_SCOPE="global"
 export AI_SUITE_DRY_RUN=0
 UNINSTALL_HOOK=0
 SHELL_TARGETS="auto"
+AI_SUITE_AGENT_ROOT_ALIAS=""
 
 HOOK_MARK_START="### AI SUITE AUTO-ENABLE HOOK START ###"
 
@@ -60,6 +62,7 @@ while [[ $# -gt 0 ]]; do
     --host)          HOST="${2:?--host requires user@host}"; shift 2 ;;
     --remote-path)   REMOTE_PATH="${2:?--remote-path requires a path}"; shift 2 ;;
     --remote-scope)  REMOTE_SCOPE="${2:?--remote-scope requires project|global}"; shift 2 ;;
+    --agent-root-alias) AI_SUITE_AGENT_ROOT_ALIAS="${2:?--agent-root-alias requires a physical directory}"; shift 2 ;;
     --dry-run)       export AI_SUITE_DRY_RUN=1; shift ;;
     --uninstall-hook) UNINSTALL_HOOK=1; shift ;;
     --shell)         SHELL_TARGETS="${2:?--shell requires auto|zsh|bash|both}"; shift 2 ;;
@@ -77,6 +80,9 @@ case "$SCOPE" in
   project|global|remote) ;;
   *) die "Unsupported scope: '$SCOPE'. Valid: project | global | remote" 1 ;;
 esac
+alias_scope="$SCOPE"
+[[ "$SCOPE" != remote ]] || alias_scope="$REMOTE_SCOPE"
+suite_validate_agent_root_alias "$AGENT" "$alias_scope" "$AI_SUITE_AGENT_ROOT_ALIAS" || exit 1
 
 _load_adapter() {
   local name="$1"
@@ -167,7 +173,7 @@ do_remote_scope() {
   source "$SUITE_DIR/layer1-abstraction/runtime/transport.sh"
   suite_validate_host "$HOST" && suite_validate_remote_path "$REMOTE_PATH" || return 1
   local remote_cmd
-  remote_cmd=$(suite_remote_command "$REMOTE_PATH" disable "$REMOTE_SCOPE" "$AGENT" "$PROJECT_PATH") || return 1
+  remote_cmd=$(suite_remote_command "$REMOTE_PATH" disable "$REMOTE_SCOPE" "$AGENT" "$PROJECT_PATH" "" "$AI_SUITE_AGENT_ROOT_ALIAS") || return 1
   run suite_transport_exec ssh -o BatchMode=yes -o ConnectTimeout=15 "$HOST" "$remote_cmd"
 }
 

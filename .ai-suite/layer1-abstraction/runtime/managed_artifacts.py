@@ -19,6 +19,29 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def artifact_checker(root, options):
+    """Allow one pinned global Cursor/Codex directory alias only by opt-in."""
+    value = getattr(options, "agent_root_alias", None)
+    if value is None:
+        return checked_path
+    manifests = {".cursor/.ai-suite-manifest.json", ".codex/.ai-suite-manifest.json"}
+    if options.manifest not in manifests or root != Path.home().resolve(strict=True):
+        raise ValueError("agent root alias requires a global Cursor or Codex installation")
+    expected = Path(value)
+    if not expected.is_absolute() or not expected.is_dir():
+        raise ValueError("agent root alias requires an existing absolute physical directory")
+    physical = expected.resolve(strict=True)
+    if physical != expected or physical == root or root.is_relative_to(physical):
+        raise ValueError("agent root alias requires a separate physical directory")
+    aliases = {str(Path(options.manifest).parent): physical}
+
+    def check(target, relative):
+        return checked_path(target, relative, aliases)
+
+    check(root, options.manifest)
+    return check
+
+
 def read_manifest(path):
     if not path.exists():
         return {"version": 1, "files": {}, "instruction": None}
@@ -61,11 +84,11 @@ def unchanged(path, expected):
             and stat.S_IMODE(path.stat().st_mode) == expected["mode"])
 
 
-def desired_files(root, stage, old):
+def desired_files(root, stage, old, check=checked_path):
     incoming = artifact_files(stage) if stage else {}
     operations, owned = {}, {}
     for relative in sorted(set(old["files"]) | set(incoming)):
-        path = checked_path(root, relative)
+        path = check(root, relative)
         previous = old["files"].get(relative)
         if path.exists() and (previous is None or not unchanged(path, previous)):
             raise ValueError(f"unmanaged collision or user-edited artifact: {path}")
@@ -79,8 +102,8 @@ def desired_files(root, stage, old):
     return operations, owned
 
 
-def instruction_plan(root, relative, content, markers, previous):
-    path = checked_path(root, relative)
+def instruction_plan(root, relative, content, markers, previous, check=checked_path):
+    path = check(root, relative)
     empty_directory = path.is_dir() and relative == ".cursorrules" and not any(path.iterdir())
     data = path.read_bytes() if path.exists() and not empty_directory else b""
     span = block_span(data, *markers)
@@ -113,15 +136,15 @@ def instruction_plan(root, relative, content, markers, previous):
         "created": previous["created"] if previous else (not path.exists() or empty_directory)}
 
 
-def add_instruction(root, operations, old, options):
+def add_instruction(root, operations, old, options, check=checked_path):
     previous = old["instruction"]
     if options.action == "remove" and previous is None:
         return None
     relative = previous["path"] if previous else options.instruction
     content = Path(options.block).read_bytes() if options.action == "install" else None
     data, metadata = instruction_plan(root, relative, content,
-                                      (options.start.encode(), options.end.encode()), previous)
-    path = checked_path(root, relative)
+                                      (options.start.encode(), options.end.encode()), previous, check)
+    path = check(root, relative)
     if not data and previous and previous.get("created"):
         operations[relative] = None
     else:
@@ -162,13 +185,13 @@ def prune_empty(root, paths):
             candidates.add(directory)
             directory = directory.parent
     for directory in sorted(candidates, key=lambda value: len(value.parts), reverse=True):
-        if directory.is_dir() and not any(directory.iterdir()):
+        if not directory.is_symlink() and directory.is_dir() and not any(directory.iterdir()):
             directory.rmdir()
 
 
-def restore(root, journal):
+def restore(root, journal, check=checked_path):
     for relative, value in reversed(list(journal["before"].items())):
-        path = checked_path(root, relative)
+        path = check(root, relative)
         current = snapshot(path)
         if current == value:
             continue
@@ -180,11 +203,11 @@ def restore(root, journal):
     prune_empty(root, journal["before"])
 
 
-def transact(root, manifest, operations, metadata, post_command=None):
+def transact(root, manifest, operations, metadata, post_command=None, check=checked_path):
     operations = dict(operations)
     relative_manifest = str(manifest.relative_to(root))
     operations[relative_manifest] = metadata
-    before = {relative: snapshot(checked_path(root, relative)) for relative in operations}
+    before = {relative: snapshot(check(root, relative)) for relative in operations}
     journal_path = manifest.with_name(".ai-suite-transaction.json")
     journal = {"version": 1, "before": before, "after": operations}
     atomic_write(journal_path, json.dumps(journal).encode(), 0o600)
@@ -192,14 +215,15 @@ def transact(root, manifest, operations, metadata, post_command=None):
     settled = False
     try:
         for relative, value in operations.items():
-            path = checked_path(root, relative)
+            path = check(root, relative)
             create_parents(path.parent, created)
             apply_operation(path, value)
         if post_command:
             run_post_command(post_command)
+        check(root, relative_manifest)
         settled = True
     except BaseException:
-        restore(root, journal)
+        restore(root, journal, check)
         settled = True
         raise
     finally:
@@ -229,7 +253,7 @@ def run_post_command(command):
 
 @contextmanager
 def install_lock(manifest):
-    directory = manifest.with_name(".ai-suite-lock")
+    directory = manifest.parent.resolve(strict=True) / ".ai-suite-lock"
     deadline = time.monotonic() + 10
     acquired = False
     try:
@@ -270,24 +294,25 @@ def clear_stale_lock(directory):
 
 def process(options):
     root = Path(options.root).resolve(strict=True)
-    manifest = checked_path(root, options.manifest)
+    check = artifact_checker(root, options)
+    manifest = check(root, options.manifest)
     manifest.parent.mkdir(parents=True, exist_ok=True)
     try:
         with install_lock(manifest):
-            journal = checked_path(root, manifest.with_name(".ai-suite-transaction.json").relative_to(root))
+            journal = check(root, manifest.with_name(".ai-suite-transaction.json").relative_to(root))
             if journal.exists():
-                restore(root, json.loads(journal.read_text()))
+                restore(root, json.loads(journal.read_text()), check)
                 journal.unlink()
             old = read_manifest(manifest)
             stage = Path(options.stage) if options.action == "install" else None
-            operations, owned = desired_files(root, stage, old)
-            instruction = add_instruction(root, operations, old, options)
+            operations, owned = desired_files(root, stage, old, check)
+            instruction = add_instruction(root, operations, old, options, check)
             state = {"version": 1, "files": owned, "instruction": instruction}
             metadata = None if options.action == "remove" else {
                 "data": base64.b64encode(json.dumps(state, sort_keys=True).encode()).decode(), "mode": 0o600}
-            transact(root, manifest, operations, metadata, getattr(options, "post_command", None))
+            transact(root, manifest, operations, metadata, getattr(options, "post_command", None), check)
     finally:
-        if manifest.parent.is_dir() and not any(manifest.parent.iterdir()):
+        if not manifest.parent.is_symlink() and manifest.parent.is_dir() and not any(manifest.parent.iterdir()):
             manifest.parent.rmdir()
 
 
@@ -298,6 +323,7 @@ def parser():
         arguments.add_argument(f"--{name}", required=True)
     for name in ("stage", "instruction", "block"):
         arguments.add_argument(f"--{name}")
+    arguments.add_argument("--agent-root-alias")
     arguments.add_argument("--post-command", nargs=argparse.REMAINDER)
     return arguments
 

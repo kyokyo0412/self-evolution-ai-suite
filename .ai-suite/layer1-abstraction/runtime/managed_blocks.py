@@ -7,15 +7,31 @@ import sys
 import tempfile
 
 
-def checked_path(root, relative):
-    """Return a contained path without following symlinks in any component."""
+def validate_root_aliases(root, aliases):
+    """Recheck explicitly pinned directory aliases before every managed access."""
+    for relative, expected in aliases.items():
+        alias = Path(root) / relative
+        try:
+            matches = (alias.is_symlink() and expected.is_dir()
+                       and alias.resolve(strict=True) == expected)
+        except (OSError, RuntimeError) as error:
+            raise ValueError(f"unresolvable agent root alias: {alias}") from error
+        if not matches:
+            raise ValueError(f"agent root alias changed or mismatched: {alias}")
+
+
+def checked_path(root, relative, aliases=None):
+    """Return a lexical path, rejecting symlinks except explicitly pinned roots."""
+    root = Path(root)
+    aliases = aliases or {}
+    validate_root_aliases(root, aliases)
     relative = Path(relative)
     if relative.is_absolute() or not relative.parts or ".." in relative.parts:
         raise ValueError(f"unsafe relative artifact path: {relative}")
     current = Path(root)
     for part in relative.parts:
         current = current / part
-        if current.is_symlink():
+        if current.is_symlink() and str(current.relative_to(root)) not in aliases:
             raise ValueError(f"refusing symlink artifact: {current}")
     return current
 
